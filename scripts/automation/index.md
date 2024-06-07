@@ -16,8 +16,8 @@ En la carpeta automation nos encontramos con scripts de acciones, que serian las
 Asi identificamos las siguientes:
 
 * [start](#start-iniciar-un-requerimiento-nuevo)
-* [pause](#pause-poner-un-requerimiento-en-pausa-para-mas-tarde-o-bien-para-que-lo-tome-otro): 
-* [done](#done-al-terminar-el-desarrollo-de-un-requerimiento):
+* [stop](#stop-poner-un-requerimiento-en-pausa-para-mas-tarde-o-bien-para-que-lo-tome-otro): 
+* [finish](#finish-al-terminar-el-desarrollo-de-un-requerimiento):
 * [deploy](#deploy):
 * [cancel](#cancel):
 * [rollback](#rollback):
@@ -27,11 +27,11 @@ Asi identificamos las siguientes:
 stateDiagram-v2 
 [*] --> Ready
 Ready --> InProgress : start
-InProgress --> Ready :pause
+InProgress --> Ready :stop
 InProgress --> Completed : finish
 Completed --> Approved :approve
 Completed --> Ready :reject
-Approved --> Done : deploy
+Approved --> finish : deploy
 Approved --> Cancelled : cancel
 InProgress --> Cancelled : cancel
 Completed --> Cancelled: cancel
@@ -61,7 +61,7 @@ Archive --> [*]
 Si arrancamos de cero cuando llamamos a start, quien va a crear la branch y la scratch
 
 ````
-start.sh (issueNumber, nombreDelRequerimiento, dias=7)
+start.sh (issueNumber, issueType, dias=7)
 ├── validate-issue.sh ( issueNumber, 'Ready')
 ├── create-branch.sh ( issueNumber, nombreDelRequerimiento)
 ├── move-issue.sh ( issueNumber, 'In Progress')
@@ -75,10 +75,10 @@ Por ejemplo:
 ````
 ./scripts/automation/start.sh 32  bugfix-productDetail
 ````
-## Pause: Poner un requerimiento en pausa para mas tarde o bien para que lo tome otro
+## stop: Poner un requerimiento en pausa para mas tarde o bien para que lo tome otro
 
 ````
-pause.sh
+stop.sh
 ├── validate-scratch.sh ()
 ├── move-issue.sh ( issueNumber, 'Ready')
 ├── label-issue.sh ( issueNumber, 'motivo')
@@ -87,10 +87,10 @@ pause.sh
 ````
 
 
-## Done: Completar el desarrollo de un Requerimiento
+## finish: Completar el desarrollo de un Requerimiento
 
 ````
-done.sh
+finish.sh
 ├── validate-scratch.sh 
 ├── validate-code.sh
 ├── update-doc.sh

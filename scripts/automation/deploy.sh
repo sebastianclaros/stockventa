@@ -1,6 +1,7 @@
 #!/bin/bash
 # Script para automatizar las acciones cuando se finaliza un requerimiento
 # Recibe:
-# 1) El issue Number del Repositorio
 
-source "$(dirname "$0")/subtask/library.sh"
+script_full_path=$(dirname "$0")
+source "$script_full_path/subtask/library.sh"
+branchName=$(git branch --show-current)

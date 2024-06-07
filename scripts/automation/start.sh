@@ -4,9 +4,9 @@
 # 1) El issue Number del Repositorio. Obligatorio
 # 2) El issue Type (feature, fix, docs, release). Opcional por omision toma feature
 
-#start.sh (issueNumber, nombreDelRequerimiento, dias=7)
+#start.sh (issueNumber, issueType, dias=7)
 #├── validate-issue.sh ( issueNumber, 'Ready')
-#├── create-branch.sh ( issueNumber, nombreDelRequerimiento)
+#├── create-branch.sh ( branchName)
 #├── move-issue.sh ( issueNumber, 'In Progress')
 #├── assign-user-issue.sh ( issueNumber, me )
 #├── assign-branch-issue.sh ( issueNumber, branch )

@@ -1,12 +1,23 @@
 #!/bin/bash
 # Script para automatizar las acciones cuando se termina el desarrollo de un requerimiento
-source "$(dirname "$0")/subtask/library.sh"
+
+script_full_path=$(dirname "$0")
+source "$script_full_path/subtask/library.sh"
+branchName=$(git branch --show-current)
 # Recibe:
-# 1) El issue Number del Repositorio
+
+# finish.sh
+# ├── validate-scratch.sh 
+# ├── validate-code.sh
+# ├── update-doc.sh
+# ├── publish-branch.sh
+# ├── create-pull-request.sh ('main')
+# ├── move-issue.sh ( issueNumber, 'Completed' )
+# ├── deploy-code.sh ( issueNumber, 'qa')
+# ├── sanity-test.sh( 'qa')
+# └── drop-scracth.sh 
 
 # Variables
-branchName=$(git branch --show-current)
-script_full_path=$(dirname "$0")
 
 ##
 # CUERPO DEL COMANDO
