@@ -4,7 +4,7 @@
 export default {
   title: "Teatime",
   url: "https://sebastianclaros.github.io", // Your website URL
-  baseUrl: "/teatime",
+  baseUrl: "/stockventa",
   projectName: "sebastianclaros.github.io",
   organizationName: "sebastianclaros",
   trailingSlash: false,
@@ -55,35 +55,35 @@ export default {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "Teatime",
+        title: "Stock Venta",
         logo: {
-          alt: "Teatime",
+          alt: "Stock Venta",
           src: "img/logo.png"
         },
         items: [
           {
             type: "docSidebar",
-            sidebarId: "configuracion",
+            sidebarId: "integraciones",
             position: "left",
-            label: "Configuración"
+            label: "Integraciones"
           },
           {
             type: "docSidebar",
-            sidebarId: "ventas",
+            sidebarId: "aplicacion",
             position: "left",
-            label: "Ventas"
+            label: "Aplicacion"
           },
           // {
           //   to: 'blog',
           //   label: 'Blog',
           //   position: 'right'
           // },
-          {
-            type: "docSidebar",
-            sidebarId: "diccionario",
-            position: "right",
-            label: "Diccionarios"
-          }
+//          {
+//            type: "docSidebar",
+//            sidebarId: "diccionario",
+//            position: "right",
+//            label: "Diccionarios"
+//          }
         ]
       },
       footer: {
@@ -97,14 +97,6 @@ export default {
               //   to: '/docs/intro',
               // },
             ]
-          },
-          {
-            title: "Arquitectura",
-            items: []
-          },
-          {
-            title: "Standards",
-            items: []
           }
         ]
       }
