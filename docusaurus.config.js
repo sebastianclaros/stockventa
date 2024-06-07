@@ -2,7 +2,7 @@
 // const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 export default {
-  title: "Teatime",
+  title: "StockVenta",
   url: "https://sebastianclaros.github.io", // Your website URL
   baseUrl: "/stockventa",
   projectName: "sebastianclaros.github.io",
@@ -33,7 +33,7 @@ export default {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/sebastianclaros/teatime/tree/main"
+          editUrl: "https://github.com/sebastianclaros/stockventa/tree/main"
         },
         blog: false,
         // blog: {
@@ -43,7 +43,7 @@ export default {
         //   // Please change this to your repo.
         //   // Remove this to remove the "edit this page" links.
         //   editUrl:
-        //     'https://github.com/sebastianclaros/teatime/tree/main',
+        //     'https://github.com/sebastianclaros/stockventa/tree/main',
         // },
         theme: {
           customCss: require.resolve("./docs/custom.css")

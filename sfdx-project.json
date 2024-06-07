@@ -5,7 +5,7 @@
       "default": true
     }
   ],
-  "name": "teatime",
+  "name": "stockventa",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "58.0"
