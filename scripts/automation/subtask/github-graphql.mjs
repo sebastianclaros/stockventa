@@ -2,7 +2,7 @@ import { graphql } from "@octokit/graphql";
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const OWNER = 'sebastianclaros';
 const REPO = 'stockventa';
-const PROJECT_NUMBER = 2;
+const PROJECT_NUMBER = 3;
 
 const repoVar = { owner: OWNER, repo: REPO }
 const graphqlAuth = graphql.defaults({
