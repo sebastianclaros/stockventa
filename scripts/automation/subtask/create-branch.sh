@@ -24,8 +24,8 @@ if [ $current_branch != $branchName ]; then
         doExit  "Tiene modificaciones pendientes ($cambios)"
     fi
 
-    doInfo  "[STEP 2] Nos movemos a development para hacer el branch desde esa rama"
-    git checkout development
+    doInfo  "[STEP 2] Nos movemos a main para hacer el branch desde esa rama"
+    git checkout main
     if [ $? -ne 0 ]; then
         doExit "No se pudo hacer el cambio de rama, verifique el mensaje de error, generalmente es porque:
             * - Tiene cosas sin comitear, haga el commit o descarte los cambios y vuelva a intentar
