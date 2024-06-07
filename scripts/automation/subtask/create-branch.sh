@@ -38,13 +38,20 @@ if [ $current_branch != $branchName ]; then
         doExit "Verifique que no tenga cosas sin comitear"
     fi
 
-    doInfo "* [STEP 4] Creamos la Branch $branchName"
-    git checkout -b $branchName
-    if [ $? -ne 0 ]; then
-        doExit "Verifique si la branch no existe ya"
+    exists=`git show-ref refs/heads/<branch-name>`
+    if [ -n "$exists" ]; then
+        doInfo "* [STEP 4] Si la branch existe la actualiza"
+        git branch $branchName
+        git pull
+    else
+        doInfo "* [STEP 4] Si no existe creamos la Branch $branchName"
+        git checkout -b $branchName
+        if [ $? -ne 0 ]; then
+            doExit "No se pudo crear la branch"
+        fi
     fi
 else 
-    doWarning "* Ya existia la branch $branchName, asi que no se hizo nada"
+    doWarning "* Ya esta sobre la branch $branchName"
 fi
 
 doInfo "[FIN] de creacion de la branch $branchName"
