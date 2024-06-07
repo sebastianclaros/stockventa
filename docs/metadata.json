@@ -1,0 +1,27 @@
+[
+  {
+    "name": "configuracion",
+    "childs": [
+      {
+        "name": "catalogo",
+        "objects": [
+          "ProductCatalog",
+          "ProductCategory",
+          "ProductCategoryProduct"
+        ]
+      },
+      {
+        "name": "precios",
+        "objects": ["PriceBook2", "PriceBookEntry", "Product2"]
+      },
+      {
+        "name": "promociones"
+      }
+    ]
+  },
+  {
+    "name": "ventas",
+    "classes": ["OrderController"],
+    "objects": ["Order", "Account", "OrderItems", "Product2"]
+  }
+]

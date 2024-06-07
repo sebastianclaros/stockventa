@@ -1,0 +1,7 @@
+
+SELECT Id,
+        Action,
+        Display,
+        Section 
+FROM SetupAuditTrail 
+WHERE CreatedDate = Today
