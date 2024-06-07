@@ -38,7 +38,7 @@ if [ $current_branch != $branchName ]; then
         doExit "Verifique que no tenga cosas sin comitear"
     fi
 
-    exists=`git show-ref refs/heads/<branch-name>`
+    exists='git show-ref refs/heads/$branchName'
     if [ -n "$exists" ]; then
         doInfo "* [STEP 4] Si la branch existe la actualiza"
         git branch $branchName
