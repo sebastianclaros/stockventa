@@ -43,7 +43,7 @@ if [ $? -ne 0 ]; then
     doExit "Por favor verifique que el issue $issueNumber este en la columna Ready $?"
 fi
 
-branchName = "$issueType/$issueNumber"
+branchName="$issueType/$issueNumber"
 
 # Step 2) Crea la Branch
 doInfo "[CREA LA BRANCH]"

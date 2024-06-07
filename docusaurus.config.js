@@ -69,6 +69,18 @@ export default {
           },
           {
             type: "docSidebar",
+            sidebarId: "modelo",
+            position: "left",
+            label: "Modelo"
+          },
+          {
+            type: "docSidebar",
+            sidebarId: "servicio",
+            position: "left",
+            label: "Servicio"
+          },
+          {
+            type: "docSidebar",
             sidebarId: "aplicacion",
             position: "left",
             label: "Aplicacion"

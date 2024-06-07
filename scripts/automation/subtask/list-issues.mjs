@@ -1,4 +1,4 @@
-import {getIssuesByState, getIssue} from "./github-graphql.mjs";
+import {getIssuesByState, getMyIssues, getIssue} from "./github-graphql.mjs";
 
 const filterType  = process.argv[2] || 'mine';
 

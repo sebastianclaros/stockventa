@@ -1,7 +1,8 @@
 #!/bin/bash
 # Script que publica la branch
 
-source "./library.sh"
+script_full_path=$(dirname "$0")
+source "$script_full_path/library.sh"
 
 # Variables
 branchName=$(git branch --show-current)

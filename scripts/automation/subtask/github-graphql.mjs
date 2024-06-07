@@ -136,15 +136,17 @@ export async function getIssueState(issueNumber){
   return issue.projectItems?.nodes[0]?.fieldValueByName?.name;
 }
 
+export async function getMyIssues(issueNumber){
 
-export async function getIssue(issueNumber, issuFields){
+}
+
+export async function getIssue(issueNumber){
   const query = `
       query getIssue($owner:String!, $repo: String!, $issueNumber: Int!) {
         repository(owner: $owner, name: $repo) {
           issue(number: $issueNumber) {
             title
             id
-            ...${issuFields}
             projectItems(last: 1) {
               nodes{
                 id, 

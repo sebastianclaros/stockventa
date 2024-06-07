@@ -4,7 +4,8 @@
 # 1) El Nombre de la scracth
 # 2) La cantidad de dias de la scracth  (por omision 7 y maximo 30) 
 
-source "./library.sh"
+script_full_path=$(dirname "$0")
+source "$script_full_path/library.sh"
 
 # Step 1) Guardian de argumentos
 if [ -z "$1" ]; then  
