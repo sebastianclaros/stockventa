@@ -58,19 +58,19 @@ if [ $? -ne 0 ]; then
     doExit "No se pudo mover el issue a inprogress, hagalo manualmente"
 fi
 
-# Step 4) Me Asigna el issue 
+# Step 4) Me Asigna el issue. Si Falla Muestra error y sigue 
 doInfo "[ASSIGN ISSUE TO ME]"
 $script_full_path/subtask/assign-user-issue.sh $issueNumber $branchName
 if [ $? -ne 0 ]; then
-    doExit "No se pudo pudo asignar la branch ($branchName) al issue. Por favor hagalo manualmente"
+    doError "No se pudo pudo asignar la branch ($branchName) al issue. Por favor hagalo manualmente"
 fi
 
-# Step 5) PONER LA BRANCH EN EL ISSUE
+# Step 5) PONER LA BRANCH EN EL ISSUE. Si Falla Muestra error y sigue
 current_branch=$(git branch --show-current)
 doInfo "[ASSIGN BRANCH TO ISSUE]"
 $script_full_path/subtask/assign-branch-issue.sh $issueNumber $current_branch 
 if [ $? -ne 0 ]; then
-    doExit "No se pudo asignar la branch $current_branch al issue $issueNumber. Hagalo manualmente"
+    doError "No se pudo asignar la branch $current_branch al issue $issueNumber. Hagalo manualmente"
 fi
 
 # Step 6) Crea la Scracth Org

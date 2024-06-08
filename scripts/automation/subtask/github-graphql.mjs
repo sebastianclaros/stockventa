@@ -96,20 +96,39 @@ export async function assignIssueToMe(issueNumber) {
   const {addAssigneesToAssignable } = await graphqlAuth(mutation, { issueId: issue.id, userId: user.id });
   return addAssigneesToAssignable.assignable.assignees.totalCount > 0 ;  
 }
+
+export async function getCommit(commitSha) {
+  const query = `
+    query getCommit($owner:String!, $repo: String!, $commitSha: String!) {
+      repository(owner: $owner, name: $repo) {
+        object(expression: $commitSha) {
+              ... on Commit {
+                id
+                oid
+              }
+            }
+      }
+    } `; 
+  const { repository } = await graphqlAuth(query, { commitSha,...repoVar});
+  return repository.object; 
+}
+
 export async function assignBranchToIssue(issueNumber, branchName, commitSha) {
   const issue = await getIssue(issueNumber);  
+  const commit = await getCommit(commitSha);
+  console.log(commit);  
   const mutation = `
-    mutation createLinkedBranch( $issueId: ID!, $commitSha: ID!, $branchName: String!) { 
+    mutation createLinkedBranch( $issueId: ID!, $oid: GitObjectID!, $branchName: String!) { 
       createLinkedBranch(input: {
         issueId: $issueId
-        oid: $commitSha
+        oid: $oid
         name: $branchName
       })
       {
         clientMutationId
       }
     }`;
-  const {clientMutationId } = await graphqlAuth(mutation, { issueId: issue.id, commitSha, branchName });
+  const {clientMutationId } = await graphqlAuth(mutation, { issueId: issue.id, oid: commit.oid, branchName });
   return clientMutationId ? true: false ;  
 
 }
