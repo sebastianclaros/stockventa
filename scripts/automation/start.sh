@@ -61,9 +61,9 @@ fi
 
 # Step 4) Me Asigna el issue 
 doInfo "[ASSIGN ISSUE TO ME]"
-$script_full_path/subtask/assign-user-issue.sh $issueNumber 
+$script_full_path/subtask/assign-user-issue.sh $issueNumber $branchName
 if [ $? -ne 0 ]; then
-    doExit "No se pudo pudo asignar el user ($userEmail) al issue. Por favor hagalo manualmente"
+    doExit "No se pudo pudo asignar la branch ($branchName) al issue. Por favor hagalo manualmente"
 fi
 
 # Step 5) PONER LA BRANCH EN EL ISSUE

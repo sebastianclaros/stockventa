@@ -10,9 +10,18 @@
 # ├── comment-issue.sh ( issueNumber, 'comment')
 # └── publish-branch.sh
 
+
 script_full_path=$(dirname "$0")
 source "$script_full_path/subtask/library.sh"
 branchName=$(git branch --show-current)
+
+$issueType=$branchName | cut -d "/" -f 1
+$issueNumber=$branchName | cut -d "/" -f 2
+
+# VALIDATE issueNumber is correct 
+if [ $issueNumber -ne 0 ]; then
+    doExit "No se pudo obtener el issueNumber de la current branch $branchName. Verifique que el formato sea issueType/issuNumber"
+fi
 
 
 doInfo "[MOVE ISSUE TO Ready]"

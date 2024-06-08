@@ -5,3 +5,9 @@
 script_full_path=$(dirname "$0")
 source "$script_full_path/subtask/library.sh"
 branchName=$(git branch --show-current)
+
+$issueType=$branchName | cut -d "/" -f 1
+$issueNumber=$branchName | cut -d "/" -f 2
+
+echo $issueNumber
+doInfo "No esta desarrollada esta accion"
