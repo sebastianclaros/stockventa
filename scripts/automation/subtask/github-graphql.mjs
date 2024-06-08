@@ -96,17 +96,22 @@ export async function assignIssueToMe(issueNumber) {
   const {addAssigneesToAssignable } = await graphqlAuth(mutation, { issueId: issue.id, userId: user.id });
   return addAssigneesToAssignable.assignable.assignees.totalCount > 0 ;  
 }
-export async function assignBranchToIssue(issueNumber, branch) {
-    // const result = await octokit.request(`POST /repos/${OWNER}/${repo}/issues/${issueNumber}/assignees`, {
-    //     assignees: [branch],
-    //     headers: {
-    //         'X-GitHub-Api-Version': '2022-11-28'
-    //     }
-    // });
-    // if ( result.status === 201 ) {
-    //     return true;
-    // }
-    // return false;
+export async function assignBranchToIssue(issueNumber, branchName, commitSha) {
+  const issue = await getIssue(issueNumber);  
+  const mutation = `
+    mutation createLinkedBranch( $issueId: ID!, $commitSha: ID!, $branchName: String!) { 
+      createLinkedBranch(input: {
+        issueId: $issueId
+        oid: $commitSha
+        name: $branchName
+      })
+      {
+        clientMutationId
+      }
+    }`;
+  const {clientMutationId } = await graphqlAuth(mutation, { issueId: issue.id, commitSha, branchName });
+  return clientMutationId ? true: false ;  
+
 }
 
 export async function getValidateIssueColumn(issueNumber, columnName) {

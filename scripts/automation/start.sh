@@ -12,7 +12,6 @@
 #├── assign-branch-issue.sh ( issueNumber, branch )
 #└── create-scracth.sh ( issueNumber, nombreDelRequerimiento, dias)
 
-
 script_full_path=$(dirname "$0")
 source "$script_full_path/subtask/library.sh"
 

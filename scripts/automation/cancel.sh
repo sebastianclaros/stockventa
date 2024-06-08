@@ -6,8 +6,9 @@ script_full_path=$(dirname "$0")
 source "$script_full_path/subtask/library.sh"
 branchName=$(git branch --show-current)
 
-$issueType=$branchName | cut -d "/" -f 1
-$issueNumber=$branchName | cut -d "/" -f 2
 
-echo $issueNumber
+# Obtiene del current branch los datos:
+issueType=$(echo $branchName | cut -d "/" -f 1)
+issueNumber=$(echo $branchName | cut -d "/" -f 2)
+
 doInfo "No esta desarrollada esta accion"

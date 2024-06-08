@@ -19,7 +19,8 @@ else
     current_branch="$1"
 fi
 
-node "$script_full_path/assign-branch-issue.mjs" $issueNumber $current_branch
+commitSha=$(git rev-parse --verify HEAD)
+node "$script_full_path/assign-branch-issue.mjs" $issueNumber $current_branch $commitSha
 
 if [ $? -ne 0 ]; then
     exit 1;

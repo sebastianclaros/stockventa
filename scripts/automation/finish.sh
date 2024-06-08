@@ -6,6 +6,10 @@ source "$script_full_path/subtask/library.sh"
 branchName=$(git branch --show-current)
 # Recibe:
 
+# Obtiene del current branch los datos:
+issueType=$(echo $branchName | cut -d "/" -f 1)
+issueNumber=$(echo $branchName | cut -d "/" -f 2)
+
 # finish.sh
 # ├── validate-scratch.sh 
 # ├── validate-code.sh
