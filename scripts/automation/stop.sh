@@ -51,7 +51,7 @@ if [ ! -z "$comentario" ]; then
 fi
 
 echo -e "${green} * [PUBLICA LA BRANCH] ${nocolor}"
-#$script_full_path/subtask/publish-branch.sh 
+$script_full_path/subtask/publish-branch.sh 
 if [ $? -ne 0 ]; then
     exit 1;
 fi
