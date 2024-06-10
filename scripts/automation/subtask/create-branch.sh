@@ -25,16 +25,16 @@ if [ $current_branch != $branchName ]; then
     fi
 
     exists= $(git show-ref refs/heads/$branchName)
-    if [ -z "$exists" ]; then
+    if [ -n "$exists" ]; then
+        doInfo "[STEP 2] Si la branch existe la actualiza $exists"
+        git branch $branchName
+        git pull
+    else
         doInfo "[STEP 2] Si no existe creamos la Branch $branchName"
         git checkout -b $branchName
         if [ $? -ne 0 ]; then
             doExit "No se pudo crear la branch"
         fi
-    else
-        doInfo "[STEP 2] Si la branch existe la actualiza $exists"
-        git branch $branchName
-        git pull
     fi
 else 
     doWarning "* Ya esta sobre la branch $branchName"
