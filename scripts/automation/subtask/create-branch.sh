@@ -33,7 +33,7 @@ if [ $current_branch != $branchName ]; then
         doInfo "[STEP 2] Si no existe creamos la Branch $branchName"
 
         git checkout -b $branchName origin/main
-        git push -u origin $branchName
+        #git push -u origin $branchName
 
         if [ $? -ne 0 ]; then
             doExit "No se pudo crear la branch"
