@@ -26,13 +26,19 @@ fi
 
 doInfo  "[INICIO] de crear la Scratch $scratchName"
 # STEP 1 Crea la scracth org
-doInfo  "[STEP 1] Crear la Scratch $scratchName"
-sf org create scratch --set-default --definition-file=$projectPath/config/project-scratch-def.json --duration-days=$dias --alias=$scratchName
-if [ $? -ne 0 ]; then
-    doExit "No se pudo crear la scracth org, verifique que no se haya pasado del limite scratchs (3 activas)
-     * sf org list --clean
-     * o bien si quedo en la mitad del proceso
-     * sf org resume"
+existScracth=$(sf org list | grep $scratchName) #Verifica si existe la scratch
+if [ -z "$existScracth" ]; then
+    doInfo  "[STEP 1] Crear la Scratch $scratchName"
+    sf org create scratch --set-default --definition-file=$projectPath/config/project-scratch-def.json --duration-days=$dias --alias=$scratchName
+    if [ $? -ne 0 ]; then
+        doExit "No se pudo crear la scracth org, verifique que no se haya pasado del limite scratchs (3 activas)
+        * sf org list --clean
+        * o bien si quedo en la mitad del proceso
+        * sf org resume"
+    fi
+else 
+    doInfo  "[STEP 1] Ya existe la Scratch $scratchName. Cambia la default org"
+    sf force config set target-org $scratchName
 fi
 
 doInfo "[STEP 2] Subiendo el codigo"
