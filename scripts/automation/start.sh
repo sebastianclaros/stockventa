@@ -45,11 +45,22 @@ fi
 branchName="$issueType/$issueNumber"
 
 # Step 2) Crea la Branch
-doInfo "[CREA LA BRANCH]"
-$script_full_path/subtask/create-branch.sh $branchName
-if [ $? -ne 0 ]; then
-    doExit "Fallo crear la branch"
+issueJson=$("$script_full_path/subtask/get-issue.sh" $issueNumber)
+if [[ $issueJson == *"branch:"* ]]; then
+    doInfo "[Si el issue ya tiene desarrollo PULL DE LA BRANCH]"
+    $script_full_path/subtask/checkout-branch.sh $branchName
+    if [ $? -ne 0 ]; then
+        doExit "Fallo checkout de la branch"
+    fi
+else
+    doInfo "[Si el issue es Nuevo CREA LA BRANCH]"
+    $script_full_path/subtask/create-branch.sh $branchName
+    if [ $? -ne 0 ]; then
+        doExit "Fallo crear la branch"
+    fi
 fi
+
+doExit 1
 
 # Step 3) Mueve el issue a In Progress
 doInfo "[MOVE ISSUE TO IN PROGRESS]"

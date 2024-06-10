@@ -16,7 +16,8 @@ branchName=$(git branch --show-current)
 
 # Guardian de Argumentos
 if [ -z "$1" ]; then  
-    doExit "Falta el Motivo (tiempo, dependencia o refinamiento), o bien un comentario" ;
+    # doExit "Falta el Motivo (tiempo, dependencia o refinamiento), o bien un comentario" ;
+    motivo="tiempo"
 else 
     if [ "$1" == "tiempo" ] || [ "$1" == "refinamiento" ] || [ "$1" == "dependencia" ]; then  
         motivo="$1"
@@ -39,7 +40,13 @@ fi
 doInfo "[MOVE ISSUE TO Ready]"
 $script_full_path/subtask/move-issue.sh $issueNumber Ready 
 if [ $? -ne 0 ]; then
-    doExit "No se pudo mover el issue a Ready, hagalo manualmente"
+    doError "No se pudo mover el issue a Ready, hagalo manualmente"
+fi
+
+echo -e "${green} * [PUBLICA LA BRANCH] ${nocolor}"
+$script_full_path/subtask/publish-branch.sh 
+if [ $? -ne 0 ]; then
+    exit 1;
 fi
 
 if [ ! -z "$motivo" ]; then
@@ -50,8 +57,3 @@ if [ ! -z "$comentario" ]; then
     doInfo "[Pone el commentario en el Issue]"
 fi
 
-echo -e "${green} * [PUBLICA LA BRANCH] ${nocolor}"
-$script_full_path/subtask/publish-branch.sh 
-if [ $? -ne 0 ]; then
-    exit 1;
-fi
