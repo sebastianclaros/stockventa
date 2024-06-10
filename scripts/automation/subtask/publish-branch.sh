@@ -17,7 +17,7 @@ fi
 
 # STEP 2: Mueve la linea del tiempo como si esta branch nace de main de ahora asi resuelve conflicto localmente
 doInfo "[STEP 2] Se deplaza al final en la linea del tiempo de Development para prevenir y resolver conflictos en el pull request(rebase)  {$nocolor}"
-git rebase origin/development
+git rebase origin/main
 if [ $? -ne 0 ]; then
     doExit "No se pudo hacer el rebase de main. Si hay conflictos resuelvalos y continue manualmente"
 fi

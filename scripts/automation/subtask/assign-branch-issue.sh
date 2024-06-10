@@ -14,12 +14,17 @@ else
 fi
 
 if [ -z "$2" ]; then  
-    current_branch=$(git branch --show-current) 
+    current_branch=$(git branch --show-current)
 else 
-    current_branch="$1"
+    current_branch="$2"
 fi
 
-commitSha=$(git rev-parse --verify HEAD)
+if [ -z "$3" ]; then  
+    commitSha=$(git rev-parse --verify HEAD)
+else 
+    commitSha="$3"
+fi
+
 node "$script_full_path/assign-branch-issue.mjs" $issueNumber $current_branch $commitSha
 
 if [ $? -ne 0 ]; then

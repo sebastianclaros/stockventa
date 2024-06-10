@@ -60,8 +60,6 @@ else
     fi
 fi
 
-doExit 1
-
 # Step 3) Mueve el issue a In Progress
 doInfo "[MOVE ISSUE TO IN PROGRESS]"
 $script_full_path/subtask/move-issue.sh $issueNumber 'In Progress' 
