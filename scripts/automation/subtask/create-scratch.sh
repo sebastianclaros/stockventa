@@ -7,7 +7,6 @@
 script_full_path=$(dirname "$0")
 source "$script_full_path/library.sh"
 
-projectPath="$script_full_path/../../.."
 # Step 1) Guardian de argumentos
 if [ -z "$1" ]; then  
     doInfo "Por omision se toma el scratchName el nombre de la branch"
@@ -25,14 +24,21 @@ fi
 # Variables
 
 doInfo  "[INICIO] de crear la Scratch $scratchName"
+
 # STEP 1 Crea la scracth org
-doInfo  "[STEP 1] Crear la Scratch $scratchName"
-sf org create scratch --set-default --definition-file=$projectPath/config/project-scratch-def.json --duration-days=$dias --alias=$scratchName
-if [ $? -ne 0 ]; then
-    doExit "No se pudo crear la scracth org, verifique que no se haya pasado del limite scratchs (3 activas)
-     * sf org list --clean
-     * o bien si quedo en la mitad del proceso
-     * sf org resume"
+existScracth=$(sf org list | grep $scratchName) #Verifica si existe la scratch
+if [ -z "$existScracth" ]; then
+    doInfo  "[STEP 1] Crear la Scratch $scratchName"
+    sf org create scratch --set-default --definition-file=config/project-scratch-def.json --duration-days=$dias --alias=$scratchName
+    if [ $? -ne 0 ]; then
+        doExit "No se pudo crear la scracth org, verifique que no se haya pasado del limite scratchs (3 activas)
+        * sf org list --clean
+        * o bien si quedo en la mitad del proceso
+        * sf org resume"
+    fi
+else 
+    doInfo  "[STEP 1] Ya existe la Scratch $scratchName. Cambia la default org"
+    sf force config set target-org $scratchName
 fi
 
 doInfo "[STEP 2] Subiendo el codigo"
@@ -48,13 +54,13 @@ if [ $? -ne 0 ]; then
 fi
 
 doInfo "[STEP 4] Subiendo los datos"
-sf data tree import --plan=$projectPath/data/plan.json --target-org $scratchName
+sf data tree import --plan=data/plan.json --target-org $scratchName
 if [ $? -ne 0 ]; then
     doExit "No se pudo importar los datos, intente manualmente "
 fi
 
 doInfo "[STEP 5] Seteando la scracth en modo debug"
-sf apex run --file "$projectPath/scripts/apex/debugMode.apex" --target-org $scratchName
+sf apex run --file ./scripts/apex/debugMode.apex --target-org $scratchName
 if [ $? -ne 0 ]; then
     doExit "No se pudo asignar el modo debug, intente manualmente en el user setear debug mode"
 fi
