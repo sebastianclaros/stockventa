@@ -31,7 +31,7 @@ InProgress --> Ready :stop
 InProgress --> Completed : finish
 Completed --> Approved :approve
 Completed --> Ready :reject
-Approved --> finish : deploy
+Approved --> Done : deploy
 Approved --> Cancelled : cancel
 InProgress --> Cancelled : cancel
 Completed --> Cancelled: cancel
@@ -40,6 +40,8 @@ Cancelled --> [*]
 Done --> [*]
 Done --> Cancelled : rollback
 ````
+
+Mientras que los estados del Issue son:
 
 ````mermaid 
 stateDiagram-v2 

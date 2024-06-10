@@ -116,7 +116,6 @@ export async function getCommit(commitSha) {
 export async function assignBranchToIssue(issueNumber, branchName, commitSha) {
   const issue = await getIssue(issueNumber);  
   const commit = await getCommit(commitSha);
-  console.log(commit);  
   const mutation = `
     mutation createLinkedBranch( $issueId: ID!, $oid: GitObjectID!, $branchName: String!) { 
       createLinkedBranch(input: {
@@ -164,6 +163,36 @@ export async function getMyIssues(issueNumber){
 
 }
 
+export async function getIssueObject(issueNumber){
+  const result = await getIssue(issueNumber);
+  const addFields = {};
+  if ( result.linkedBranches.nodes.length > 0 ) {
+    addFields.branch = result.linkedBranches.nodes[0].ref.name;
+    delete result.linkedBranches;
+  }
+
+  if ( result.projectItems.nodes.length > 0 ) {
+    addFields.state = result.projectItems.nodes[0].fieldValueByName.name;
+    delete result.projectItems;
+  }
+
+  return { ...addFields,  ...result};
+}
+
+export async function getRepository(){
+  const query = `
+      query getRepo($owner:String!, $repo: String!) {
+        repository(owner: $owner, name: $repo) {
+          id
+        }
+      }
+  `; 
+
+  const { repository } = await graphqlAuth(query, repoVar );
+
+  return repository;
+}
+
 export async function getIssue(issueNumber){
   const query = `
       query getIssue($owner:String!, $repo: String!, $issueNumber: Int!) {
@@ -171,6 +200,12 @@ export async function getIssue(issueNumber){
           issue(number: $issueNumber) {
             title
             id
+            labels(first:3, orderBy:  { field: CREATED_AT, direction: DESC}) {
+              nodes {
+                color
+                name
+              }
+            }
             projectItems(last: 1) {
               nodes{
                 id, 
