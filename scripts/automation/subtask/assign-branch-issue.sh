@@ -20,7 +20,7 @@ else
 fi
 
 if [ -z "$3" ]; then  
-    commitSha=$(git rev-parse --verify HEAD)
+    commitSha=$(git rev-parse --verify main)
 else 
     commitSha="$3"
 fi

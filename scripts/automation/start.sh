@@ -54,10 +54,10 @@ if [[ $issueJson == *"branch:"* ]]; then
     fi
 else
     doInfo "[Si el issue es Nuevo CREA LA BRANCH]"
-    #$script_full_path/subtask/create-branch.sh $branchName
-    #if [ $? -ne 0 ]; then
-    #    doExit "Fallo crear la branch"
-    #fi
+    $script_full_path/subtask/create-branch.sh $branchName
+    if [ $? -ne 0 ]; then
+        doExit "Fallo crear la branch"
+    fi
 fi
 
 # Step 3) Mueve el issue a In Progress
