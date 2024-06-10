@@ -75,11 +75,10 @@ if [ $? -ne 0 ]; then
 fi
 
 # Step 5) PONER LA BRANCH EN EL ISSUE. Si Falla Muestra error y sigue
-current_branch=$(git branch --show-current)
 doInfo "[ASSIGN BRANCH TO ISSUE]"
-$script_full_path/subtask/assign-branch-issue.sh $issueNumber $current_branch 
+$script_full_path/subtask/assign-branch-issue.sh $issueNumber $branchName 
 if [ $? -ne 0 ]; then
-    doError "No se pudo asignar la branch $current_branch al issue $issueNumber. Hagalo manualmente"
+    doError "No se pudo asignar la branch $branchName al issue $issueNumber. Hagalo manualmente"
 fi
 
 # Step 6) Crea la Scracth Org
