@@ -24,27 +24,13 @@ if [ $current_branch != $branchName ]; then
         doExit  "Tiene modificaciones pendientes ($cambios)"
     fi
 
-    doInfo  "[STEP 2] Nos movemos a main para hacer el branch desde esa rama"
-    git checkout main
-    if [ $? -ne 0 ]; then
-        doExit "No se pudo hacer el cambio de rama, verifique el mensaje de error, generalmente es porque:
-            * - Tiene cosas sin comitear, haga el commit o descarte los cambios y vuelva a intentar
-            * - Pruebe hacer un git fetch para ver si baja el remote localmente"
-    fi
-
-    doInfo "* [STEP 3] Hacemos un pull para bajar lo ultimo del remote"
-    git pull
-    if [ $? -ne 0 ]; then
-        doExit "Verifique que no tenga cosas sin comitear"
-    fi
-
     exists='git show-ref refs/heads/$branchName'
     if [ -n "$exists" ]; then
-        doInfo "* [STEP 4] Si la branch existe la actualiza"
+        doInfo "* [STEP 2] Si la branch existe la actualiza"
         git branch $branchName
         git pull
     else
-        doInfo "* [STEP 4] Si no existe creamos la Branch $branchName"
+        doInfo "* [STEP 2] Si no existe creamos la Branch $branchName"
         git checkout -b $branchName
         if [ $? -ne 0 ]; then
             doExit "No se pudo crear la branch"
