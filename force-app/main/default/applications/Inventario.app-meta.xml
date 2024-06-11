@@ -13,17 +13,8 @@
     <isNavPersonalizationDisabled>true</isNavPersonalizationDisabled>
     <isNavTabPersistenceDisabled>true</isNavTabPersistenceDisabled>
     <label>Inventario</label>
-    <navType>Console</navType>
+    <navType>Standard</navType>
     <tabs>Material__c</tabs>
     <tabs>standard-Product2</tabs>
     <uiType>Lightning</uiType>
-    <utilityBar>Inventario_UtilityBar1</utilityBar>
-    <workspaceConfig>
-        <mappings>
-            <tab>Material__c</tab>
-        </mappings>
-        <mappings>
-            <tab>standard-Product2</tab>
-        </mappings>
-    </workspaceConfig>
 </CustomApplication>
