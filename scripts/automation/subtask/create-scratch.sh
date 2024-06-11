@@ -22,6 +22,11 @@ else
     dias="$2"
 fi
 
+if [ -n "$2" ]; then  
+    permissionSet="$2"
+fi
+
+
 # Variables
 
 doInfo  "[INICIO] de crear la Scratch $scratchName"
@@ -47,10 +52,12 @@ if [ $? -ne 0 ]; then
     doExit "No se pudo subir el codigo"
 fi
 
-doInfo "[STEP 3] Asignando los permisos"
-sf org assign permset --name=adminCatalogo --target-org $scratchName
-if [ $? -ne 0 ]; then
-    doExit "No se pudo asignar los permisos, intente manualmente"
+if [ -n "$permissionSet" ]; then  
+    doInfo "[STEP 3] Asignando los permisos"
+    sf org assign permset --name=$permissionSet --target-org $scratchName
+    if [ $? -ne 0 ]; then
+        doExit "No se pudo asignar los permisos, intente manualmente"
+    fi
 fi
 
 doInfo "[STEP 4] Subiendo los datos"

@@ -83,7 +83,7 @@ fi
 
 # Step 6) Crea la Scracth Org
 doInfo "[CREA LA SCRATCH]"
-$script_full_path/subtask/create-scratch.sh $branchName 
+$script_full_path/subtask/create-scratch.sh $branchName 7 adminInventario
 if [ $? -ne 0 ]; then
     doExit "Fallo crear la scratch"
 fi
