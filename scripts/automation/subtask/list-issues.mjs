@@ -14,7 +14,7 @@ if ( filterType === 'issue' ) {
     const result = await getIssue(issueNumber);
     console.log( result.title );
     // Branch    
-    if ( result.linkedBranches ) {
+    if ( result.linkedBranches.nodes.lenght > 0  ) {
         console.log( result.linkedBranches.nodes[0].ref.name );
     } else {
         console.log( 'sin branch' );
