@@ -37,4 +37,15 @@
             <default>false</default>
         </values>
     </picklistValues>
+    <picklistValues>
+        <picklist>PaisOrigen__c</picklist>
+        <values>
+            <fullName>CH</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MX</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
 </RecordType>

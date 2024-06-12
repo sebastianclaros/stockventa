@@ -141,7 +141,7 @@
         <type>Default</type>
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
-    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <compactLayoutAssignment>Material</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
@@ -155,9 +155,10 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>Material</label>
     <nameField>
+        <displayFormat>MT# {YY}{00000000}</displayFormat>
         <label>Material Name</label>
         <trackHistory>false</trackHistory>
-        <type>Text</type>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Materials</pluralLabel>
     <recordTypeTrackHistory>false</recordTypeTrackHistory>

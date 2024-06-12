@@ -2,7 +2,6 @@
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>All_Materials</fullName>
     <columns>NAME</columns>
-    <columns>Serial__c</columns>
     <columns>NMU__c</columns>
     <columns>BusinessSite__c</columns>
     <columns>IntegrationStatus__c</columns>

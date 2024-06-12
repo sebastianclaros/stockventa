@@ -3,7 +3,7 @@
     <fullName>MaterialStatus__c</fullName>
     <externalId>false</externalId>
     <label>Material Status</label>
-    <required>true</required>
+    <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
@@ -13,21 +13,25 @@
             <sorted>false</sorted>
             <value>
                 <fullName>MTPL</fullName>
-                <default>false</default>
+                <color>#66FF99</color>
+                <default>true</default>
                 <label>Disponible</label>
             </value>
             <value>
                 <fullName>MTRE</fullName>
+                <color>#FF0000</color>
                 <default>false</default>
                 <label>Reservado</label>
             </value>
             <value>
                 <fullName>MTPM</fullName>
+                <color>#CC33CC</color>
                 <default>false</default>
                 <label>Muleto</label>
             </value>
             <value>
                 <fullName>MTND</fullName>
+                <color>#FF9966</color>
                 <default>false</default>
                 <label>No Disponible</label>
             </value>
