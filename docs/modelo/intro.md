@@ -1,5 +1,5 @@
 ---
-title: Modelo de Clases
+title: Modelo de Objetos
 ---
 
 ## Introducción

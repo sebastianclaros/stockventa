@@ -7,8 +7,7 @@ public class MaterialTriggerHandler extends BaseTriggerHandler {
     }    
 
     public override void beforeUpdate() {
-        List<SObject> productChanges = TriggerHelper.getRecordChanges(Trigger.newMap, Trigger.oldMap, 'NMU__c');
-        
+        List<SObject> productChanges = TriggerHelper.getRecordChanges(Trigger.newMap, Trigger.oldMap, 'NMU__c');        
         if ( productChanges.size() >0 ) {
             MaterialTriggerHelper.completarProducto(productChanges);
         }
