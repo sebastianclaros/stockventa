@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Material</fullName>
+    <fields>Name</fields>
+    <fields>Product__c</fields>
+    <fields>BusinessSite__c</fields>
+    <fields>MaterialStatus__c</fields>
+    <fields>SerialNumber__c</fields>
+    <label>Material</label>
+</CompactLayout>
