@@ -16,6 +16,10 @@ script_full_path=$(dirname "$0")
 source "$script_full_path/subtask/library.sh"
 
 # Guardian de Argumentos
+if [ -z "${GITHUB_TOKEN}" ]; then
+    doExit "Falta la var de entorno que tiene el token de Github (GITHUB_TOKEN)" ;
+fi
+
 if [ -z "$1" ]; then  
     doExit "Falta el Issue Number" ;
 else 

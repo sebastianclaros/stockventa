@@ -15,6 +15,10 @@ source "$script_full_path/subtask/library.sh"
 branchName=$(git branch --show-current)
 
 # Guardian de Argumentos
+if [ -z "${GITHUB_TOKEN}" ]; then
+    doExit "Falta la var de entorno que tiene el token de Github (GITHUB_TOKEN)" ;
+fi
+
 if [ -z "$1" ]; then  
     # doExit "Falta el Motivo (tiempo, dependencia o refinamiento), o bien un comentario" ;
     motivo="tiempo"
