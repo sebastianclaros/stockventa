@@ -18,15 +18,15 @@ public with sharing class MaterialTriggerHelper {
     }        
 
     public static void completarBusinessSite(List<Material__c> materiales) {
-        Set<Object> businessSites = TriggerHelper.getFieldsFromSObjects(materiales, 'BusinessSite__c');
-        Map<String, Id> businessSitesMap = TriggerHelper.getExternalMap('BusinessSite__c', 'BusinessSite__c', businessSites);
+        Set<Object> businessSites = TriggerHelper.getFieldsFromSObjects(materiales, 'Werks__c');
+        Map<String, Id> businessSitesMap = TriggerHelper.getExternalMap('BusinessSite__c', 'Werks__c', businessSites);
 
         for ( Material__c material : materiales) {
             if ( material.IntegrationStatus__c != 'Error' ) {
                 material.IntegrationStatus__c = 'Nuevo';
             }
-            if ( businessSitesMap.containsKey(material.BusinessSite__c)) {
-                material.Product__c = businessSitesMap.get(material.BusinessSite__c);
+            if ( businessSitesMap.containsKey(material.Werks__c)) {
+                material.BusinessSite__c = businessSitesMap.get(material.Werks__c);
             } else {
                 material.IntegrationStatus__c = 'Error';
             }
