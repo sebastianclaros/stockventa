@@ -10,6 +10,10 @@ branchName=$(git branch --show-current)
 issueType=$(echo $branchName | cut -d "/" -f 1)
 issueNumber=$(echo $branchName | cut -d "/" -f 2)
 
+# Guardian de Argumentos
+if [ -z "${GITHUB_TOKEN}" ]; then
+    doExit "Falta la var de entorno que tiene el token de Github (GITHUB_TOKEN)" ;
+fi
 
 node "$script_full_path/subtask/list-issues.mjs" issue "$issueNumber"
 if [ $? -ne 0 ]; then
