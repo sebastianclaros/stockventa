@@ -174,3 +174,32 @@ Una vez obtenido el token hay que guardarlo en una variable de ambiente. Esto pu
 ````
 export GITHUB_TOKEN=<<PegarTokenDeGitHub>>
 ````
+
+## View
+
+## List
+
+## Switch
+
+## Como generar un Token en Github
+
+Para poder ejecutar las acciones tenes que tener un token personal. Sino tenes uno entra con tu cuenta a Github, dentro de Settings/Developer Settings y ahi Personal Access Token/Token Classic ( o bien ingresa a el siguiente [link](https://github.com/settings/tokens) ).
+
+Hace clic en Generate New Token Classic con al menos los siguientes privilegios:
+
+Repo > repo:status
+     > repo_deployment
+     > public_repo
+Project > Read project
+
+Si bien no es recomendable el No Expiration, simplifica esta actualizandolo.
+
+Una vez obtenido el token hay que guardarlo en una variable de ambiente. Esto puede ser editando .bash_profile o .bashrc. Agregar una linea asi:
+
+````
+export GITHUB_TOKEN=<<PegarTokenDeGitHub>>
+````
+
+```
+
+
