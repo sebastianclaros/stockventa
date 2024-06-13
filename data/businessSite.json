@@ -1,0 +1,40 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "BusinessSite__c",
+                "referenceId": "BusinessSite__cRef1"
+            },
+            "Name": "OC Santa Fe",
+            "AssociatedWarehouseId__c": "CA0001001",
+            "Werks__c": "ON11"
+        },
+        {
+            "attributes": {
+                "type": "BusinessSite__c",
+                "referenceId": "BusinessSite__cRef2"
+            },
+            "Name": "OC Capitalinas",
+            "AssociatedWarehouseId__c": "CA2043331",
+            "Werks__c": "ON02"
+        },
+        {
+            "attributes": {
+                "type": "BusinessSite__c",
+                "referenceId": "BusinessSite__cRef3"
+            },
+            "Name": "OC Bariloche",
+            "AssociatedWarehouseId__c": "CA0140001",
+            "Werks__c": "OS04"
+        },
+        {
+            "attributes": {
+                "type": "BusinessSite__c",
+                "referenceId": "BusinessSite__cRef4"
+            },
+            "Name": "Rosario Plaza",
+            "AssociatedWarehouseId__c": "CA2043501",
+            "Werks__c": "ON14"
+        }
+    ]
+}

@@ -10,8 +10,13 @@ source "$script_full_path/library.sh"
 projectPath="$script_full_path/../../.."
 # Step 1) Guardian de argumentos
 if [ -z "$1" ]; then  
-    doInfo "Por omision se toma el scratchName el nombre de la branch"
-    scratchName="$1"
+    branchName=$(git branch --show-current)
+    if [ -n "$branchName" ]; then  
+        doInfo "Por omision se toma el scratchName el nombre de la branch $branchName"
+        scratchName=$branchName
+    else
+        doError "Especifique el nombre de la scracth"
+    fi
 else 
     scratchName="$1"
 fi

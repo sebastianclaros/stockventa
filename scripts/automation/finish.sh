@@ -12,7 +12,7 @@ issueNumber=$(echo $branchName | cut -d "/" -f 2)
 
 # Guardian de Argumentos
 if [ -z "${GITHUB_TOKEN}" ]; then
-    doExit "Falta la var de entorno que tiene el token de Github (GITHUB_TOKEN)" ;
+    doExit "Falta la var de entorno que tiene el token de Github (GITHUB_TOKEN). Para crear uno lea index.md" ;
 fi
 
 # finish.sh
