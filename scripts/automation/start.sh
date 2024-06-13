@@ -79,10 +79,17 @@ if [ $? -ne 0 ]; then
 fi
 
 # Step 5) PONER LA BRANCH EN EL ISSUE. Si Falla Muestra error y sigue
-doInfo "[ASSIGN BRANCH TO ISSUE]"
+doInfo "[ASSIGN BRANCH TO ISSUE Y LA CREA REMOTE]"
 $script_full_path/subtask/assign-branch-issue.sh $issueNumber $branchName 
 if [ $? -ne 0 ]; then
     doError "No se pudo asignar la branch $branchName al issue $issueNumber. Hagalo manualmente"
+fi
+
+# Step 6) ASOCIAR LA BRANCH LOCAL CON REMOTE
+doInfo "[ASOCIAR LA BRANCH LOCAL CON REMOTE]"
+git push -u origin $branchName
+if [ $? -ne 0 ]; then
+    doError "No se pudo asociar la branch $branchName al remote. verifique con git branch -vv "
 fi
 
 # Step 6) Crea la Scracth Org
