@@ -1,0 +1,114 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref1"
+            },
+            "Name": "Moto G",
+            "NMU__c": "MOTOGN1",
+            "Type__c": "Dispositivo",
+            "ProductCode": null,
+            "IsActive": true
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref2"
+            },
+            "Name": "LG G3",
+            "NMU__c": "PLGWD855R",
+            "Type__c": "Dispositivo",
+            "ProductCode": "FAN_PRD_EM_00587",
+            "IsActive": true
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref3"
+            },
+            "Name": "Simcard",
+            "NMU__c": "PTP128PSI",
+            "Type__c": "Simcard",
+            "ProductCode": "FAN_PSIM_STANDARD",
+            "IsActive": false
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref4"
+            },
+            "Name": "Moto Edge SE - Gris",
+            "NMU__c": "PMTGEDSEN",
+            "Type__c": "Dispositivo",
+            "ProductCode": "FAN_PRD_EM_00462",
+            "IsActive": false
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref5"
+            },
+            "Name": "Moto E",
+            "NMU__c": "PMTB1021R",
+            "Type__c": "Dispositivo",
+            "ProductCode": "FAN_PRD_EM_00591",
+            "IsActive": false
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref6"
+            },
+            "Name": "Parlante Sony Bluetooth Chico",
+            "NMU__c": "ASOSPX11N",
+            "Type__c": "Accesorio",
+            "ProductCode": "FAN_PRD_AM_00001",
+            "IsActive": false
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref7"
+            },
+            "Name": "Auriculares Sony Basicos Overhead - Negro",
+            "NMU__c": "ASOOHZ11N",
+            "Type__c": "Accesorio",
+            "ProductCode": "FAN_PRD_AM_00020",
+            "IsActive": false
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref8"
+            },
+            "Name": "Samsung Galaxy A6 Plus - Violeta",
+            "NMU__c": "PSGA6PLAN",
+            "Type__c": "Dispositivo",
+            "ProductCode": "FAN_PRD_EM_00406",
+            "IsActive": false
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref9"
+            },
+            "Name": "Galaxy S8 - Negro",
+            "NMU__c": "PSGS8NEGN",
+            "Type__c": "Dispositivo",
+            "ProductCode": "FAN_PRD_EM_00001",
+            "IsActive": true
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref10"
+            },
+            "Name": "Galaxy A5 2017 - Durazno",
+            "NMU__c": "PSGP520FN",
+            "Type__c": "Dispositivo",
+            "ProductCode": "FAN_PRD_EM_00107",
+            "IsActive": false
+        }
+    ]
+}
