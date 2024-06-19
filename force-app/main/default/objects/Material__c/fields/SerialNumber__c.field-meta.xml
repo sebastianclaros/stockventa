@@ -2,6 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>SerialNumber__c</fullName>
     <caseSensitive>false</caseSensitive>
+    <description>Código único que identifica el material. En tipo &quot;Terminales&quot; se trata del IMEI. En tipo &quot;Simcard&quot; refiere al IMSI</description>
     <externalId>true</externalId>
     <label>SerialNumber</label>
     <length>80</length>
