@@ -163,18 +163,30 @@ export async function getMyIssues(issueNumber){
 
 }
 
+function getIssueName(title) {
+  return title.toLowerCase().replaceAll(' ', '-');
+}
 export async function getIssueObject(issueNumber){
   const result = await getIssue(issueNumber);
   const addFields = {};
+  addFields.name = getIssueName(result.title);
   if ( result.linkedBranches.nodes.length > 0 ) {
     addFields.branch = result.linkedBranches.nodes[0].ref.name;
-    delete result.linkedBranches;
   }
+  delete result.linkedBranches;
 
   if ( result.projectItems.nodes.length > 0 ) {
     addFields.state = result.projectItems.nodes[0].fieldValueByName.name;
-    delete result.projectItems;
   }
+  delete result.projectItems;
+
+  if ( result.labels.nodes.length > 0 ) {
+    addFields.labels = [];
+    for ( const node of result.labels.nodes ) {
+      addFields.labels.push(node.name);
+    }
+  }
+  delete result.labels;
 
   return { ...addFields,  ...result};
 }

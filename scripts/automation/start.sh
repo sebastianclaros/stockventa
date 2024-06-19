@@ -32,7 +32,6 @@ else
     issueType="$2"
 fi
 
-
 ##
 # CUERPO DEL COMANDO
 ##
@@ -46,10 +45,19 @@ if [ $? -ne 0 ]; then
     doExit "Por favor verifique que el issue $issueNumber este en la columna Ready $?"
 fi
 
-branchName="$issueType/$issueNumber"
-
 # Step 2) Crea la Branch
 issueJson=$("$script_full_path/subtask/get-issue.sh" $issueNumber)
+
+#  Verifica si es Documentacion o Automation
+if [[ $issueJson == *"labels"*"automation"* ]]; then
+    issueType='automation';
+fi
+if [[ $issueJson == *"labels"*"documentation"* ]];  then
+    issueType='doc';
+fi
+
+branchName="$issueType/$issueNumber"
+
 if [[ $issueJson == *"branch:"* ]]; then
     doInfo "[Si el issue ya tiene desarrollo PULL DE LA BRANCH]"
     $script_full_path/subtask/checkout-branch.sh $branchName
@@ -93,10 +101,11 @@ if [ $? -ne 0 ]; then
 fi
 
 # Step 6) Crea la Scracth Org
-doInfo "[CREA LA SCRATCH]"
-$script_full_path/subtask/create-scratch.sh $branchName 7 adminInventario
-if [ $? -ne 0 ]; then
-    doExit "Fallo crear la scratch"
+if [ $issueType == 'feature'  ]; then
+    doInfo "[CREA LA SCRATCH]"
+    $script_full_path/subtask/create-scratch.sh $branchName 7 adminInventario
+    if [ $? -ne 0 ]; then
+        doExit "Fallo crear la scratch"
+    fi
 fi
-
-doInfo "[FIN] del script de comienzo del requerimiento $issueType"
+doInfo "[FIN] del script de comienzo del requerimiento $issueNumber"
