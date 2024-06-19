@@ -10,6 +10,7 @@ title: TriggerContext
 classDiagram
 
 class TriggerContext {
+    
      BEFORE_INSERT $    
      BEFORE_UPDATE $    
      BEFORE_DELETE $    

@@ -11,8 +11,8 @@ title: MaterialTriggerHandler
 
 - Status: Active
 - Api Version: 59
-- Creada: 11 de junio de 24
-- Modificada: 12 de junio de 24
+- Creada: 13 de junio de 24
+- Modificada: 13 de junio de 24
 - Interface 
 
 ## Diagrama
@@ -20,6 +20,7 @@ title: MaterialTriggerHandler
 classDiagram
 
 class MaterialTriggerHandler {
+    
      beforeInsert() void o
      beforeUpdate() void o
 

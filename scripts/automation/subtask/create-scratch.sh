@@ -21,15 +21,16 @@ else
     scratchName="$1"
 fi
 
-if [ -z "$2" ]; then  
-    dias=7
-else 
-    dias="$2"
-fi
-
 if [ -n "$2" ]; then  
     permissionSet="$2"
 fi
+
+if [ -z "$3" ]; then  
+    dias=7
+else 
+    dias="$3"
+fi
+
 
 
 # Variables
@@ -39,7 +40,7 @@ doInfo  "[INICIO] de crear la Scratch $scratchName"
 existScracth=$(sf org list | grep $scratchName) #Verifica si existe la scratch
 if [ -z "$existScracth" ]; then
     doInfo  "[STEP 1] Crear la Scratch $scratchName"
-    sf org create scratch --set-default --definition-file=$projectPath/config/project-scratch-def.json --duration-days=$dias --alias=$scratchName
+    sf org create scratch --set-default --definition-file=$projectPath/config/project-scratch-def.json --duration-days=$dias --alias=$scratchName --name=$scratchName
     if [ $? -ne 0 ]; then
         doExit "No se pudo crear la scracth org, verifique que no se haya pasado del limite scratchs (3 activas)
         * sf org list --clean

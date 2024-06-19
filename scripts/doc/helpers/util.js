@@ -23,7 +23,7 @@ function verFecha() {
       month: "long"
     });
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return this;
   }
 }
@@ -70,11 +70,13 @@ function setObjectsCache(fileName, items) {
 }
 
 function getClassesCache(fileName) {
-  return getContextCache(fileName).classes;
+  const cache = getContextCache(fileName, false);
+  return cache ? cache.classes: [];
 }
 
 function getObjectsCache(fileName) {
-  return getContextCache(fileName).objects;
+  const cache = getContextCache(fileName, false);
+  return cache ? cache.objects: [];
 }
 
 function mergeArray(baseArray, newArray) {
@@ -150,13 +152,17 @@ function getMetadata(fileName = DEFAULT_METADATAFILENAME) {
   }
 }
 
-function getContextCache(fileName) {
+function getContextCache(fileName, errorIfnotExist = true) {
   const fullName =
     fileName.indexOf("/") != -1 ? fileName : WORKING_FOLDER + "/" + fileName;
-  if (!fs.existsSync(fullName)) {
-    throw new Error(
-      `No existe el archivo ${fullName}. Debe ser un json generado por el flag -o`
-    );
+  if (!fs.existsSync(fullName) ) {
+    if ( errorIfnotExist ) {
+      throw new Error(
+        `No existe el archivo ${fullName}. Debe ser un json generado por el flag -o`
+      );
+    } else  {
+      return ;
+    }
   }
   const content = fs.readFileSync(fullName);
   try {

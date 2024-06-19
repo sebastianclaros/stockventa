@@ -52,7 +52,7 @@ function help() {
     "El comando genera un markdown indice para cada nodo, de forma tal que el modulo contiene todos los componentes de sus submodulos y estos los de sus procesos."
   );
   console.info(
-    "Si se invocar con --r (refresh), baja primero toda la metadata de SF. Si no recibe el archivo .json toma por default docs/metadata.json "
+    "Si se invoca con --r (refresh), baja primero toda la metadata de SF. Si no recibe el archivo .json toma por default docs/metadata.json "
   );
   console.info("> yarn doc:create metadata --r --f=<<archivo.json>>");
   console.info("> yarn doc:create metadata --f=<<archivo.json>>");
@@ -67,22 +67,23 @@ async function execute({ opciones }) {
   const nodes = getMetadataArray(opciones.f, components);
 
   for (const node of nodes) {
-    const isRoot = node.path === ".";
+    let hasRefreshed = false;
     const filename = node.hasChilds
       ? `${node.path}/intro.md`
       : `${node.path}/${node.name}.md`;
-    newHelper.execute({ template: "intro", filename, context: node });
+    await newHelper.execute({ template: "intro", filename, context: node });
     for (const component of components) {
       const items = node[component];
       if (items?.length > 0) {
         const helper = helpers[component];
         const opciones = { m: filename };
-        if (isRoot && hasRefresh) {
+        if ( hasRefresh && !hasRefreshed) {
           opciones.o = "";
+          hasRefreshed = true;
         } else {
           opciones.i = "";
         }
-        helper.execute({ items, opciones });
+        await helper.execute({ items, opciones });
       }
     }
   }

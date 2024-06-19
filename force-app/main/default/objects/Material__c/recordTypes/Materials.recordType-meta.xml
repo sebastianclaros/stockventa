@@ -4,21 +4,6 @@
     <active>true</active>
     <label>Materials</label>
     <picklistValues>
-        <picklist>IntegrationStatus__c</picklist>
-        <values>
-            <fullName>Editado</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Error</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Nuevo</fullName>
-            <default>false</default>
-        </values>
-    </picklistValues>
-    <picklistValues>
         <picklist>MaterialStatus__c</picklist>
         <values>
             <fullName>MTND</fullName>

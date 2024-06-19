@@ -11,8 +11,8 @@ title: BaseTriggerHandler
 
 - Status: Active
 - Api Version: 59
-- Creada: 11 de junio de 24
-- Modificada: 11 de junio de 24
+- Creada: 13 de junio de 24
+- Modificada: 13 de junio de 24
 - Interface 
 
 ## Diagrama
@@ -20,6 +20,7 @@ title: BaseTriggerHandler
 classDiagram
 
 class BaseTriggerHandler {
+    
      loopCountMap $    
      bypassedHandlers $    
      context     
