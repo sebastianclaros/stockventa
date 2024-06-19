@@ -35,7 +35,6 @@ async function prompt(config) {}
 
 async function getContext(items, opciones) {
   let contexts;
-
   // flag -i lee del archivo cache
   if (opciones && "i" in opciones) {
     const allClasses = getClassesCache(
@@ -44,7 +43,7 @@ async function getContext(items, opciones) {
     contexts = allClasses.filter((clase) => items.includes(clase.Name));
   } else if (opciones && "r" in opciones) {
     // flag -r lee del archivo cache pero vuelve a buscar la metadata
-    contexts = getClassesCache(opciones.r ? opciones.r : DEFAULT_FILENAME);
+    contexts = getClassesCache( DEFAULT_FILENAME) || [];
     const itemsEnCache = contexts.map((clase) => clase.Name);
     contexts = await getClasses(itemsEnCache);
   } else {
@@ -189,11 +188,10 @@ async function execute({ items, opciones }) {
 
   // Busca la metadata
   let contexts = await getContext(classNames, opciones);
-
   if (!contexts || contexts.length === 0) {
     return;
   }
-
+  
   // Arma el diccionario de cada Clase
   templateEngine.read("class");
   for (const context of contexts) {
