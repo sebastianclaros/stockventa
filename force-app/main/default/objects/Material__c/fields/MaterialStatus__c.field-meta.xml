@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MaterialStatus__c</fullName>
+    <description>Estado del material. Sólo el estado &lt;MTPL&gt; Disponible va a permitir ser reservado.</description>
     <externalId>false</externalId>
     <label>Material Status</label>
     <required>false</required>
