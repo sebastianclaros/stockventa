@@ -141,7 +141,7 @@ async function getContext(items, opciones) {
     contexts = allObjects.filter((object) => items.includes(object.fullName));
   } else if (opciones && "r" in opciones) {
     // flag -r lee del archivo cache pero vuelve a buscar la metadata
-    contexts = getObjectsCache(opciones.r ? opciones.r : DEFAULT_FILENAME);
+    contexts = getObjectsCache(DEFAULT_FILENAME);
     const itemsEnCache = contexts.map((object) => object.fullName);
     contexts = await getObjects(itemsEnCache);
   } else {

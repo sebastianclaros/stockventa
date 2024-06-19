@@ -10,6 +10,7 @@ title: BaseTriggerHandlerException
 classDiagram
 
 class BaseTriggerHandlerException {
+    
 
 }
 ```

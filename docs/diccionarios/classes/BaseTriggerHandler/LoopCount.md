@@ -10,6 +10,7 @@ title: LoopCount
 classDiagram
 
 class LoopCount {
+    
      max     
      count     
      LoopCount()  

@@ -90,12 +90,12 @@ export default {
           //   label: 'Blog',
           //   position: 'right'
           // },
-//          {
-//            type: "docSidebar",
-//            sidebarId: "diccionario",
-//            position: "right",
-//            label: "Diccionarios"
-//          }
+          {
+            type: "docSidebar",
+            sidebarId: "diccionario",
+            position: "right",
+            label: "Diccionarios"
+          }
         ]
       },
       footer: {

@@ -11,8 +11,8 @@ title: MaterialTriggerHelper
 
 - Status: Active
 - Api Version: 59
-- Creada: 11 de junio de 24
-- Modificada: 12 de junio de 24
+- Creada: 13 de junio de 24
+- Modificada: 13 de junio de 24
 - Interface 
 
 ## Diagrama
@@ -20,6 +20,7 @@ title: MaterialTriggerHelper
 classDiagram
 
 class MaterialTriggerHelper {
+    
      completarProducto(List materiales) void $
      completarBusinessSite(List materiales) void $
 

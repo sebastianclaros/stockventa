@@ -150,6 +150,11 @@ rollback.sh (issueNumber)
 └── move-issue.sh ( issueNumber, 'Cancelled')
 ````
 
+## View
+
+## List
+
+## Switch
 
 ## Como generar un Token en Github
 
@@ -169,5 +174,3 @@ Una vez obtenido el token hay que guardarlo en una variable de ambiente. Esto pu
 ````
 export GITHUB_TOKEN=<<PegarTokenDeGitHub>>
 ````
-
-

@@ -18,13 +18,13 @@ title: Material
 
 | #   | Label | Api Name | Tipo | Descripcion |
 | --- | ----- | -------- | ---- | ----------- |
+| <div class="icons"></div> | Año de Importacion | AnoImportacion__c | Number(4) | Para los productos importados viene el año de importación. Este dato es importante porque debe salir en la factura <ul></ul> |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | Business Site | BusinessSite__c | [Lookup a BusinessSite__c](/diccionarios/objects/BusinessSite__c) |  <ul></ul> |
-| <div class="icons">![Track History](/img/tracker_60.png)</div> | IntegrationStatus | IntegrationStatus__c | Picklist |  <ul><li>Nuevo</li><li>Editado</li><li>Error</li></ul> |
-| <div class="icons">![Required](/img/lock_60.png)</div> | Material Status | MaterialStatus__c | Picklist |  <ul><li>Disponible</li><li>Reservado</li><li>Muleto</li><li>No Disponible</li></ul> |
+| <div class="icons"></div> | Material Status | MaterialStatus__c | Picklist |  <ul><li>Disponible</li><li>Reservado</li><li>Muleto</li><li>No Disponible</li></ul> |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | NMU | NMU__c | Text(30) |  <ul></ul> |
+| <div class="icons"></div> | Pais de Origen | PaisOrigen__c | Picklist | Esto se usa en material importados y tiene el pais de donde se realizó la importación <ul><li>MX</li><li>CH</li></ul> |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | Product | Product__c | [Lookup a Product2](/diccionarios/objects/Product2) |  <ul></ul> |
 | <div class="icons">![External Id](/img/database_60.png)</div> | SerialNumber | SerialNumber__c | Text(80) |  <ul></ul> |
-| <div class="icons">![Track History](/img/tracker_60.png) ![External Id](/img/database_60.png)</div> | Serial | Serial__c | Text(22) |  <ul></ul> |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | Werks | Werks__c | Text(10) |  <ul></ul> |
 
 | #                                                              | Referencia    |

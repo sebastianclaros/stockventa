@@ -37,7 +37,7 @@ async function getContext(items, opciones) {
     contexts = allLwc.filter((lwc) => items.includes(lwc.Name));
   } else if (opciones && "r" in opciones) {
     // flag -r lee del archivo cache pero vuelve a buscar la metadata
-    contexts = getLwcCache(opciones.r ? opciones.r : DEFAULT_FILENAME);
+    contexts = getLwcCache( DEFAULT_FILENAME) || [];
     const itemsEnCache = contexts.map((lwc) => lwc.Name);
     contexts = await getLwc(itemsEnCache);
   } else {
