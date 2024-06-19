@@ -33,38 +33,38 @@ fi
 ##
 
 # Si no esta en la branch intenta crear la branch nueva
-echo -e "${green} * [INICIO] del script de finalizacion de un requerimiento $branchName ${nocolor}"
+doInfo "[INICIO] del script de finalizacion de un requerimiento $branchName"
 
 # Step 1) Actualiza la documentacion
-echo -e "${green} * [UPDATE DOCUMENTACION] ${nocolor}"
+doInfo "[UPDATE DOCUMENTACION]"
 $script_full_path/subtask/update-doc.sh 
 if [ $? -ne 0 ]; then
-    exit 1;
+    doError "No se pudo actualizar la documentacion";
 fi
 
 # Step 2) Valida si la scracth tiene cambios y no fueron bajados al repo 
-echo -e "${green} * [VALIDA SCRATCH NO TENGA CAMBIOS] ${nocolor}"
+doInfo "[VALIDA SCRATCH NO TENGA CAMBIOS]"
 $script_full_path/subtask/validate-scratch.sh $branchName
 if [ $? -ne 0 ]; then
-    exit 1;
+    doExit "Hay cambios en la scratch. Para bajarlos sf org retrieve start";
 fi
 
 # Step 3) 
-echo -e "${green} * [VALIDA CODIGO] ${nocolor}"
+doInfo "[VALIDA CODIGO]"
 $script_full_path/subtask/validate-code.sh 
 if [ $? -ne 0 ]; then
-    exit 1;
+    doExit "Fallo el script de calidad y validacion de codigo";
 fi
 
 # Step 4) 
-echo -e "${green} * [PUBLICA LA BRANCH] ${nocolor}"
+doInfo "[PUBLICA LA BRANCH]"
 $script_full_path/subtask/publish-branch.sh 
 if [ $? -ne 0 ]; then
-    exit 1;
+    doExit "No se pudo publicar la branch";
 fi
 
 # Step 5) 
-echo -e "${green} * [ELIMINA LA SCRATCH] ${nocolor}"
+doInfo "[ELIMINA LA SCRATCH]"
 $script_full_path/subtask/drop-scratch.sh 
 
-echo -e "${green} * [FIN] del script de finalizacion del requerimiento $branchName ${nocolor}"
+doInfo "[FIN] del script de finalizacion del requerimiento $branchName"
