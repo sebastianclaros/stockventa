@@ -14,5 +14,8 @@ fi
 # Obtiene del current branch los datos:
 issueType=$(echo $branchName | cut -d "/" -f 1)
 issueNumber=$(echo $branchName | cut -d "/" -f 2)
+[ "$issueType" = "feature" ] || [ "$issueType" = "fix" ] && isDevelopment=true || isDevelopment=false
 
-doInfo "No esta desarrollada esta accion"
+if [ $isDevelopment == true ]; then 
+    doInfo "No esta desarrollada esta accion "
+fi

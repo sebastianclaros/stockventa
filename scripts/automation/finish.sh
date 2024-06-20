@@ -9,6 +9,7 @@ branchName=$(git branch --show-current)
 # Obtiene del current branch los datos:
 issueType=$(echo $branchName | cut -d "/" -f 1)
 issueNumber=$(echo $branchName | cut -d "/" -f 2)
+[ "$issueType" = "feature" ] || [ "$issueType" = "fix" ] && isDevelopment=true || isDevelopment=false
 
 # Guardian de Argumentos
 if [ -z "${GITHUB_TOKEN}" ]; then
@@ -35,7 +36,7 @@ fi
 # Si no esta en la branch intenta crear la branch nueva
 doInfo "[INICIO] del script de finalizacion de un requerimiento $branchName"
 
-if [ $issueType == 'feature' ]; then 
+if [ $isDevelopment == true ]; then 
     # Step 1) Actualiza la documentacion
     doInfo "[UPDATE DOCUMENTACION]"
     $script_full_path/subtask/update-doc.sh 
@@ -66,7 +67,7 @@ if [ $? -ne 0 ]; then
     doExit "No se pudo publicar la branch";
 fi
 
-if [ $issueType == 'feature' ]; then 
+if [ $isDevelopment == true ]; then 
     # Step 5) 
     doInfo "[ELIMINA LA SCRATCH]"
     $script_full_path/subtask/drop-scratch.sh 
