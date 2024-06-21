@@ -52,10 +52,59 @@ async function getColumnValueMap() {
   return mapValues;
 }
 
+export async function createIssue(title, columnName, label, milestone, body ) {
+  const user = await getUser();
+  const repository = await getRepository(label);
+  const repositoryId = repository.id;
+  const labelId = repository.label?.id;
+  const projectId = repository.projectV2.id;
+  const mutationIssue = `
+    mutation createIssue($repositoryId: ID!, $assignId: ID!, $title: String!, $body: String, ${ labelId ? '$labelId: ID!': ''} , $milestoneId: ID ) {
+      createIssue(
+          input: {
+            repositoryId: $repositoryId,
+            assigneeIds: [$assignId],
+            ${labelId ? 'labelIds: [$labelId],': ''}
+            title: $title,
+            milestoneId: $milestoneId,
+            body: $body
+          }
+      ) {
+        issue {
+          id
+          number
+        }
+      }
+    }`;
+  const { createIssue } = await graphqlAuth(mutationIssue, { labelId,  body, assignId: user.id,  projectId, repositoryId, title, label: label?  [label]: null });
+  const issue = createIssue.issue;
+  if ( !columnName || !issue.number) {
+    return issue.number;
+  }
+  const mutationItem = `
+    mutation addProjectV2ItemById($projectId: ID!, $contentId: ID! ) {
+      addProjectV2ItemById(
+          input: {
+            projectId: $projectId
+            contentId: $contentId
+          }
+      ) {
+        clientMutationId,
+        item {
+          id
+        }
+      }
+    }`;
+  const { addProjectV2ItemById } = await graphqlAuth(mutationItem, { projectId, contentId: issue.id });  
+  const itemId = addProjectV2ItemById.item.id;
+  // await moveIssue(issue.number, 'Ready');
+  return issue.number;  
+}
+
 export async function moveIssue(issueNumber, columnName) {
   const issue = await getIssue(issueNumber);
   const itemId = issue.projectItems.nodes[0].id;
-  const projectId = issue.projectItems.nodes[0].project.id;
+  const projectId = issue.projectItems.nodes[0].project.id;  
   const fieldId = issue.projectItems.nodes[0].fieldValueByName.field.id;
   const mapValues = await getColumnValueMap();
   const columnValue = mapValues[columnName]; 
@@ -72,8 +121,8 @@ export async function moveIssue(issueNumber, columnName) {
       clientMutationId
     }
   }`;
-  const {clientMutationId } = await graphqlAuth(mutation, { projectId, itemId, fieldId, columnValue });
-  return clientMutationId ? true: false ;  
+  const {updateProjectV2ItemFieldValue } = await graphqlAuth(mutation, { projectId, itemId, fieldId, columnValue });
+  return updateProjectV2ItemFieldValue?.clientMutationId ? true: false ;  
 }
 
 export async function assignIssueToMe(issueNumber) {
@@ -127,9 +176,9 @@ export async function assignBranchToIssue(issueNumber, branchName, commitSha) {
         clientMutationId
       }
     }`;
-  const {clientMutationId } = await graphqlAuth(mutation, { issueId: issue.id, oid: commit.oid, branchName });
-  return clientMutationId ? true: false ;  
-
+  const {createLinkedBranch } = await graphqlAuth(mutation, { issueId: issue.id, oid: commit.oid, branchName });
+  
+  return createLinkedBranch?.clientMutationId ? true: false ;  
 }
 
 export async function getValidateIssueColumn(issueNumber, columnName) {
@@ -191,17 +240,23 @@ export async function getIssueObject(issueNumber){
   return { ...addFields,  ...result};
 }
 
-export async function getRepository(){
+export async function getRepository(label){
   const query = `
-      query getRepo($owner:String!, $repo: String!) {
+      query getRepo($owner:String!, $repo: String!, $projectNumber: Int!, ${label ?  '$label: String!': ''} ) {
         repository(owner: $owner, name: $repo) {
           id
+          ${ label ? 
+            `label(name: $label) {
+              id
+            }` :''
+          }
+          projectV2( number: $projectNumber ) {
+            id
+          }
         }
       }
   `; 
-
-  const { repository } = await graphqlAuth(query, repoVar );
-
+  const { repository } = await graphqlAuth(query, { label, projectNumber: PROJECT_NUMBER,...repoVar});
   return repository;
 }
 
