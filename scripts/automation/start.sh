@@ -39,8 +39,8 @@ fi
 doInfo "[INICIO] del script de comienzo del requerimiento $issueNumber"
 
 # Step 1) Valida que Issue este en la Columna Ready
-doInfo "[VALIDA ISSUE ESTE EN Ready]"
-$script_full_path/subtask/validate-issue.sh $issueNumber Ready
+doInfo "[VALIDA ISSUE ESTE EN Ready o Backlog]"
+$script_full_path/subtask/validate-issue.sh $issueNumber Ready,Backlog
 if [ $? -ne 0 ]; then
     doExit "Por favor verifique que el issue $issueNumber este en la columna Ready $?"
 fi
