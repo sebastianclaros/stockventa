@@ -15,6 +15,7 @@ En la carpeta automation nos encontramos con scripts de acciones, que serian las
 
 Asi identificamos las siguientes:
 
+* [new](#new-crear-un-requerimiento-nuevo)
 * [start](#start-iniciar-un-requerimiento-nuevo)
 * [stop](#stop-poner-un-requerimiento-en-pausa-para-mas-tarde-o-bien-para-que-lo-tome-otro): 
 * [finish](#finish-al-terminar-el-desarrollo-de-un-requerimiento):
@@ -25,7 +26,8 @@ Asi identificamos las siguientes:
 
 ````mermaid 
 stateDiagram-v2 
-[*] --> Ready
+[*] --> Backlog : new
+Backlog --> Ready : refine
 Ready --> InProgress : start
 InProgress --> Ready :stop
 InProgress --> Completed : finish
@@ -55,6 +57,14 @@ Archive --> Open :desarchive
 Closed --> [*]
 Resolved --> [*]
 Archive --> [*]
+````
+
+## New: Crear un Requerimiento Nuevo
+Crea un nuevo Issue y lo deja en Backlog
+
+````
+new.sh (title, issueType)
+└── create-issue.sh ( title, issueType)
 ````
 
 
