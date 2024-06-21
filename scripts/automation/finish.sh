@@ -9,6 +9,7 @@ branchName=$(git branch --show-current)
 # Obtiene del current branch los datos:
 issueType=$(echo $branchName | cut -d "/" -f 1)
 issueNumber=$(echo $branchName | cut -d "/" -f 2)
+[ "$issueType" = "feature" ] || [ "$issueType" = "fix" ] && isDevelopment=true || isDevelopment=false
 
 # Guardian de Argumentos
 if [ -z "${GITHUB_TOKEN}" ]; then
@@ -35,26 +36,29 @@ fi
 # Si no esta en la branch intenta crear la branch nueva
 doInfo "[INICIO] del script de finalizacion de un requerimiento $branchName"
 
-# Step 1) Actualiza la documentacion
-doInfo "[UPDATE DOCUMENTACION]"
-$script_full_path/subtask/update-doc.sh 
-if [ $? -ne 0 ]; then
-    doError "No se pudo actualizar la documentacion";
+if [ $isDevelopment == true ]; then 
+    # Step 1) Actualiza la documentacion
+    doInfo "[UPDATE DOCUMENTACION]"
+    $script_full_path/subtask/update-doc.sh 
+    if [ $? -ne 0 ]; then
+        doError "No se pudo actualizar la documentacion";
+    fi
+
+    # Step 2) Valida si la scracth tiene cambios y no fueron bajados al repo 
+    doInfo "[VALIDA SCRATCH NO TENGA CAMBIOS]"
+    $script_full_path/subtask/validate-scratch.sh $branchName
+    if [ $? -ne 0 ]; then
+        doExit "Hay cambios en la scratch. Para bajarlos sf org retrieve start";
+    fi
+
+    # Step 3) 
+    doInfo "[VALIDA CODIGO]"
+    $script_full_path/subtask/validate-code.sh 
+    if [ $? -ne 0 ]; then
+        doExit "Fallo el script de calidad y validacion de codigo";
+    fi
 fi
 
-# Step 2) Valida si la scracth tiene cambios y no fueron bajados al repo 
-doInfo "[VALIDA SCRATCH NO TENGA CAMBIOS]"
-$script_full_path/subtask/validate-scratch.sh $branchName
-if [ $? -ne 0 ]; then
-    doExit "Hay cambios en la scratch. Para bajarlos sf org retrieve start";
-fi
-
-# Step 3) 
-doInfo "[VALIDA CODIGO]"
-$script_full_path/subtask/validate-code.sh 
-if [ $? -ne 0 ]; then
-    doExit "Fallo el script de calidad y validacion de codigo";
-fi
 
 # Step 4) 
 doInfo "[PUBLICA LA BRANCH]"
@@ -63,8 +67,10 @@ if [ $? -ne 0 ]; then
     doExit "No se pudo publicar la branch";
 fi
 
-# Step 5) 
-doInfo "[ELIMINA LA SCRATCH]"
-$script_full_path/subtask/drop-scratch.sh 
+if [ $isDevelopment == true ]; then 
+    # Step 5) 
+    doInfo "[ELIMINA LA SCRATCH]"
+    $script_full_path/subtask/drop-scratch.sh 
+fi
 
 doInfo "[FIN] del script de finalizacion del requerimiento $branchName"
