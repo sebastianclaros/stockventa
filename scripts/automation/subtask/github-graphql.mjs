@@ -48,7 +48,6 @@ export async function getColumnValueMap() {
   for ( const option of repository.projectV2.field.options ) {
     mapValues[option.name] = option.id;
   }
-  console.log( mapValues );
   return mapValues;
 }
 
@@ -285,7 +284,6 @@ export async function getRepository(label){
       }
   `; 
   const { repository } = await graphqlAuth(query, { label, projectNumber: PROJECT_NUMBER,...repoVar});
-  console.log(JSON.stringify(repository));
   return repository;
 }
 
