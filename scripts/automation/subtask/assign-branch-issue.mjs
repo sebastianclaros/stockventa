@@ -1,4 +1,4 @@
-import {assignBranchToIssue} from "./github-graphql.mjs";
+import {assignBranchToIssue} from "../helpers/github-graphql.mjs";
 
 const issueNumber = process.argv[2];
 const branchName  = process.argv[3];

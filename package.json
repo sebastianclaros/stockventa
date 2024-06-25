@@ -17,6 +17,7 @@
     "doc:start": "docusaurus start",
     "doc:build": "docusaurus build",
     "doc:config": "node scripts/doc/config.js",
+    "auto": "node scripts/automation/auto.mjs",
     "precommit": "lint-staged"
   },
   "devDependencies": {

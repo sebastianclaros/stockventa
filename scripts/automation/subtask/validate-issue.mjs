@@ -1,5 +1,5 @@
 import assert from "assert";
-import {getIssueState} from "./github-graphql.mjs";
+import {getIssueState} from "../helpers/github-graphql.mjs";
 
 const compareStates = ( state ) => state.toLocaleLowerCase().replace(' ', '');
 const issueNumber = process.argv[2];

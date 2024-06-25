@@ -1,6 +1,10 @@
 {
     "name": "start",
-    "description": "Comando para iniciar un requerimiento",
+    "input": {
+        "name": "issuNumber",
+        "label": "numero de issue"
+    },
+    "description": "Comando para iniciar un requerimiento. Automatiza las acciones cuando se arranca un requerimiento nuevo",
     "steps": [
     ] 
 }

@@ -1,4 +1,4 @@
-import {moveIssue} from "./github-graphql.mjs";
+import {moveIssue} from "../helpers/github-graphql.mjs";
 
 const issueNumber = process.argv[2];
 const columnName  = process.argv[3];
