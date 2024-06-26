@@ -9,6 +9,8 @@ branchName=$(git branch --show-current)
 
 # Obtiene del current branch los datos:
 issueNumberActual=$(echo $branchName | cut -d "/" -f 2)
+issueType=$(echo $branchName | cut -d "/" -f 1)
+[ "$issueType" = "feature" ] || [ "$issueType" = "fix" ] && isDevelopment=true || isDevelopment=false
 
 # Guardian de Argumentos
 if [ -z "${GITHUB_TOKEN}" ]; then
@@ -21,24 +23,25 @@ else
     issueNumber="$1"
 fi
 
-
 doInfo "[INICIO] del script de switch de requerimiento"
 
 # VALIDA QUE NO QUEDEN COSAS PENDIENTES
 # Si no esta en la branch intenta crear la branch nueva
 
 # Step 1) Actualiza la documentacion
-doInfo "[STEP 1] UPDATE DOCUMENTACION"
-$script_full_path/subtask/update-doc.sh 
-if [ $? -ne 0 ]; then
-    doError "No se pudo actualizar la documentacion";
-fi
+if [ $isDevelopment == true ]; then 
+    doInfo "[STEP 1] UPDATE DOCUMENTACION"
+    $script_full_path/subtask/update-doc.sh 
+    if [ $? -ne 0 ]; then
+        doError "No se pudo actualizar la documentacion";
+    fi
 
-# Step 2) Valida si la scracth tiene cambios y no fueron bajados al repo 
-doInfo "[STEP 2] VALIDA SCRATCH NO TENGA CAMBIOS"
-$script_full_path/subtask/validate-scratch.sh $branchName
-if [ $? -ne 0 ]; then
-    doExit "Hay cambios en la scratch. Para bajarlos sf org retrieve start";
+    # Step 2) Valida si la scracth tiene cambios y no fueron bajados al repo 
+    doInfo "[STEP 2] VALIDA SCRATCH NO TENGA CAMBIOS"
+    $script_full_path/subtask/validate-scratch.sh $branchName
+    if [ $? -ne 0 ]; then
+        doExit "Hay cambios en la scratch. Para bajarlos sf org retrieve start";
+    fi
 fi
 
 # Step 3) 
@@ -55,22 +58,28 @@ if [ $? -ne 0 ]; then
     doExit "No se pudo mover al branch $newBranch. Hagalo manualmente (git checkout -b $newBranch)"
 fi
 
+
+
 # Step 5) Baja cambios de Main
 git fetch
 #git merge origin/main
 
-# Step 6) Cambia de scratch
-doInfo "[STEP 6] CAMBIA LA SCRATCH"
-sf force config set target-org $newScratchName
-if [ $? -ne 0 ]; then
-    doExit "No se pudo mover al scratch $newScratchName. Hagalo manualmente (sf force config set target-org $newScratchName)"
-fi
+issueNewType=$(echo $newBranch | cut -d "/" -f 1)
+[ "$issueNewType" = "feature" ] || [ "$issueTyissueNewTypepe" = "fix" ] && isNewDevelopment=true || isDevelopment=false
 
-# Step 7) Deploy por si hubo cambios en main
-doInfo "[STEP 7] Subiendo el codigo"
-sf project deploy start --target-org $newScratchName
-if [ $? -ne 0 ]; then
-    doExit "No se pudo subir el codigo"
-fi
+if [ $isNewDevelopment == true ]; then 
+    # Step 6) Cambia de scratch
+    doInfo "[STEP 6] CAMBIA LA SCRATCH"
+    sf force config set target-org $newScratchName
+    if [ $? -ne 0 ]; then
+        doExit "No se pudo mover al scratch $newScratchName. Hagalo manualmente (sf force config set target-org $newScratchName)"
+    fi
 
+    # Step 7) Deploy por si hubo cambios en main
+    doInfo "[STEP 7] Subiendo el codigo"
+    sf project deploy start --target-org $newScratchName
+    if [ $? -ne 0 ]; then
+        doExit "No se pudo subir el codigo"
+    fi
+fi
 
