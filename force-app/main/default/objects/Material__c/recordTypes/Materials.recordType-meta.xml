@@ -4,7 +4,7 @@
     <active>true</active>
     <label>Materials</label>
     <picklistValues>
-        <picklist>MaterialStatus__c</picklist>
+        <picklist>Status__c</picklist>
         <values>
             <fullName>MTND</fullName>
             <default>false</default>

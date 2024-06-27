@@ -71,7 +71,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Material__c.MaterialStatus__c</field>
+        <field>Material__c.Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
