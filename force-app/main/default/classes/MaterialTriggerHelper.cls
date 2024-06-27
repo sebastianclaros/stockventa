@@ -42,7 +42,7 @@ public with sharing class MaterialTriggerHelper {
         for ( Material__c material :materiales ) {
             Inventory__c inventario = inventarios.get( getInventoryKey(material) );
             String campoSegunEstado = CAMPO_SEGUN_ESTADO.get(material.Status__c.toLowerCase());            
-            inventario.put(campoSegunEstado, (Integer)inventario.get(campoSegunEstado) + 1);
+            inventario.put(campoSegunEstado, (Decimal)inventario.get(campoSegunEstado) + 1);
             inventario.Total__c = inventario.Total__c +1; 
         }
 
@@ -61,8 +61,8 @@ public with sharing class MaterialTriggerHelper {
             String campoNew = CAMPO_SEGUN_ESTADO.get(materialNew.Status__c.toLowerCase());            
             String campoOld = CAMPO_SEGUN_ESTADO.get(materialOld.Status__c.toLowerCase());            
             
-            inventario.put(campoNew, (Integer)inventario.get(campoNew) + 1);
-            inventario.put(campoOld, (Integer)inventario.get(campoOld) - 1);
+            inventario.put(campoNew, (Decimal)inventario.get(campoNew) + 1);
+            inventario.put(campoOld, (Decimal)inventario.get(campoOld) - 1);
         }
 
         InventoryTriggerHandler.flagInventoryTrigger = true;
@@ -83,9 +83,9 @@ public with sharing class MaterialTriggerHelper {
             String campoNew = CAMPO_SEGUN_ESTADO.get(materialNew.Status__c.toLowerCase());            
             String campoOld = CAMPO_SEGUN_ESTADO.get(materialOld.Status__c.toLowerCase());            
             
-            inventarioNew.put(campoNew, (Integer)inventarioNew.get(campoNew) + 1);
+            inventarioNew.put(campoNew, (Decimal)inventarioNew.get(campoNew) + 1);
             inventarioNew.Total__c = inventarioNew.Total__c + 1;
-            inventarioOld.put(campoOld, (Integer)inventarioOld.get(campoOld) - 1);
+            inventarioOld.put(campoOld, (Decimal)inventarioOld.get(campoOld) - 1);
             inventarioOld.Total__c =  inventarioOld.Total__c - 1;
         }
 
@@ -101,7 +101,7 @@ public with sharing class MaterialTriggerHelper {
         for ( Material__c material :materiales ) {
             Inventory__c inventario = inventarios.get( getInventoryKey(material) );
             String campoSegunEstado = CAMPO_SEGUN_ESTADO.get(material.Status__c.toLowerCase());            
-            inventario.put(campoSegunEstado, (Integer)inventario.get(campoSegunEstado) - 1);
+            inventario.put(campoSegunEstado, (Decimal)inventario.get(campoSegunEstado) - 1);
             inventario.Total__c = inventario.Total__c - 1; 
         }
 
