@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>LockedByQuantity__c</fullName>
+    <fullName>TTL__c</fullName>
+    <description>Tiempo máximo (en seg) que puede vivir un bloqueo</description>
     <externalId>false</externalId>
-    <label>Bloqueos por Cantidad</label>
+    <label>Tiempo de Bloqueo</label>
     <precision>8</precision>
     <required>false</required>
     <scale>0</scale>

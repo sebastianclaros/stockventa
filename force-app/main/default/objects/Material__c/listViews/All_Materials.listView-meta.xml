@@ -4,7 +4,6 @@
     <columns>NAME</columns>
     <columns>NMU__c</columns>
     <columns>BusinessSite__c</columns>
-    <columns>IntegrationStatus__c</columns>
     <columns>MaterialStatus__c</columns>
     <filterScope>Everything</filterScope>
     <label>All Materials</label>
