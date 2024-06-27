@@ -162,10 +162,7 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>Inventario</label>
     <nameField>
-        <displayFormat>IN# {YY}{00000000}</displayFormat>
-        <label>Inventory Name</label>
-        <trackHistory>false</trackHistory>
-        <type>AutoNumber</type>
+        <label>Werks y Nmu</label>
     </nameField>
     <pluralLabel>Inventarios</pluralLabel>
     <searchLayouts></searchLayouts>
