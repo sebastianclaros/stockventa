@@ -20,7 +20,7 @@ public with sharing class MaterialTriggerHelper {
         }
 
         // Agrega los inventarios que existen
-        for ( Inventory__c inventario: [SELECT Id, LockedBySerial__c, Available__c, Total__c FROM Inventory__c WHERE name IN :inventoryNames.keySet()] ) {
+        for ( Inventory__c inventario: [SELECT Name, Id, LockedBySerial__c, Available__c, Total__c FROM Inventory__c WHERE name IN :inventoryNames.keySet()] ) {
             inventarios.put( inventario.Name , inventario);
         }
 
