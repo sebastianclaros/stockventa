@@ -4,6 +4,17 @@
     <active>true</active>
     <label>Materials</label>
     <picklistValues>
+        <picklist>OriginCountry__c</picklist>
+        <values>
+            <fullName>CH</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MX</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>Status__c</picklist>
         <values>
             <fullName>MTND</fullName>
@@ -19,17 +30,6 @@
         </values>
         <values>
             <fullName>MTRE</fullName>
-            <default>false</default>
-        </values>
-    </picklistValues>
-    <picklistValues>
-        <picklist>OriginCountry__c</picklist>
-        <values>
-            <fullName>CH</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>MX</fullName>
             <default>false</default>
         </values>
     </picklistValues>

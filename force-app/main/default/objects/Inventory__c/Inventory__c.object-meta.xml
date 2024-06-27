@@ -162,7 +162,9 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>Inventario</label>
     <nameField>
-        <label>Werks y Nmu</label>
+        <label>Inventory Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Inventarios</pluralLabel>
     <searchLayouts></searchLayouts>

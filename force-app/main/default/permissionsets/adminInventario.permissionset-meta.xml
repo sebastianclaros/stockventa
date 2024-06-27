@@ -70,11 +70,6 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
-        <field>Material__c.Status__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
         <editable>true</editable>
         <field>Material__c.NMU__c</field>
         <readable>true</readable>
@@ -87,6 +82,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Material__c.SerialNumber__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Material__c.Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
