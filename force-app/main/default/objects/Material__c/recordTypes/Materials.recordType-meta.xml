@@ -23,7 +23,7 @@
         </values>
     </picklistValues>
     <picklistValues>
-        <picklist>PaisOrigen__c</picklist>
+        <picklist>OriginCountry__c</picklist>
         <values>
             <fullName>CH</fullName>
             <default>false</default>

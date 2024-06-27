@@ -146,19 +146,21 @@
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
-    <enableHistory>false</enableHistory>
+    <enableHistory>true</enableHistory>
     <enableLicensing>false</enableLicensing>
     <enableReports>false</enableReports>
     <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>Private</externalSharingModel>
-    <label>Punto de Venta</label>
+    <label>Bloqueo por Cantidad</label>
     <nameField>
-        <label>Business Site Name</label>
-        <type>Text</type>
+        <displayFormat>IL# {YY}{00000000}</displayFormat>
+        <label>InventoryLock Name</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Puntos de Venta</pluralLabel>
+    <pluralLabel>Bloqueos por Cantidad</pluralLabel>
     <searchLayouts></searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
