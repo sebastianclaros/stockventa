@@ -12,6 +12,6 @@
         { "name": "Me Asigna el issue", "function": "assignIssueToMe", "errorMessage": "No se pudo pudo asignar la branch (${branchName}) al issue. Por favor hagalo manualmente", "skipOnError": true },
         { "name": "Pone la branch en el issue", "function": "assignBranchIssue", "errorMessage": "No se pudo asignar la branch ${branchName} al issue ${issueNumbe}r. Hagalo manualmente","skipOnError": true },
         { "name": "Asocia la branch con el remote", "command": "git push -u origin ${branchName}", "errorMessage": "No se pudo asociar la branch ${branchName} al remote. verifique con git branch -vv " },
-        { "criteria": { "field": "isDevelopment", "value": true }, "name": "Crea la Scratch", "command": "create-scratch.sh ${branchName} ${defaultDias} ${permissionSet}", "errorMessage": "No se pudo asociar la branch ${branchName} al remote. verifique con git branch -vv " },
+        { "criteria": { "field": "isDevelopment", "value": true }, "name": "Crea la Scratch", "command": "create-scratch.sh ${branchName} ${defaultDias} ${permissionSet}", "errorMessage": "No se pudo asociar la branch ${branchName} al remote. verifique con git branch -vv " }
     ] 
 }

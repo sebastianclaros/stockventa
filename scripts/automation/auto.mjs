@@ -1,7 +1,7 @@
 // Comandos validos
 import {getTasks, execute} from "./helpers/auto.mjs";
 import context from "./helpers/context.mjs";
-
+import { getColored } from "./helpers/color.mjs";
 import prompts from "prompts";
 //const prompts = require("prompts");
 

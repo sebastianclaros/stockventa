@@ -11,10 +11,6 @@ class Context {
     permissionSet;
     issueNumber;
     
-    constructor() {
-        this.init()
-    }
-
     init() {
         console.log('init context');
         // Busca variables de entorno    
@@ -31,4 +27,7 @@ class Context {
     }
 }
 
-export const context= new Context();
+const context= new Context();
+
+context.init();
+export default context;
