@@ -1,5 +1,6 @@
 public with sharing class MaterialTriggerHelper {
-
+    final static String ERROR_NMU_DOES_NOT_EXIST = 'El NMU {0} no existe';
+    final static String ERROR_WERKS_DOES_NOT_EXIST = 'El werks {0} no existe';
     
     public static void completarProducto(List<Material__c> materiales) {
         Set<Object> nmu = TriggerHelper.getFieldsFromSObjects(materiales, 'NMU__c');
@@ -9,7 +10,7 @@ public with sharing class MaterialTriggerHelper {
             if ( nmuMap.containsKey(material.NMU__c) ) {
                 material.Product__c = nmuMap.get(material.NMU__c);
             } else {
-                material.addError( 'El NMU ' + material.NMU__c + ' no existe' );
+                material.addError(  ERROR_NMU_DOES_NOT_EXIST.format( new String[]{ material.NMU__c} ) );
             }
         }
     }        
@@ -22,7 +23,7 @@ public with sharing class MaterialTriggerHelper {
             if ( businessSitesMap.containsKey(material.Werks__c)) {
                 material.BusinessSite__c = businessSitesMap.get(material.Werks__c);
             } else {
-                material.addError( 'El werks ' + material.Werks__c + ' no existe' );
+                material.addError(  ERROR_WERKS_DOES_NOT_EXIST.format( new String[]{ material.Werks__c} ) );
             }
         }
     }        
