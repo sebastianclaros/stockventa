@@ -81,7 +81,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Material__c.SerialNumber__c</field>
+        <field>Material__c.Serial__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

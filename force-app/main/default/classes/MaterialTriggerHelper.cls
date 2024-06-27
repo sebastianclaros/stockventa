@@ -46,7 +46,9 @@ public with sharing class MaterialTriggerHelper {
             inventario.Total__c = inventario.Total__c +1; 
         }
 
+        InventoryTriggerHandler.flagInventoryTrigger = true;
         upsert inventarios.values();
+        InventoryTriggerHandler.flagInventoryTrigger = false;
     }
     public static void cambiarEstadoInventario (Map<Id,Material__c> materialesOld, List<Material__c> materialesNew) {
         List<Material__c> todosLosMateriales = materialesOld.values();
@@ -63,7 +65,9 @@ public with sharing class MaterialTriggerHelper {
             inventario.put(campoOld, (Integer)inventario.get(campoOld) - 1);
         }
 
+        InventoryTriggerHandler.flagInventoryTrigger = true;
         upsert inventarios.values();    
+        InventoryTriggerHandler.flagInventoryTrigger = false;
     
     }
     public static void moverDepositoInventario (Map<Id,Material__c> materialesOld, List<Material__c> materialesNew) {
@@ -85,7 +89,9 @@ public with sharing class MaterialTriggerHelper {
             inventarioOld.Total__c =  inventarioOld.Total__c - 1;
         }
 
+        InventoryTriggerHandler.flagInventoryTrigger = true;
         upsert inventarios.values();    
+        InventoryTriggerHandler.flagInventoryTrigger = false;
     
     }
 
@@ -99,7 +105,9 @@ public with sharing class MaterialTriggerHelper {
             inventario.Total__c = inventario.Total__c - 1; 
         }
 
+        InventoryTriggerHandler.flagInventoryTrigger = true;
         upsert inventarios.values();    
+        InventoryTriggerHandler.flagInventoryTrigger = false;
     }    
 
     public static void completarProducto(List<Material__c> materiales) {
