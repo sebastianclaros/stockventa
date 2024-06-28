@@ -1,9 +1,13 @@
-import { getContext } from "./taskFunctions.mjs"
+//import { getContext } from "./taskFunctions.mjs"
+import context from "./context.mjs";
+import { getColored } from "./color.mjs";
 
 const TASKS_FOLDER = process.cwd() + "/scripts/automation/tasks";
+const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
 
 import fs from "fs";
 import {getRepository} from "./github-graphql.mjs"
+import { executeFunction, executeShell } from "./taskFunctions.mjs";
 
 const filterJson = (file) => file.endsWith(".json");
 
@@ -20,15 +24,49 @@ export function getTasks() {
   return tasks;
 }
 
-function getTask(taskName) {
-    const filename = TASKS_FOLDER + "/" + taskName + ".json";
+function getTask(taskName, folder = TASKS_FOLDER) {
+    const filename =  folder + "/" + taskName + ".json";
     const content = fs.readFileSync(filename, "utf8");
     return JSON.parse(content);
 }
 
+export async function runTask(task){
+  console.info(getColored(`[INICIO] ${task.name}`, "green") )
 
-export function execute(task) {
-  getContext();
+  console.log( context );
+  for ( const step of task.steps ) {
+      if ( step.criteria ) {
+          const { field, value } = step.criteria;
+          const result = context.get(field) == value;
+          if ( !result ) {
+              break;
+          }   
+      }
+      console.info(getColored(`[INICIO] ${step.name}`, "green") )
+      if ( await execute(step) )  {
+          console.info(getColored(`[FIN] ${step.name}`, "green") )        
+      }
+  }
+  console.info(getColored(`[FIN] ${task.name}`, "green") );  
+}
+
+export function execute(task, verbose = false) {
+  let success = false;
+
+  if ( task.command ) {
+    success = executeShell(task.command);
+  } else if ( task.function ) {
+    success = executeFunction(task.function);
+  } else if ( task.subtasks ) {
+    const subtask = getTask(task.subtasks, SUBTASKS_FOLDER);
+    success = runTask(subtask);
+  }
+
+  if ( !success && verbose) {
+    // pregunta si quiere skipear el error
+    success = true;
+  }
+  return success;
 }
 
 function getFiles(source, filter=(file)=>true, recursive = false, ignoreList = []) {
