@@ -95,6 +95,13 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>false</editable>
+        <field>Material__c.Status__c</field>>>>>>>> main
+101
+
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <field>Material__c.Werks__c</field>
         <readable>true</readable>
