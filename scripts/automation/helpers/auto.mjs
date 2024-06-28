@@ -1,3 +1,5 @@
+import { getContext } from "./taskFunctions.mjs"
+
 const TASKS_FOLDER = process.cwd() + "/scripts/automation/tasks";
 
 import fs from "fs";
@@ -26,7 +28,7 @@ function getTask(taskName) {
 
 
 export function execute(task) {
-
+  getContext();
 }
 
 function getFiles(source, filter=(file)=>true, recursive = false, ignoreList = []) {

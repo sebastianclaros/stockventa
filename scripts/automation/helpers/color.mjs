@@ -26,15 +26,25 @@ const BgCyan = "\x1b[46m"
 const BgWhite = "\x1b[47m"
 const BgGray = "\x1b[100m"
 
-function getColorName(rgb) {
-    const colors = {
-        'a2eeef' : FgCyan,
+function getColorName(name) {
+    const colors = { "Black": FgBlack,
+        "red": FgRed,
+        "green": FgGreen,
+        "yellow": FgYellow,
+        "blue": FgBlue,
+        "magenta": FgMagenta,
+        "cyan": FgCyan,
+        "white": FgWhite,
+        "gray": FgGray }
+        return colors[name] ? colors[name]: FgBlack;
     }
+    
+    export function getColored( text, colorName ) {
+        const color = getColorName(colorName.toLowerCase());
+        return `${color}${text}${Reset}`;
+    }
+    
 
-    return colors[rgb] ? colors[rgb]: FgBlack;
-}
 
-export function getColored( text, colorName ) {
-    const color = getColorName(colorName.toLowerCase());
-    return `${color}${text}${Reset}`;
-}
+
+

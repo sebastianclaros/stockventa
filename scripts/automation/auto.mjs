@@ -26,9 +26,9 @@ if ( !config.taskName ) {
 }
 const task = tasks[config.taskName];
 
-context.init();
 console.info(getColored(`[INICIO] ${task.name}`, "green") )
 
+console.log( context );
 for ( const step of task.steps ) {
     if ( step.criteria ) {
         const { field, value } = step.criteria;
@@ -42,4 +42,4 @@ for ( const step of task.steps ) {
         console.info(getColored(`[FIN] ${step.name}`, "green") )        
     }
 }
-console.info(getColored(`[FIN] ${task.name}`, "green") )
+console.info(getColored(`[FIN] ${task.name}`, "green") );
