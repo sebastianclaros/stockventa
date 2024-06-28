@@ -12,8 +12,7 @@ public class MaterialTriggerHandler extends BaseTriggerHandler {
         // No permite que se modifique el NMU
         TriggerHelper.validateFieldUnchanged(Trigger.newMap, Trigger.oldMap, 'NMU__c');
 
-        // Si cambia el werks actuliza el lookup a business Site
-        List<SObject> businessSiteChanges = TriggerHelper.getRecordChanges(Trigger.newMap, Trigger.oldMap, 'BusinessSite__c');
+        List<SObject> businessSiteChanges = TriggerHelper.getRecordChanges(Trigger.newMap, Trigger.oldMap, 'Werks__c');
         if ( businessSiteChanges.size() >0 ) {
             MaterialTriggerHelper.completarBusinessSite(businessSiteChanges);       
         }
