@@ -35,6 +35,34 @@
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
+                    <name>status</name>
+                    <value>mtpl</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>title</name>
+                    <value>Materiales Disponibles</value>
+                </componentInstanceProperties>
+                <componentName>materials</componentName>
+                <identifier>c_materials</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>status</name>
+                    <value>mtre</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>title</name>
+                    <value>Materiales Reservados por Serie</value>
+                </componentInstanceProperties>
+                <componentName>materials</componentName>
+                <identifier>c_materials2</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
                     <name>relatedListComponentOverride</name>
                     <value>NONE</value>
                 </componentInstanceProperties>
