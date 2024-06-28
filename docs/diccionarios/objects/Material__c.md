@@ -24,7 +24,7 @@ title: Material
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | NMU | NMU__c | Text(30) |  <ul></ul> |
 | <div class="icons"></div> | Pais de Origen | PaisOrigen__c | Picklist | Esto se usa en material importados y tiene el pais de donde se realizó la importación <ul><li>MX</li><li>CH</li></ul> |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | Product | Product__c | [Lookup a Product2](/diccionarios/objects/Product2) |  <ul></ul> |
-| <div class="icons">![External Id](/img/database_60.png)</div> | SerialNumber | SerialNumber__c | Text(80) |  <ul></ul> |
+| <div class="icons">![External Id](/img/database_60.png)</div> | Serial | Serial__c | Text(80) |  <ul></ul> |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | Werks | Werks__c | Text(10) |  <ul></ul> |
 
 | #                                                              | Referencia    |

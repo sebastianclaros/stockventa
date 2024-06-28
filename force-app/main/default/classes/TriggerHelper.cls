@@ -1,5 +1,16 @@
 public with sharing class TriggerHelper {
+    final static String ERROR_FIELD_CANT_BE_MODIFIED = 'No se puede modifificar el campo {0}';
 
+    static public void validateFieldUnchanged( Map<Id,SObject> newMap,  Map<Id,SObject> oldMap, String fieldName ) {
+        for( SObject record: newMap.values()){
+            Object newValue = record.get(fieldName);
+            Object oldValue = oldMap.get(record.Id).get(fieldName);
+            if ( oldValue != newValue ){
+                record.addError( String.format(ERROR_FIELD_CANT_BE_MODIFIED, new string[] {fieldName} ) );
+            }
+        }
+    }
+    
     static public List<SObject> getRecordChanges( Map<Id,SObject> newMap,  Map<Id,SObject> oldMap, String fieldName ) {
         List<SObject> changeRecords = new List<SObject>();
         for( SObject record: newMap.values()){

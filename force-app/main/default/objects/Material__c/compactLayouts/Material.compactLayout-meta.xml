@@ -4,7 +4,7 @@
     <fields>Name</fields>
     <fields>Product__c</fields>
     <fields>BusinessSite__c</fields>
-    <fields>MaterialStatus__c</fields>
-    <fields>SerialNumber__c</fields>
+    <fields>Status__c</fields>
+    <fields>Serial__c</fields>
     <label>Material</label>
 </CompactLayout>

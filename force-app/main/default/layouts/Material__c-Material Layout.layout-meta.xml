@@ -37,7 +37,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>SerialNumber__c</field>
+                <field>Serial__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -121,7 +121,7 @@
             <posY>0</posY>
         </summaryLayoutItems>
         <summaryLayoutItems>
-            <field>SerialNumber__c</field>
+            <field>Serial__c</field>
             <posX>3</posX>
             <posY>0</posY>
         </summaryLayoutItems>
