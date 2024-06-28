@@ -12,7 +12,7 @@ public class MaterialTriggerHandler extends BaseTriggerHandler {
             MaterialTriggerHelper.completarProducto(productChanges);
         }
 
-        List<SObject> businessSiteChanges = TriggerHelper.getRecordChanges(Trigger.newMap, Trigger.oldMap, 'BusinessSite__c');
+        List<SObject> businessSiteChanges = TriggerHelper.getRecordChanges(Trigger.newMap, Trigger.oldMap, 'Werks__c');
         if ( businessSiteChanges.size() >0 ) {
             MaterialTriggerHelper.completarBusinessSite(businessSiteChanges);
         }
