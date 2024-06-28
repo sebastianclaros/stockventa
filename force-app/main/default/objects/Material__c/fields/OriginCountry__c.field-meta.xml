@@ -14,12 +14,12 @@
             <value>
                 <fullName>MX</fullName>
                 <default>false</default>
-                <label>MX</label>
+                <label>Mexico</label>
             </value>
             <value>
                 <fullName>CH</fullName>
                 <default>false</default>
-                <label>CH</label>
+                <label>China</label>
             </value>
         </valueSetDefinition>
     </valueSet>
