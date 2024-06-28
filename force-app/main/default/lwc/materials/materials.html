@@ -1,0 +1,12 @@
+<template>
+    <lightning-card  variant="Narrow"  title={title} icon-name="standard:account">
+        <lightning-datatable 
+                hide-checkbox-column
+                show-row-number-column                
+                key-field="id"
+                data={data}
+                columns={columns}>
+        </lightning-datatable>
+    </lightning-card>
+
+</template>
