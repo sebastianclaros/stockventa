@@ -28,7 +28,7 @@ if [ $current_branch != $branchName ]; then
     if [ -n "$exists" ]; then
         doInfo "[STEP 2] Si la branch existe la actualiza $exists"
         git branch $branchName
-        git pull --set-upstream-to=origin/$branchName
+        git pull --set-upstream origin/$branchName
     else
         doInfo "[STEP 2] Si no existe creamos la Branch $branchName"
         git fetch

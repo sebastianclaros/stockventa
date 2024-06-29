@@ -1,0 +1,6 @@
+{
+    "name": "stop",
+    "description": "Comando para dejar a un lado un requerimiento",
+    "steps": [
+    ] 
+}

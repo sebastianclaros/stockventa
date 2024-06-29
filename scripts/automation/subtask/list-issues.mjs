@@ -1,5 +1,5 @@
-import {getIssuesByState, getMyIssues, getIssueObject, getIssue} from "./github-graphql.mjs";
-import {getColored} from "./color.mjs";
+import {getIssuesByState, getMyIssues, getIssueObject, getIssue} from "../helpers/github-graphql.mjs";
+import {getColored} from "../helpers/color.mjs";
 
 const filterType  = process.argv[2] || 'mine';
 

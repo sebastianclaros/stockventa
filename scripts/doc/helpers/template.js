@@ -33,12 +33,12 @@ function openTemplate(sourceFolder, templateName, extension) {
   return content;
 }
 
-function getFiles(source) {
+function getFiles(source, recursive = true, ignoreList = []) {
   const files = [];
   for (const file of fs.readdirSync(source)) {
     const fullPath = source + "/" + file;
-    if (fs.lstatSync(fullPath).isDirectory()) {
-      getFiles(fullPath).forEach((x) => files.push(file + "/" + x));
+    if (fs.lstatSync(fullPath).isDirectory() && recursive && !ignoreList.includes(file)) {
+      getFiles(fullPath, recursive, ignoreList).forEach((x) => files.push(file + "/" + x));
     } else {
       files.push(file);
     }
@@ -58,7 +58,7 @@ module.exports = (source, extension) => {
   return {
     getTemplates: () => {
       const templates = [];
-      const files = getFiles(sourceFolder);
+      const files = getFiles(sourceFolder, true, ['dictionary']);
       for (filename of files) {
         const [name, ext] = filename.split(".");
         if (ext === extension) {
