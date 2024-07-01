@@ -1,17 +1,17 @@
 {
     "name": "start",
     "guards": [ "gitToken" ], 
-    "input": [ "issueNumber" ],
+    "inputs": [ "newIssueNumber" ],
     "description": "Comando para iniciar un requerimiento. Automatiza las acciones cuando se arranca un requerimiento nuevo",
     "steps": [
-        { "name": "validate issue", "command": "validate-issue.sh ${issueNumber} Ready,Backlog", "description": "Valida que Issue este en la Columna Ready o Backlog", "errorMessage": "Por favor verifique que el issue $issueNumber este en la columna Ready o Backlog" },
+        { "name": "validate issue", "command": "validate-issue.sh", "arguments":  ["${newIssueNumber}",  "Ready,Backlog"], "description": "Valida que Issue este en la Columna Ready o Backlog", "errorMessage": "Por favor verifique que el issue $issueNumber este en la columna Ready o Backlog" },
         { "name": "check Issue type based on Labels", "function": "checkIssueType", "description": "Verifica si el issueType es de Desarrollo o No segun los labels (no desa son automation, documentation)" },
-        { "criteria": { "field": "hasBranch", "value": true }, "command": "checkout-branch.sh ${branchName}", "name": "Si el issue ya tiene desarrollo pull de la branch", "description": "baja cualquier cambio que este en la remote branch" , "errorMessage": "Fallo checkout de la branch"},
-        { "criteria": { "field": "hasBranch", "value": false }, "command": "create-branch.sh ${branchName}", "name": "Si el issue es Nuevo CREA LA BRANCH", "description": "Crea un branch", "errorMessage": "Fallo crear la branch" },
+        { "criteria": { "field": "hasBranch", "value": true }, "command": "checkout-branch.sh", "arguments": ["${branchName}"], "name": "Pull de la branch", "description": "baja cualquier cambio que este en la remote branch" , "errorMessage": "Fallo checkout de la branch"},
+        { "criteria": { "field": "hasBranch", "value": false }, "command": "create-branch.sh", "arguments": ["${branchName}"],  "name": "Crea la branch", "description": "Crea un branch localmente", "errorMessage": "Fallo crear la branch" },
         { "name": "Mueve el issue a In Progress", "function": "moveIssueInProgress", "errorMessage": "No se pudo mover el issue a inprogress, hagalo manualmente" },
         { "name": "Me Asigna el issue", "function": "assignIssueToMe", "errorMessage": "No se pudo pudo asignar la branch (${branchName}) al issue. Por favor hagalo manualmente", "skipOnError": true },
         { "name": "Pone la branch en el issue", "function": "assignBranchIssue", "errorMessage": "No se pudo asignar la branch ${branchName} al issue ${issueNumbe}r. Hagalo manualmente","skipOnError": true },
-        { "name": "Asocia la branch con el remote", "command": "git push -u origin ${branchName}", "errorMessage": "No se pudo asociar la branch ${branchName} al remote. verifique con git branch -vv " },
-        { "criteria": { "field": "isDevelopment", "value": true }, "name": "Crea la Scratch", "command": "create-scratch.sh ${branchName} ${defaultDias} ${permissionSet}", "errorMessage": "No se pudo asociar la branch ${branchName} al remote. verifique con git branch -vv " }
+        { "name": "Asocia la branch con el remote", "command": "git push -u origin", "arguments": ["${branchName}"], "errorMessage": "No se pudo asociar la branch ${branchName} al remote. verifique con git branch -vv " },
+        { "criteria": { "field": "isDevelopment", "value": true }, "name": "Crea la Scratch", "command": "create-scratch.sh", "arguments": ["${branchName}", "${defaultDias}", "${permissionSet}"], "errorMessage": "No se pudo asociar la branch ${branchName} al remote. verifique con git branch -vv " }
     ] 
 }
