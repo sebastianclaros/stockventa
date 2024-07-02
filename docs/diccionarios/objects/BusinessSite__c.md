@@ -8,7 +8,7 @@ title: Business Site
 
 
 
-- Label: Business Site
+- Label: Punto de Venta
 - ApiName: BusinessSite__c
 - Sharing Mode: ReadWrite
 - Visibilidad: Public

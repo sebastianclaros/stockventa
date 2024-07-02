@@ -11,8 +11,8 @@ title: TriggerHelper
 
 - Status: Active
 - Api Version: 59
-- Creada: 13 de junio de 24
-- Modificada: 13 de junio de 24
+- Creada: 27 de junio de 24
+- Modificada: 27 de junio de 24
 - Interface 
 
 ## Diagrama
@@ -21,6 +21,8 @@ classDiagram
 
 class TriggerHelper {
     
+     ERROR_FIELD_CANT_BE_MODIFIED $    
+     validateFieldUnchanged(Map newMapMap oldMapString fieldName) void $
      getRecordChanges(Map newMapMap oldMapString fieldName) List $
      getFieldsFromSObjects(List recordsString fieldName) Set $
      getExternalMap(String objectNameString externalFieldSet values) Map $
@@ -35,6 +37,7 @@ class TriggerHelper {
 *Metodos*
 | #   | Nombre | Return | Argumentos |
 | --- | ------ | ------ | ---------- |
+| <div class="icons">$</div> | validateFieldUnchanged | void| <ul><li>Map newMap</li><li>Map oldMap</li><li>String fieldName</li></ul>|
 | <div class="icons">$</div> | getRecordChanges | List| <ul><li>Map newMap</li><li>Map oldMap</li><li>String fieldName</li></ul>|
 | <div class="icons">$</div> | getFieldsFromSObjects | Set| <ul><li>List records</li><li>String fieldName</li></ul>|
 | <div class="icons">$</div> | getExternalMap | Map| <ul><li>String objectName</li><li>String externalField</li><li>Set values</li></ul>|

@@ -11,8 +11,8 @@ title: BaseTriggerHandler
 
 - Status: Active
 - Api Version: 59
-- Creada: 13 de junio de 24
-- Modificada: 13 de junio de 24
+- Creada: 27 de junio de 24
+- Modificada: 27 de junio de 24
 - Interface 
 
 ## Diagrama
