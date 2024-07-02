@@ -144,8 +144,18 @@ async function getContext(items, opciones) {
     contexts = getObjectsCache(DEFAULT_FILENAME);
     const itemsEnCache = contexts.map((object) => object.fullName);
     contexts = await getObjects(itemsEnCache);
+  } 
+
+  // cualquier cosa que no encontro lo busca
+  if ( contexts ) {
+    const itemsInContext = contexts.map((o) => o.fullName);
+    const itemsNotInContext = items.filter( x => !itemsInContext.includes(x) ); 
+    if (itemsNotInContext.length > 0 ) {
+      // Sino buscar la metadata segun los items
+      const newContexts = await getObjects(itemsNotInContext);
+      contexts = contexts.concat(newContexts);
+    }
   } else {
-    // Sino buscar la metadata segun los items
     contexts = await getObjects(items);
   }
 

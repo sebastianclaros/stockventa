@@ -1,5 +1,5 @@
 ---
-title: MaterialTriggerHandler
+title: InventoryTriggerHandler
 ---
 
 ## Introducción
@@ -10,24 +10,22 @@ title: MaterialTriggerHandler
 
 
 - Status: Active
-- Api Version: 59
+- Api Version: 61
 - Creada: 27 de junio de 24
-- Modificada: 28 de junio de 24
+- Modificada: 27 de junio de 24
 - Interface 
 
 ## Diagrama
 ```mermaid
 classDiagram
 
-class MaterialTriggerHandler {
+class InventoryTriggerHandler {
     
+     ERROR_CRUD_SOLO_POR_TRIGGER $    
+     flagInventoryTrigger $    
      beforeInsert() void o
      beforeUpdate() void o
      beforeDelete() void o
-     afterInsert() void o
-     afterUpdate() void o
-     afterDelete() void o
-     afterUndelete() void o
 
 }
 ```
@@ -41,10 +39,6 @@ class MaterialTriggerHandler {
 | <div class="icons">o</div> | beforeInsert | void| <ul></ul>|
 | <div class="icons">o</div> | beforeUpdate | void| <ul></ul>|
 | <div class="icons">o</div> | beforeDelete | void| <ul></ul>|
-| <div class="icons">o</div> | afterInsert | void| <ul></ul>|
-| <div class="icons">o</div> | afterUpdate | void| <ul></ul>|
-| <div class="icons">o</div> | afterDelete | void| <ul></ul>|
-| <div class="icons">o</div> | afterUndelete | void| <ul></ul>|
 
 
 | #  | Referencia       | #  | Referencia |
