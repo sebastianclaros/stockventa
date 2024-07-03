@@ -41,16 +41,16 @@ title: Material
 
 ````mermaid 
 stateDiagram-v2
-[*] --> Disponible: Si es un bien de cambio
-[*] --> DisponibleParaPrestamo: Si es un muleto 
-Disponible --> Reservado : reservar
-Reservado --> Disponible : desreservar
-Disponible --> Vendido :vender
-Vendido --> Disponible : anulación de venta
-Vendido --> Devolucion : develucion
-DisponibleParaPrestamo --> Prestado : entregar muleto
-Prestado --> DisponibleParaPrestamo : devolver muleto
-Prestado --> Vendido : venta-forzosa
-Disponible --> Siniestrado : declarar siniestro
-Vendido --> Siniestrado : declarar robo o hurto
+[*] --> Disponible: Alta de bien de cambio
+[*] --> DisponibleParaPrestamo: Alta de un muleto 
+Disponible --> Reservado : Reserva
+Reservado --> Disponible : Desreserva
+Disponible --> Vendido :Venta
+Vendido --> Disponible : Anulación de venta
+Vendido --> Devolucion : Develucion
+DisponibleParaPrestamo --> Prestado : Prestamo de Muleto
+Prestado --> DisponibleParaPrestamo : Devolución de muleto
+Prestado --> Vendido : Venta por falta de devolución de muleto
+Disponible --> Siniestrado : Robo o hurto a Telecom
+Vendido --> Siniestrado : Robo o hurto al cliente
 ````
