@@ -10,11 +10,11 @@ public class MaterialTriggerHandler extends BaseTriggerHandler {
     
     public override void beforeUpdate() {
         // No permite que se modifique el NMU
-        TriggerHelper.validateFieldUnchanged(Trigger.newMap, Trigger.oldMap, 'NMU__c');
+        TriggerHelper.validateFieldsUnchanged(Trigger.newMap, Trigger.oldMap, new String[]{'NMU__c', 'Serial__c'} );
 
         List<SObject> businessSiteChanges = TriggerHelper.getRecordChanges(Trigger.newMap, Trigger.oldMap, 'Werks__c');
         if ( businessSiteChanges.size() >0 ) {
-            MaterialTriggerHelper.completarBusinessSite(businessSiteChanges);       
+            MaterialTriggerHelper.completarBusinessSite(businessSiteChanges);
         }
 
         // Validar cambios de Estado
