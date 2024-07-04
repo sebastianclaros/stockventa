@@ -9,11 +9,15 @@ const proxyCommnad = {
     'run': runTask
 }
 
-const config = getConfigFromArgs();
-const tasks = getTasks(config.taskFolder);
-const taskName = await askForTaskName(config.taskName, tasks);
-const task = tasks[taskName];
-proxyCommnad[config.command](task);
+try {
+    const config = getConfigFromArgs();
+    const tasks = getTasks(config.taskFolder);
+    const taskName = await askForTaskName(config.taskName, tasks);
+    const task = tasks[taskName];
+    await proxyCommnad[config.command](task);
+} catch(error) {
+    console.error(error.message);
+}
 
 function getConfigFromArgs() {
     const config = { taskFolder: TASKS_FOLDER};

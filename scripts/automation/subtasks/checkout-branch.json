@@ -1,48 +1,15 @@
-#!/bin/bash
-# Script crea una branch nueva para un requerimiento
-# Recibe:
-# 1) El nombre de la Branch
-
-script_full_path=$(dirname "$0")
-source "$script_full_path/library.sh"
-
-# Step 1) Guardian de argumentos
-
-if [ -z "$1" ]; then  
-    doExit "Falta el nombre de la Branch"
-else 
-    branchName="$1"
-fi
-
-# Si no esta en la branch intenta crear la branch nueva
-doInfo "[INICIO] de Checkout de la branch $branchName"
-current_branch=$(git branch --show-current)
-if [ $current_branch != $branchName ]; then
-    doInfo  "[STEP 1] Chequea si hay algo sin commitear"
-    cambios=$(git status --porcelain=v1 2>/dev/null | wc -l)
-    if [ "$cambios" -ne 0 ]; then 
-        doExit  "Tiene modificaciones pendientes ($cambios)"
-    fi
-
-    doInfo  "[STEP 2] Nos movemos a branch $branchName"
-    git checkout $branchName
-    if [ $? -ne 0 ]; then
-        doExit "No se pudo hacer el cambio de rama, verifique el mensaje de error, generalmente es porque:
-            * - Tiene cosas sin comitear, haga el commit o descarte los cambios y vuelva a intentar
-            * - Pruebe hacer un git fetch para ver si baja el remote localmente"
-    fi
-
-    doInfo "* [STEP 3] Hacemos un pull para bajar lo ultimo"
-    git pull
-    if [ $? -ne 0 ]; then
-        doExit "Verifique que no tenga cosas sin comitear"
-    fi
-
-    #doInfo "* [STEP 4] Hacemos un rebase de main"
-    
-else 
-    doWarning "* Ya esta sobre la branch $branchName"
-    git pull
-fi
-
-doInfo "[FIN] de creacion de la branch $branchName"
+{
+    "name": "checkout-branch",
+    "guards": [ "isGitRepo" ], 
+    "arguments": { "newBranchName": { "name": "newBranchName", "option": "--newBranchName" } },
+    "description": "Comando para cambiar de branch y baja cualquier cambio que este en la remote branch o en main",
+    "steps": [
+        { "name": "valida que no sea la branch actual", "function": "validaNoseaBranchActual", "description": "Chequea si hay algo sin commitear", "errorMessage": "Tiene modificaciones pendientes" },
+        { "name": "chequea si hay cambios sin commit", "function": "checkCommitPending", "description": "Chequea si hay algo sin commitear", "errorMessage": "Tiene modificaciones pendientes" },
+        { "name": "baja cambios en remote y en main", "command": "git fetch", "description": "Baja de remote", "errorMessage": "No se pudo actualizar la branch, intente manualmente con git fetch" },
+        { "criteria": { "field": "existNewBranch", "value": false }, "name": "crea de branch", "command": "git checkout -b", "arguments": ["${newBranchName}", "origin/main" ], "description": "Chequea si hay algo sin commitear", "errorMessage": "No se pudo mover al branch ${newBranch}. Hagalo manualmente (git checkout -b ${newBranch})" },
+        { "criteria": { "field": "existNewBranch", "value": true }, "name": "cambia de branch", "command": "git branch", "arguments": ["${newBranchName}"], "description": "Cambia de branch", "errorMessage": "No se pudo mover al branch ${newBranch}. Hagalo manualmente (git branch ${newBranch})" },
+        { "criteria": { "field": "existNewBranch", "value": true }, "name": "baja de la remote branch", "command": "git pull", "arguments": { "--set-upstream": "origin/${branchName}"}, "description": "Trae contenido de branch remota", "errorMessage": "No se pudo traer de la remote branch ${newBranch}. Hagalo manualmente (git pull --set-upstream origin/${branchName} )" },
+        { "criteria": { "field": "existNewBranch", "value": true }, "name": "merge de main", "command": "git merge main", "description": "Trae cualquier cambio en main", "errorMessage": "No se pudo actualizar la branch con main, intente manualmente con git merge main" }
+    ]
+}

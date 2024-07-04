@@ -9,6 +9,8 @@ issueNumber
 */
 
 class Context {
+    isGitRepo = true;
+    sfToken = true;
     gitToken;
     branchName;
     defaultDias = 7
@@ -18,13 +20,18 @@ class Context {
     newIssueNumber;
     issueType;
     isVerbose = false;
-    
+    projectPath = process.cwd();
+    _scratch;
+    existNewBranch = false; // git show-ref refs/heads/
+
     init() {
         // Busca variables de entorno    
         this.gitToken = process.env.GITHUB_TOKEN ;
         this.permissionSet = process.env.PERMISSION_SET;
         // 
+
         this.branchName = taskFunctions.getBranchName();
+
         if ( this.branchName ) {
             const branchSplit = this.branchName.split("/");
             if ( branchSplit.length > 1 ) {
@@ -36,6 +43,19 @@ class Context {
                 }
             }
         }
+    }
+
+    get targetOrg() {
+        if ( !this._targetOrg ) {
+            this._targetOrg= taskFunctions.getTargetOrg();        
+        }
+        return this._targetOrg;
+    }
+    get scratch() {
+        if ( !this._scratch ) {
+            this._scratch= taskFunctions.getOrganizationObject(this.branchName);
+        }
+        return this._scratch;
     }
 
     validate(guards) {
@@ -57,24 +77,31 @@ class Context {
         return answer.newIssueNumber;
     }
 
-    async askForInputs(inputs) {        
-        for(const input of inputs) {
-            if ( !this.get(input) ) {
-                if ( typeof this[`get${input}`] === 'function' ) {
-                    this[input] = await this[`get${input}`]();
-                } else {
-                    const answer = await prompts([
-                        {
-                          type: "text",
-                          name: input,
-                          message: `Por favor ingrese ${input}?`
-                        }
-                      ]);                
-                      this[input] =  answer[input];                
-                }
+    convertToArrayOfInputs(inputs) {
+        let inputsArray = [];
+        if ( Array.isArray(inputs) ) {
+            // Si viene los args como ['name1', 'names] lo convierte a [{name: 'name1'}, {name: 'name2'}]
+            inputsArray = inputs.map( input => { return { name: input, type: 'text', message: `Por favor ingrese ${input}?` }});
+        } else {
+            // Si viene args como objeto { name1: {...}, name2: {...}} lo convierte a [{name: name1...}, {name: name2...}]
+            for (let key in inputs) {
+                const initial = inputs[key].default ? this.merge(inputs[key].default): undefined;
+                inputsArray.push( {name: key, type: 'text', initial, message: `Por favor ingrese ${key}?`, ...inputs[key]} ) ;
             }
         }
+        return inputsArray;
+    }
 
+    async askForArguments(inputs) {
+        // unifica los dos tipos de inputs (array y objeto) en un array de inputs
+        const inputsArray = this.convertToArrayOfInputs(inputs);
+
+        for(const input of inputsArray) {
+            if ( !this.get(input.name) ) {
+                const answer = await prompts([input]);
+                this[input.name] =  answer[input.name];
+            }
+        }
     }
 
     set() {    
@@ -92,8 +119,14 @@ class Context {
             });
         };
         
-        if ( Array.isArray(text) ) {            
+        if ( Array.isArray(text) ) {
             return text.map( t => mergeVariables(t) );
+        } else if ( typeof text === 'object' ) {            
+            const mergedObject = {}
+            for ( const key in text) {
+                mergedObject[key] = mergeVariables(text[key]);
+            }
+            return mergedObject;
         } else {
             return mergeVariables(text);
         }

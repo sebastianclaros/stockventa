@@ -23,7 +23,11 @@ export function getTasks(folder=TASKS_FOLDER) {
 function getTask(taskName, folder) {
     const filename =  folder + "/" + taskName + ".json";
     const content = fs.readFileSync(filename, "utf8");
-    return JSON.parse(content);
+    try {
+      return JSON.parse(content);
+    } catch (error) {
+      throw new Error(`Verifique que el ${filename} sea json valido`  );
+    }
 }
 
 function isCriteriaMet(criteria) {
@@ -44,8 +48,8 @@ export async function runTask(task, tabs = ''){
     context.validate(task.guards);
   }
   // Pide datos de entrada y los deja en context
-  if ( task.inputs ) {
-    await context.askForInputs(task.inputs);
+  if ( task.arguments ) {
+    await context.askForArguments(task.arguments);
   }
 
   logStep( `[INICIO] ${task.name}`, tabs );
@@ -73,12 +77,13 @@ function previewStep(step, tabs = '') {
     logStep(`Si ${step.criteria.field} ${step.criteria.operator || '=='} ${step.criteria.value}`, tabs );
     tabs += '\t';
   }
-  logStep(`${step.name}`, tabs );
-  if ( step.subtasks ) {
+  if ( step.subtask ) {
     tabs += '\t';
-    const subtask = getTask(task.subtasks, SUBTASKS_FOLDER);
+    const subtask = getTask(task.subtask, SUBTASKS_FOLDER);
     previewTask(subtask, tabs);
-  } 
+  } else {
+    logStep(`${step.name}`, tabs );
+  }
 }
 
 async function runStep(task, tabs) {
@@ -87,8 +92,8 @@ async function runStep(task, tabs) {
     return executeShell( task.command, args );
   } else if ( task.function ) {
     return executeFunction(task.function, args);
-  } else if ( task.subtasks ) {
-    const subtask = getTask(task.subtasks, SUBTASKS_FOLDER);
+  } else if ( task.subtask ) {
+    const subtask = getTask(task.subtask, SUBTASKS_FOLDER);
     return await runTask(subtask, tabs + '\t');
   }
   throw new Error(`No se pudo ejecutar el step ${task.name} porque no tiene command, function o subtasks`);

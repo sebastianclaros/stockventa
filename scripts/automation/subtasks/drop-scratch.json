@@ -1,25 +1,10 @@
-#!/bin/bash
-# Script que elimina la scractch
-# Recibe:
-# 1) El Alias de la Scratch 
-
-script_full_path=$(dirname "$0")
-source "$script_full_path/library.sh"
-
-# Step 1) Guardian de argumentos
-if [ -z "$1" ]; then  
-    scratchName=$(git branch --show-current)
-else 
-    scratchName="$1"
-fi
-
-# Si no esta en la branch intenta crear la branch nueva
-doInfo "* [INICIO] Eliminacion de la scracth $scratchName"
-
-sf org delete scratch --target-org $scratchName
-
-if [ $? -ne 0 ]; then
-    doExit "* [ERROR] No se pudo eliminar la scratch"
-fi
-
-doInfo "* [FIN] Eliminacion de la scracth $scratchName"
+{
+    "name": "drop-scratch",
+    "guards": [ "targetOrg" ],
+    "arguments": { "scratchName": { "default": "${branchName}" } },
+    "description": "Elimina la scratch",
+    "errorMessage": "No se pudo eliminar la scratch. Verifique si existe con sf org list, y en caso afirmativo pruebe manualmente un sf org delete scratch --target-org ${scratchName}  ",
+    "steps": [
+        { "name": "drop-scratch" , "command": "sf org delete scratch", "arguments": { "--target-org": "${scratchName}" } }
+    ] 
+}
