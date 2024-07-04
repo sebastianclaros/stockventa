@@ -1,8 +1,6 @@
 // Comandos validos
-import {getTasks, previewTask, helpTask, runTask} from "./helpers/tasks.mjs";
+import {getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
 import prompts from "prompts";
-export const TASKS_FOLDER = process.cwd() + "/scripts/automation/tasks";
-export const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
 const proxyCommnad = {
     'preview': previewTask , 
     'help': helpTask, 
@@ -13,8 +11,10 @@ try {
     const config = getConfigFromArgs();
     const tasks = getTasks(config.taskFolder);
     const taskName = await askForTaskName(config.taskName, tasks);
-    const task = tasks[taskName];
-    await proxyCommnad[config.command](task);
+    if ( taskName ) {        
+        const task = tasks[taskName];
+        await proxyCommnad[config.command](task);
+    }
 } catch(error) {
     console.error(error.message);
 }

@@ -4,6 +4,8 @@ import { logError, logStep } from "./color.mjs";
 import fs from "fs";
 import { executeFunction, executeShell } from "./taskFunctions.mjs";
 import prompts from "prompts";
+export const TASKS_FOLDER = process.cwd() + "/scripts/automation/tasks";
+export const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
 
 const filterJson = (file) => file.endsWith(".json");
 
@@ -34,7 +36,11 @@ function isCriteriaMet(criteria) {
   if ( !criteria ) {
     return true;
   }
-  const { field, value } = criteria;
+  const { field, value} = criteria;
+  // si no viene valor solo verifica que tenga no este vacio
+  if ( !value ) {
+    return context.get(field) ;
+  } 
   const result = context.get(field) == value;
   return result;
 }
@@ -87,11 +93,10 @@ function previewStep(step, tabs = '') {
 }
 
 async function runStep(task, tabs) {
-  const args = task.arguments ? context.merge(task.arguments): [];
   if ( task.command ) {
-    return executeShell( task.command, args );
+    return executeShell( task.command, task.arguments );
   } else if ( task.function ) {
-    return executeFunction(task.function, args);
+    return await executeFunction(task.function, task.arguments);
   } else if ( task.subtask ) {
     const subtask = getTask(task.subtask, SUBTASKS_FOLDER);
     return await runTask(subtask, tabs + '\t');

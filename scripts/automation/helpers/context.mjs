@@ -1,5 +1,6 @@
 import { taskFunctions } from "./taskFunctions.mjs"
 import prompts from "prompts";
+import fs from "fs";
 
 /*
 branchName 
@@ -10,6 +11,7 @@ issueNumber
 
 class Context {
     isGitRepo = true;
+    sfInstalled = true; 
     sfToken = true;
     gitToken;
     branchName;
@@ -24,10 +26,25 @@ class Context {
     _scratch;
     existNewBranch = false; // git show-ref refs/heads/
 
+    loadConfig() {
+        const filename =  this.projectPath +  "/.autoforce.json";
+        const content = fs.readFileSync(filename, "utf8");
+        try {
+          const config = JSON.parse(content);
+          for( const key in config ) {
+            this.set( key, config[key] );
+          }
+        } catch (error) {
+          throw new Error(`Verifique que el ${filename} sea json valido`  );
+        }
+      
+    }
+
     init() {
         // Busca variables de entorno    
         this.gitToken = process.env.GITHUB_TOKEN ;
-        this.permissionSet = process.env.PERMISSION_SET;
+
+        this.loadConfig();
         // 
 
         this.branchName = taskFunctions.getBranchName();
@@ -104,7 +121,8 @@ class Context {
         }
     }
 
-    set() {    
+    set( field, value ) {
+        this[field] = value;    
     }
 
     get(variable) { 
@@ -119,17 +137,7 @@ class Context {
             });
         };
         
-        if ( Array.isArray(text) ) {
-            return text.map( t => mergeVariables(t) );
-        } else if ( typeof text === 'object' ) {            
-            const mergedObject = {}
-            for ( const key in text) {
-                mergedObject[key] = mergeVariables(text[key]);
-            }
-            return mergedObject;
-        } else {
-            return mergeVariables(text);
-        }
+        return mergeVariables(text);
     }
 }
 

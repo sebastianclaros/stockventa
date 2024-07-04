@@ -1,29 +1,60 @@
 import {execSync} from "child_process";
-// import { getRepository, moveIssue } from "./github-graphql.mjs";
+import context from "./context.mjs";
+import { getIssue, getIssueState } from "./github-graphql.mjs";
 
+function mergeArgs(args) {
+    if ( Array.isArray(args) ) {
+        let argsArray = [];
+        for ( const argName of args) {
+            argsArray.push( context.merge(argName) );
+        }
+        return argsArray;
+    } else if ( typeof args === 'object' ) {
+        let argsObject = {};        
+        for ( const argName in args) {
+            argsObject[argName] =  context.merge(args[argName]);
+        }
+        return argsObject;
+    }
+    return null;
+
+}
+function convertArgsToString(args) {
+    let argsString = '';
+    if ( Array.isArray(args) ) {
+        for ( const argName of args) {
+            argsString += context.merge(argName) + ' ';
+        }    
+    } else if ( typeof args === 'object' ) {
+        for ( const argName in args) {
+            argsString += argName + '=' + context.merge(args[argName]) + ' ';
+        }
+    }
+    return argsString;
+
+}
 export function executeShell(command, args) {
     try {
-        console.log(command, args);
-        // const buffer = execSync( command ) ;
-        // const salida = buffer.toString().trim();
-        // return ( salida.endsWith("\n") ? salida.slice(0, -1) : salida );
-        return true;  
+       const buffer = execSync( command + ' ' + convertArgsToString(args)) ;
+       const salida = buffer.toString().trim();
+       return ( salida.endsWith("\n") ? salida.slice(0, -1) : salida );
     } catch (error) {
         return false;
     }
 }
 
-export function executeFunction(functionName, args) {
+export async function executeFunction(functionName, args) {
+    let returnValue = false;
     try {
-        if ( typeof taskFunctions[functionName] === 'function' ) {
-            // taskFunctions[functionName](args);            
+        if ( typeof taskFunctions[functionName] === 'function' ) {         
+            returnValue = await taskFunctions[functionName](...mergeArgs(args));            
         } else {
             throw new Error(`No se encontro la funcion ${functionName}`);
         }
-        return true;  
     } catch (error) {
-        return false;        
+        returnValue=false;        
     }
+    return returnValue;  
 }
 
 
@@ -67,9 +98,11 @@ export const taskFunctions = {
     
     },
 
-    validateIssue() {
+    async validateIssue(issueNumber, states) {        
+        const currentState = await getIssueState(issueNumber);        
+        const arrayStates = states.toLocaleLowerCase().replace(' ', '').split(',');
+        return arrayStates.includes(currentState.toLocaleLowerCase().replace(' ', ''));
     },
-
     validateScratch() {
         // hayCambios=$(sf project retrieve preview)
     
