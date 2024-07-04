@@ -10,7 +10,7 @@ public with sharing class MaterialTriggerHelper {
     public final static String ESTADO_SINIESTRADO = 'MCSH'; // hurto 'MCSR'  Robo 'MCDT' Destruccion toal  MTSE Extravio
     public final static String ESTADO_DISPONIBLE_PRESTAMO = 'MTPM';
     public final static String ESTADO_DEVOLUCION_GARANTIA = 'MTDG';
-    public final static String ESTADO_INICIAL = '';
+    public final static String SIN_ESTADO_PREVIO = '';
 
     final static Map<String, String> CAMPO_SEGUN_ESTADO = new Map<String, String>{
         ESTADO_DISPONIBLE => 'Available__c',
@@ -18,11 +18,12 @@ public with sharing class MaterialTriggerHelper {
     };
 
     final static map<String, String> CAMBIOS_ESTADO_PROCESO = new Map<String, String>{
-        ESTADO_INICIAL + ESTADO_DISPONIBLE => 'Alta bien de cambio',
-        ESTADO_INICIAL + ESTADO_DISPONIBLE_PRESTAMO => 'Alta de muleto',
+        SIN_ESTADO_PREVIO + ESTADO_DISPONIBLE => 'Alta bien de cambio',
+        SIN_ESTADO_PREVIO + ESTADO_DISPONIBLE_PRESTAMO => 'Alta de muleto',
         ESTADO_DISPONIBLE + ESTADO_RESERVADO => 'Reserva', 
         ESTADO_RESERVADO + ESTADO_DISPONIBLE => 'Desreserva',
         ESTADO_DISPONIBLE + ESTADO_VENDIDO => 'Venta',
+        ESTADO_RESERVADO + ESTADO_VENDIDO => 'Venta',        
         ESTADO_VENDIDO + ESTADO_DISPONIBLE => 'Anulacion Venta',
         ESTADO_DISPONIBLE_PRESTAMO + ESTADO_PRESTADO => 'Entrega Muleto',
         ESTADO_PRESTADO + ESTADO_DISPONIBLE_PRESTAMO => 'Devolucion Muleto',
@@ -142,7 +143,7 @@ public with sharing class MaterialTriggerHelper {
     public static void validateStatusChanges( Map<Id, Material__c> oldMaterial, List<Material__c> newMaterial ){
         for( Material__c material: newMaterial){
             String newStatus = material.Status__c;
-            String oldStatus = oldMaterial == null ? ESTADO_INICIAL : oldMaterial.get(material.Id).Status__c;
+            String oldStatus = oldMaterial == null ? SIN_ESTADO_PREVIO : oldMaterial.get(material.Id).Status__c;
 
             if ( !CAMBIOS_ESTADO_PROCESO.containsKey(oldStatus + newStatus) ){
                 material.addError( String.format( ERROR_CAMBIO_DE_ESTADO, new String[]{ oldStatus, newStatus}));
