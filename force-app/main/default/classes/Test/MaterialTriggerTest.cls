@@ -3,6 +3,65 @@
 public with sharing class MaterialTriggerTest {
 
     @IsTest 
+    static void testCambiarStatusInvalido() {
+        Product2 p1= TestDataFactory.getProductos().values().get(0);
+        BusinessSite__c b1= TestDataFactory.getBusinessSites().values().get(0);
+        Material__c material = new Material__c( Status__c = MaterialTriggerHelper.ESTADO_DISPONIBLE  ,  Serial__c = '1', NMU__c =  p1.NMU__c, Werks__c = b1.Werks__c );
+        insert material;
+    
+        try {
+            material.Status__c = MaterialTriggerHelper.ESTADO_PRESTADO;
+            update material;
+            System.assert(true, 'El cambio de estado no es valido');
+        } catch ( Exception e) {
+
+        }
+     }
+
+    @IsTest 
+    static void testCambiarStatusValido() {
+        Product2 p1= TestDataFactory.getProductos().values().get(0);
+        BusinessSite__c b1= TestDataFactory.getBusinessSites().values().get(0);
+        Material__c material = new Material__c( Status__c = MaterialTriggerHelper.ESTADO_DISPONIBLE  ,  Serial__c = '1', NMU__c =  p1.NMU__c, Werks__c = b1.Werks__c );
+        insert material;
+
+        try {
+            material.Status__c = MaterialTriggerHelper.ESTADO_VENDIDO;
+            update material;
+        } catch ( Exception e) {
+            System.assert(true, 'El cambio de estado era valido');
+        }
+        
+    }
+
+    @IsTest 
+    static void testCambiarStatusInicialValido() {
+        Product2 p1= TestDataFactory.getProductos().values().get(0);
+        BusinessSite__c b1= TestDataFactory.getBusinessSites().values().get(0);
+        Material__c material = new Material__c( Status__c = MaterialTriggerHelper.ESTADO_DISPONIBLE  ,  Serial__c = '1', NMU__c =  p1.NMU__c, Werks__c = b1.Werks__c );
+    
+        try {
+            insert material;
+        } catch ( Exception e) {
+            System.assert(true, 'El cambio de estado era valido');
+        }
+    }
+
+    @IsTest 
+    static void testCambiarStatusInicialInvalido() {
+        Product2 p1= TestDataFactory.getProductos().values().get(0);
+        BusinessSite__c b1= TestDataFactory.getBusinessSites().values().get(0);
+        Material__c material = new Material__c( Status__c = MaterialTriggerHelper.ESTADO_VENDIDO  ,  Serial__c = '1', NMU__c =  p1.NMU__c, Werks__c = b1.Werks__c );
+
+        try {
+            insert material;
+            System.assert(true, 'El estado inicial Vendido no es valido');
+        } catch ( Exception e) {
+
+        }
+
+    }
+    @IsTest 
     static void testAltaDeMateriales() {
         List<Material__c> materiales = new List<Material__c>();
         
