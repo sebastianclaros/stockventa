@@ -1,6 +1,6 @@
 import {execSync} from "child_process";
 import context from "./context.mjs";
-import { getIssue, getIssueState } from "./github-graphql.mjs";
+import { getIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
 
 function mergeArgs(args) {
     if ( Array.isArray(args) ) {
@@ -139,21 +139,20 @@ export const taskFunctions = {
         }
     },
     
-    moveIssueInProgress() {
-    
+    async moveIssue(issueNumber, state) {
+        const result = await moveIssue(issueNumber, state);    
+        return result;
     },
     
-    assignIssueToMe() {
+    async assignIssueToMe(issueNumber) {
+        const result = await assignIssueToMe(issueNumber);    
+        return result;
         
     },
     
-    checkIssueType() {
-    //    issueJson=$("$script_full_path/subtask/get-issue.sh" $issueNumber)
-    //    if [[ $issueJson == *"labels"*"automation"* ]]; then
-    //        issueType='automation';
-    //    fi
-    //    if [[ $issueJson == *"labels"*"documentation"* ]];  then
-    //        issueType='doc';
-    //    fi
+    async checkIssueType(issueNumber) {
+        const issue = await getIssueObject(issueNumber);
+        console.log(issue);
+        return true;
     }
 }
