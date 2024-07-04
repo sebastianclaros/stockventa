@@ -17,6 +17,18 @@
     <picklistValues>
         <picklist>Status__c</picklist>
         <values>
+            <fullName>MCLV</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MCSH</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MTDG</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>MTND</fullName>
             <default>false</default>
         </values>
@@ -26,6 +38,10 @@
         </values>
         <values>
             <fullName>MTPM</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MTPO</fullName>
             <default>false</default>
         </values>
         <values>
