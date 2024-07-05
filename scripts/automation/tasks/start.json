@@ -6,11 +6,11 @@
     "steps": [
         { "name": "validate issue", "function": "validateIssue", "arguments":  ["${newIssueNumber}",  "Ready,Backlog"], "description": "Valida que Issue este en la Columna Ready o Backlog", "errorMessage": "Por favor verifique que el issue $issueNumber este en la columna Ready o Backlog" },
         { "name": "check Issue type based on Labels", "function": "checkIssueType", "arguments":  ["${newIssueNumber}"] , "description": "Verifica si el issueType es de Desarrollo o No segun los labels (no desa son automation, documentation)" },
-        { "subtask": "checkout-branch", "arguments": ["${branchName}"]},
-        { "name": "Mueve el issue a In Progress", "function": "moveIssueInProgress", "errorMessage": "No se pudo mover el issue a inprogress, hagalo manualmente" },
-        { "name": "Me Asigna el issue", "function": "assignIssueToMe", "errorMessage": "No se pudo pudo asignar la branch (${branchName}) al issue. Por favor hagalo manualmente", "skipOnError": true },
-        { "name": "Pone la branch en el issue", "function": "assignBranchIssue", "errorMessage": "No se pudo asignar la branch ${branchName} al issue ${issueNumbe}r. Hagalo manualmente","skipOnError": true },
-        { "name": "Asocia la branch con el remote", "command": "git push -u origin", "arguments": ["${branchName}"], "errorMessage": "No se pudo asociar la branch ${branchName} al remote. verifique con git branch -vv " },
-        { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "create-scratch", "arguments": ["${branchName}", "${defaultDias}", "${permissionSet}"] }
+        { "subtask": "checkout-branch", "arguments": ["${newBranchName}"]},
+        { "name": "Mueve el issue a In Progress", "function": "moveIssue", "arguments":  ["${newIssueNumber}",  "In Progress"], "errorMessage": "No se pudo mover el issue a inprogress, hagalo manualmente" },
+        { "name": "Me Asigna el issue", "function": "assignIssueToMe", "arguments":  ["${newIssueNumber}"], "errorMessage": "No se pudo pudo asignar la branch (${newBranchName}) al issue. Por favor hagalo manualmente", "skipOnError": true },
+        { "name": "Pone la branch en el issue", "function": "assignBranchIssue", "arguments":  ["${newIssueNumber}"], "errorMessage": "No se pudo asignar la branch ${newBranchName} al issue ${issueNumbe}r. Hagalo manualmente","skipOnError": true },
+        { "name": "Asocia la branch con el remote", "command": "git push -u origin", "arguments": ["${newBranchName}"], "errorMessage": "No se pudo asociar la branch ${newBranchNamed} al remote. verifique con git branch -vv " },
+        { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "create-scratch", "arguments": ["${newBranchName}", "${defaultDias}", "${permissionSet}"] }
     ] 
 }

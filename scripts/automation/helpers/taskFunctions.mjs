@@ -94,8 +94,8 @@ export const taskFunctions = {
     },
     
     validaNoseaBranchActual(newBranchName) {
-    // current_branch=$(git branch --show-current)
-    
+        console.log(this.getBranchName(), newBranchName );
+        return this.getBranchName() !== newBranchName;
     },
 
     async validateIssue(issueNumber, states) {        
@@ -143,16 +143,38 @@ export const taskFunctions = {
         const result = await moveIssue(issueNumber, state);    
         return result;
     },
+
+    async assignBranchToIssue(issueNumber, newBranchName) {
+        const commitSha = '';//commitSha=$(git rev-parse --verify main)
+        const result = await assignBranchToIssue(issueNumber,newBranchName, commitSha);
+        return result;
+        
+    },    
+
     
     async assignIssueToMe(issueNumber) {
         const result = await assignIssueToMe(issueNumber);    
         return result;
         
-    },
-    
+    },    
+
     async checkIssueType(issueNumber) {
         const issue = await getIssueObject(issueNumber);
-        console.log(issue);
+        // Setea el issueType segun el issue
+        try {
+            if ( issue.labels?.length > 0 ) {
+                if ( issue.labels.includes('documentation') ) {
+                    context.set('newIssueType', 'doc');
+                } else if ( issue.labels.includes('automation') ) {
+                    context.set('newIssueType', 'automation');
+                } else if ( issue.labels.includes('bug') ) {
+                    context.set('newIssueType', 'fix');
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
         return true;
     }
 }

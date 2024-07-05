@@ -39,9 +39,9 @@ function isCriteriaMet(criteria) {
   const { field, value} = criteria;
   // si no viene valor solo verifica que tenga no este vacio
   if ( !value ) {
-    return context.get(field) ;
+    return context[field] ;
   } 
-  const result = context.get(field) == value;
+  const result = context[field] == value;
   return result;
 }
 
@@ -51,7 +51,7 @@ export async function helpTask(task){
 export async function runTask(task, tabs = ''){
   // Valida que este ya esten las variables de enotorno y  configuracion
   if ( task.guards ) {
-    context.validate(task.guards);
+    await context.validate(task.guards);
   }
   // Pide datos de entrada y los deja en context
   if ( task.arguments ) {
@@ -99,7 +99,7 @@ async function runStep(task, tabs) {
     return await executeFunction(task.function, task.arguments);
   } else if ( task.subtask ) {
     const subtask = getTask(task.subtask, SUBTASKS_FOLDER);
-    return await runTask(subtask, tabs + '\t');
+    return await runTask(subtask, tabs);
   }
   throw new Error(`No se pudo ejecutar el step ${task.name} porque no tiene command, function o subtasks`);
 }
@@ -120,19 +120,23 @@ async function askForContinue() {
 } 
 
 function getStepError(step) {
-  return step.errorMesage ? context.merge(step.errorMesage): `Fallo el step ${step.name}`;
+  return step.errorMessage ? context.merge(step.errorMessage): step.name ? `Fallo el step ${step.name}` : '';
 }
 async function executeStep(step, tabs) {
-  logStep(`[INICIO] ${step.name}`, tabs);
+  if ( step.name ) {
+    logStep(`[INICIO] ${step.name}`, tabs);
+  }
   
   const success = await runStep(step, tabs);
-  if ( !success ) {
+  if ( !success) {
     logError(`[ERROR] ${getStepError(step)}`, tabs );
     if ( ! await askForContinue() ) {
       return false;
     } 
   }
-  logStep(`[FIN] ${step.name}`, tabs );
+  if ( step.name ) {
+    logStep(`[FIN] ${step.name}`, tabs );
+  }
   return true;
 }
 

@@ -14,13 +14,18 @@ class Context {
     sfInstalled = true; 
     sfToken = true;
     gitToken;
+
     branchName;
+    issueNumber;
+    issueType;
+
+    newIssueNumber;
+    newIssueType;
+    newBranchName;
+
     defaultDias = 7
     permissionSet;
-    issueNumber;
     issueTitle;
-    newIssueNumber;
-    issueType;
     isVerbose = false;
     projectPath = process.cwd();
     _scratch;
@@ -46,7 +51,6 @@ class Context {
 
         this.loadConfig();
         // 
-
         this.branchName = taskFunctions.getBranchName();
 
         if ( this.branchName ) {
@@ -75,15 +79,28 @@ class Context {
         return this._scratch;
     }
 
-    validate(guards) {
+    async validate(guards) {
         for(const guard of guards) {
-            if ( !this.get(guard) ) {
+            const value = await this.get(guard);
+            if ( !value ) {
                 throw new Error(`No se encontro la variable ${guard} en el contexto. Ejecute yarn auto config o lea el index.md para mas informacion.`);
             }
         }
     }
 
-    async getnewIssueNumber() {
+    async _newBranchName() {       
+        if ( !this.newIssueNumber  ) {
+            this.newIssueNumber = await this._newIssueNumber();
+        }
+        
+        if ( !this.newIssueType  ) {
+            this.newIssueType = await this._newIssueType();
+        }
+        
+        return this.newIssueType + '/' + this.newIssueNumber;
+    }    
+
+    async _newIssueNumber() {
         const answer = await prompts([
             {
               type: "text",
@@ -92,6 +109,19 @@ class Context {
             }
           ]);                
         return answer.newIssueNumber;
+    }
+
+    async _newIssueType() {
+        const answer = await prompts([
+            {
+              type: "list",
+              name: "newIssueType",
+              initial: "feature",
+              message: "Por favor ingrese el type del issue?",
+              choices: [ "feature", "bug", "documentation", "automation" ]
+            }
+          ]);                
+        return answer.newIssueType;
     }
 
     convertToArrayOfInputs(inputs) {
@@ -114,7 +144,8 @@ class Context {
         const inputsArray = this.convertToArrayOfInputs(inputs);
 
         for(const input of inputsArray) {
-            if ( !this.get(input.name) ) {
+            const hasValue = await this.get(input.name);
+            if ( !hasValue ) {
                 const answer = await prompts([input]);
                 this[input.name] =  answer[input.name];
             }
@@ -125,15 +156,20 @@ class Context {
         this[field] = value;    
     }
 
-    get(variable) { 
-         return this[variable] ? this[variable]: ''; 
+    async get(variable) { 
+        if ( !this[variable] ) {
+            if ( this['_' + variable] && typeof this['_' + variable] == 'function' ) {
+                this[variable] = await this['_' + variable]();
+            }
+        }
+        return this[variable];
     }
 
     merge(text) {
         const mergeVariables = (t) => {
             if (!t) return '';
             return t.replace(/\$\{([^}]+)}/g, (match, variable) => {
-                return this.get(variable);
+                return this[variable];
             });
         };
         
