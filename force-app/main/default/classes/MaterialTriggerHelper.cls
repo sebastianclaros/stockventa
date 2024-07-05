@@ -7,14 +7,24 @@ public with sharing class MaterialTriggerHelper {
     public final static String ESTADO_RESERVADO = 'MTRE';
     public final static String ESTADO_VENDIDO = 'MCLV';
     public final static String ESTADO_PRESTADO = 'MTPO';
-    public final static String ESTADO_SINIESTRADO = 'MCSH'; // hurto 'MCSR'  Robo 'MCDT' Destruccion toal  MTSE Extravio
+    public final static String ESTADO_SINIESTRADO_TELECOM = 'MTSC';
     public final static String ESTADO_DISPONIBLE_PRESTAMO = 'MTPM';
     public final static String ESTADO_DEVOLUCION_GARANTIA = 'MTDG';
     public final static String SIN_ESTADO_PREVIO = '';
+    // Estados del Asset cuando esta Siniestrado del lado del Cliente
+    //public final static String ESTADO_HURTO = 'MCSH'; 
+    //public final static String ESTADO_ROBO = 'MCSR'; 
+    //public final static String ESTADO_EXTRAVIO = 'MTSE'; 
+    //public final static String ESTADO_DESTRUCCION_TOTAL = 'MCDT'; 
 
     final static Map<String, String> CAMPO_SEGUN_ESTADO = new Map<String, String>{
-        ESTADO_DISPONIBLE => 'Available__c',
-        ESTADO_RESERVADO => 'LockedBySerial__c'
+        ESTADO_DISPONIBLE => 'mtpl__c',
+        ESTADO_RESERVADO => 'mtre__c',
+        ESTADO_DISPONIBLE_PRESTAMO => 'mtpm__c',
+        ESTADO_PRESTADO => 'mtpo__c',
+        ESTADO_SINIESTRADO_TELECOM => 'mtsc__c',
+        ESTADO_VENDIDO => 'mclv__c',
+        ESTADO_DEVOLUCION_GARANTIA => 'mtdg__c'
     };
 
     final static map<String, String> CAMBIOS_ESTADO_PROCESO = new Map<String, String>{
@@ -29,9 +39,7 @@ public with sharing class MaterialTriggerHelper {
         ESTADO_PRESTADO + ESTADO_DISPONIBLE_PRESTAMO => 'Devolucion Muleto',
         ESTADO_PRESTADO + ESTADO_VENDIDO => 'Vendido',
         ESTADO_PRESTADO + ESTADO_VENDIDO => 'Vendido',
-        ESTADO_DISPONIBLE + ESTADO_SINIESTRADO => 'Siniestro',
-        ESTADO_VENDIDO + ESTADO_SINIESTRADO => 'Robo',
-        ESTADO_SINIESTRADO + ESTADO_VENDIDO => 'Recuperacion',
+        ESTADO_DISPONIBLE + ESTADO_SINIESTRADO_TELECOM => 'Siniestro',
         ESTADO_VENDIDO + ESTADO_DEVOLUCION_GARANTIA => 'Cambio en garantia'
     };
 
@@ -50,7 +58,7 @@ public with sharing class MaterialTriggerHelper {
         }
 
         // Agrega los inventarios que existen
-        for ( Inventory__c inventario: [SELECT Name, Id, LockedBySerial__c, Available__c, Total__c FROM Inventory__c WHERE name IN :inventoryNames.keySet()] ) {
+        for ( Inventory__c inventario: [SELECT Name, Id, mtpl__c, mtre__c, mtpm__c, mtpo__c, mclv__c, mtsc__c, mtdg__c, LockedByQuantity__c, Total__c FROM Inventory__c WHERE name IN :inventoryNames.keySet()] ) {
             inventarios.put( inventario.Name , inventario);
         }
 
@@ -60,7 +68,7 @@ public with sharing class MaterialTriggerHelper {
         if ( newInventarios.size() > 0 ) {
             for ( String inventoryName: newInventarios ) {
                 Material__c material = inventoryNames.get(inventoryName);
-                inventarios.put( inventoryName, new Inventory__c(Name = inventoryName, Product__c = material.Product__c, BusinessSite__c = material.BusinessSite__c,  Available__c = 0 ,  LockedBySerial__c = 0, Total__c = 0 ) );
+                inventarios.put( inventoryName, new Inventory__c(Name = inventoryName, Product__c = material.Product__c, BusinessSite__c = material.BusinessSite__c,  mtpl__c= 0, mtre__c= 0, mtpm__c= 0, mtpo__c= 0, mclv__c= 0, mtsc__c = 0, mtdg__c = 0, LockedByQuantity__c = 0, Total__c = 0 ) );
             }
         }
         return inventarios;

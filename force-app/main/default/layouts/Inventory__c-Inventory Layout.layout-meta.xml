@@ -23,6 +23,22 @@
                 <behavior>Edit</behavior>
                 <field>BusinessSite__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>mtpo__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>mclv__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>mtsc__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>mtdg__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -44,7 +60,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Available__c</field>
+                <field>mtpl__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -54,11 +70,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>LockedBySerial__c</field>
+                <field>mtre__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Substitutes__c</field>
+                <field>mtpm__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -208,7 +224,7 @@
             <posY>0</posY>
         </summaryLayoutItems>
         <summaryLayoutItems>
-            <field>Available__c</field>
+            <field>mtpl__c</field>
             <posX>1</posX>
             <posY>1</posY>
         </summaryLayoutItems>

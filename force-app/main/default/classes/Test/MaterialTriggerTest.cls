@@ -76,12 +76,12 @@ public with sharing class MaterialTriggerTest {
         
         insert materiales;
 
-        List<Inventory__c> inventarios = [SELECT Name, Product__r.NMU__c, BusinessSite__r.Werks__c, Available__c, Total__c FROM Inventory__c];
+        List<Inventory__c> inventarios = [SELECT Name, Product__r.NMU__c, BusinessSite__r.Werks__c, mtpl__c, Total__c FROM Inventory__c];
         
         System.assertEquals(inventarios.size(), 2, 'Tiene que dejar dos Inventory');
-        System.assertEquals(inventarios.get(0).Available__c, 1, 'Tiene que dejar avaiable 1 en ' + inventarios.get(0).name);
+        System.assertEquals(inventarios.get(0).mtpl__c, 1, 'Tiene que dejar avaiable 1 en ' + inventarios.get(0).name);
         System.assertEquals(inventarios.get(0).Total__c, 1, 'Tiene que dejar total 1 en ' + inventarios.get(0).name);
-        System.assertEquals(inventarios.get(1).Available__c, 1, 'Tiene que dejar avaiable 1 en ' + inventarios.get(1).name);
+        System.assertEquals(inventarios.get(1).mtpl__c, 1, 'Tiene que dejar avaiable 1 en ' + inventarios.get(1).name);
         System.assertEquals(inventarios.get(1).Total__c, 1, 'Tiene que dejar total 1 en ' + inventarios.get(1).name);
 
     }
