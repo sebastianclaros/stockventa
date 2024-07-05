@@ -120,7 +120,7 @@ class Context {
               message: "Por favor ingrese el type del issue?",
               choices: [ "feature", "bug", "documentation", "automation" ]
             }
-          ]);                
+          ]);
         return answer.newIssueType;
     }
 
@@ -147,6 +147,9 @@ class Context {
             const hasValue = await this.get(input.name);
             if ( !hasValue ) {
                 const answer = await prompts([input]);
+                if ( !answer ) {
+                    process.exit();
+                }
                 this[input.name] =  answer[input.name];
             }
         }

@@ -113,21 +113,7 @@ export const taskFunctions = {
         // fi
     },
     
-    
-    checkCommitPending() {
-        // cambios=$(git status --porcelain=v1 2>/dev/null | wc -l)
-    },
-    
-    checkoutBranch() {
-        // git checkout -b $newBranch
-        // mergeBranch
-    },
-    
-    mergeBranch() {
-        // git fetch
-        // git merge origin/main
-    },
-    
+  
     
     getBranchName() {
         try {
@@ -142,6 +128,31 @@ export const taskFunctions = {
         return this.getBranchName() !== newBranchName;
     },
 
+    
+    async checkCommitPending() {
+        try {
+            const buffer = execSync( "git status --porcelain=v1 2>/dev/null | wc -l" ) ;
+            const salida = buffer.toString().trim();
+            const cambios = ( salida.endsWith("\n") ? salida.slice(0, -1) : salida );
+            return cambios == '0' ;
+        } catch (error) {
+        }
+
+        // cambios=$(git status --porcelain=v1 2>/dev/null | wc -l)
+        return false;
+    },
+    
+    async checkoutBranch() {
+        // git checkout -b $newBranch
+        // mergeBranch
+        return false;
+    },
+    
+    async mergeBranch() {
+        return false;
+        // git fetch
+        // git merge origin/main
+    },
     
     async moveIssue(issueNumber, state) {
         const result = await moveIssue(issueNumber, state);    
