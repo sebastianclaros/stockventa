@@ -32,12 +32,6 @@
                 <label>Disponible Prestamo</label>
             </value>
             <value>
-                <fullName>MTND</fullName>
-                <color>#FF9966</color>
-                <default>false</default>
-                <label>No Disponible</label>
-            </value>
-            <value>
                 <fullName>MTDG</fullName>
                 <default>false</default>
                 <label>Devuelto en garantia</label>
@@ -53,7 +47,7 @@
                 <label>Vendido</label>
             </value>
             <value>
-                <fullName>MCSH</fullName>
+                <fullName>MTSC</fullName>
                 <default>false</default>
                 <label>Siniestro</label>
             </value>

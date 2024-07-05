@@ -21,15 +21,7 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>MCSH</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>MTDG</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>MTND</fullName>
             <default>false</default>
         </values>
         <values>
@@ -46,6 +38,10 @@
         </values>
         <values>
             <fullName>MTRE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MTSC</fullName>
             <default>false</default>
         </values>
     </picklistValues>
