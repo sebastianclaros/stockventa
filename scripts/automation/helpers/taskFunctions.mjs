@@ -137,21 +137,34 @@ export const taskFunctions = {
             return cambios == '0' ;
         } catch (error) {
         }
-
-        // cambios=$(git status --porcelain=v1 2>/dev/null | wc -l)
         return false;
     },
     
-    async checkoutBranch() {
-        // git checkout -b $newBranch
+    async checkoutBranch(newBranch) {
+        try {
+            const buffer = execSync( `git checkout -b ${newBranch}` ) ;
+            const salida = buffer.toString().trim();
+            return true ;
+        } catch (error) {
+            console.log(error);
+        }
         // mergeBranch
         return false;
     },
     
     async mergeBranch() {
+        try {
+            execSync( `git fetch` ) ;
+
+            execSync( `git merge origin/main` ) ;
+            
+            return true ;
+        } catch (error) {
+            console.log(error);
+        }
         return false;
         // git fetch
-        // git merge origin/main
+        // 
     },
     
     async moveIssue(issueNumber, state) {
