@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>LockedByQuantity__c</fullName>
+    <fullName>mtre__c</fullName>
     <defaultValue>0</defaultValue>
     <externalId>false</externalId>
-    <label>Bloqueos por Cantidad</label>
+    <label>Bloqueos Unitarios</label>
     <precision>8</precision>
     <required>false</required>
     <scale>0</scale>

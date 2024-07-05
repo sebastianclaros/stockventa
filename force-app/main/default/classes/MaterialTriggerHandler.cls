@@ -6,11 +6,19 @@ public class MaterialTriggerHandler extends BaseTriggerHandler {
         MaterialTriggerHelper.completarProducto(Trigger.new);
         // Completa el lookup a business Site segun el werks
         MaterialTriggerHelper.completarBusinessSite(Trigger.new);
+       // Valida estado iniciales
+        MaterialTriggerHelper.validateStatusChanges(null, Trigger.new);
     }    
     
     public override void beforeUpdate() {
-        // No permite que se modifique el NMU
+        // No permite que se modifique el NMU, y el Nro Serie
         TriggerHelper.validateFieldsUnchanged(Trigger.newMap, Trigger.oldMap, new String[]{'NMU__c', 'Serial__c'} );
+
+        // Valida cambios de estado
+        List<SObject> statusChanges = TriggerHelper.getRecordChanges(Trigger.newMap, Trigger.oldMap, 'Status__c');
+        if ( statusChanges.size() >0 ) {
+            MaterialTriggerHelper.validateStatusChanges((Map<Id, Material__c>)Trigger.oldMap, statusChanges);
+        }
 
         List<SObject> businessSiteChanges = TriggerHelper.getRecordChanges(Trigger.newMap, Trigger.oldMap, 'Werks__c');
         if ( businessSiteChanges.size() >0 ) {
@@ -25,7 +33,7 @@ public class MaterialTriggerHandler extends BaseTriggerHandler {
 
     public override void afterInsert() {
         // Incrementa en las rollup de inventarios segun producto y punto de venta
-        MaterialTriggerHelper.agregarInventario(Trigger.new);
+        MaterialTriggerHelper.agregarInventario(Trigger.new );
     }
 
     public override void afterUpdate() {

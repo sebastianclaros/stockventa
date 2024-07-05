@@ -5,6 +5,6 @@
     <fields>Product__c</fields>
     <fields>BusinessSite__c</fields>
     <fields>Total__c</fields>
-    <fields>Available__c</fields>
+    <fields>mtpl__c</fields>
     <label>Inventory</label>
 </CompactLayout>

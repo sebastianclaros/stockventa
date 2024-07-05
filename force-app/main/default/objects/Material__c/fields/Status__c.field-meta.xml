@@ -29,13 +29,33 @@
                 <fullName>MTPM</fullName>
                 <color>#CC33CC</color>
                 <default>false</default>
-                <label>Muleto</label>
+                <label>Disponible Prestamo</label>
             </value>
             <value>
                 <fullName>MTND</fullName>
                 <color>#FF9966</color>
                 <default>false</default>
                 <label>No Disponible</label>
+            </value>
+            <value>
+                <fullName>MTDG</fullName>
+                <default>false</default>
+                <label>Devuelto en garantia</label>
+            </value>
+            <value>
+                <fullName>MTPO</fullName>
+                <default>false</default>
+                <label>Prestado</label>
+            </value>
+            <value>
+                <fullName>MCLV</fullName>
+                <default>false</default>
+                <label>Vendido</label>
+            </value>
+            <value>
+                <fullName>MCSH</fullName>
+                <default>false</default>
+                <label>Siniestro</label>
             </value>
         </valueSetDefinition>
     </valueSet>
