@@ -4,7 +4,7 @@
     "arguments": { "newBranchName": { "name": "newBranchName", "option": "--newBranchName" } },
     "description": "Comando para cambiar de branch y baja cualquier cambio que este en la remote branch o en main",
     "steps": [
-        { "name": "valida que no sea la branch actual", "function": "validaNoseaBranchActual", "description": "Chequea si hay algo sin commitear", "errorMessage": "Tiene modificaciones pendientes" },
+        { "name": "valida que no sea la branch actual", "function": "validaNoseaBranchActual", "arguments": ["${newBranchName}"], "description": "Chequea si hay algo sin commitear", "errorMessage": "Tiene modificaciones pendientes" },
         { "name": "chequea si hay cambios sin commit", "function": "checkCommitPending", "description": "Chequea si hay algo sin commitear", "errorMessage": "Tiene modificaciones pendientes" },
         { "name": "baja cambios en remote y en main", "command": "git fetch", "description": "Baja de remote", "errorMessage": "No se pudo actualizar la branch, intente manualmente con git fetch" },
         { "criteria": { "field": "existNewBranch", "value": false }, "name": "crea de branch", "command": "git checkout -b", "arguments": ["${newBranchName}", "origin/main" ], "description": "Chequea si hay algo sin commitear", "errorMessage": "No se pudo mover al branch ${newBranch}. Hagalo manualmente (git checkout -b ${newBranch})" },

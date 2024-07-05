@@ -46,8 +46,12 @@ export function executeShell(command, args) {
 export async function executeFunction(functionName, args) {
     let returnValue = false;
     try {
-        if ( typeof taskFunctions[functionName] === 'function' ) {         
-            returnValue = await taskFunctions[functionName](...mergeArgs(args));            
+        if ( typeof taskFunctions[functionName] === 'function' ) {       
+            if ( args )  {
+                returnValue = await taskFunctions[functionName](...mergeArgs(args));            
+            } else {
+                returnValue = await taskFunctions[functionName]();            
+            }
         } else {
             throw new Error(`No se encontro la funcion ${functionName}`);
         }
@@ -93,11 +97,6 @@ export const taskFunctions = {
         console.log('Not implemented');
     },
     
-    validaNoseaBranchActual(newBranchName) {
-        console.log(this.getBranchName(), newBranchName );
-        return this.getBranchName() !== newBranchName;
-    },
-
     async validateIssue(issueNumber, states) {        
         const currentState = await getIssueState(issueNumber);        
         const arrayStates = states.toLocaleLowerCase().replace(' ', '').split(',');
@@ -138,6 +137,11 @@ export const taskFunctions = {
         } catch (error) {
         }
     },
+
+    async validaNoseaBranchActual(newBranchName) {
+        return this.getBranchName() !== newBranchName;
+    },
+
     
     async moveIssue(issueNumber, state) {
         const result = await moveIssue(issueNumber, state);    
