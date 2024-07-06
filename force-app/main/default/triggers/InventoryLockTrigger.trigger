@@ -1,4 +1,4 @@
-trigger InventoryLockTrigger on InventoryLock__c  (before insert, before update, before delete
-/*,  after insert, after update, after delete,after undelete*/ ) {
+trigger InventoryLockTrigger on InventoryLock__c  (after insert, before update, after delete,after undelete
+/*before insert, after update, before delete*/ ) {
     new InventoryLockTriggerHandler().run();  
 }

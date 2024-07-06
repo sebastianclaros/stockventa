@@ -39,6 +39,10 @@
                 <behavior>Edit</behavior>
                 <field>mtdg__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Available__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

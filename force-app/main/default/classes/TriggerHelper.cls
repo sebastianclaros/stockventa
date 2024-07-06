@@ -34,10 +34,10 @@ public with sharing class TriggerHelper {
         return changeRecords;
     }
 
-    static public Set<Object> getFieldsFromSObjects(List<SObject> records, String fieldName) {
-        Set<Object> values = new Set<Object>();
+    static public Set<Id> getIdsFromSObjects(List<SObject> records, String fieldName) {
+        Set<Id> values = new Set<Id>();
         for( SObject record: records){
-            Object fieldValue = record.get(fieldName);
+            Id fieldValue = (Id) record.get(fieldName);
             if ( fieldValue != null ){
                 values.add(fieldValue);
             }
