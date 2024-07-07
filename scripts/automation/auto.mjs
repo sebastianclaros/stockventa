@@ -4,35 +4,63 @@ import prompts from "prompts";
 const proxyCommnad = {
     'preview': previewTask , 
     'help': helpTask, 
-    'run': runTask
+    'task': runTask,
+    'subtask': runTask
 }
 
-try {
-    const config = getConfigFromArgs();
-    const tasks = getTasks(config.taskFolder);
-    const taskName = await askForTaskName(config.taskName, tasks);
-    if ( taskName ) {        
-        const task = tasks[taskName];
-        await proxyCommnad[config.command](task);
+// Lo mas prolijo es create un auto.js 
+if ( process.argv[1].endsWith('/auto.mjs') ) {
+    await main();
+}
+
+export async function main() {
+    try {
+        const config = getConfigFromArgs(process.argv.slice(2));
+        const tasks = getTasks(config.taskFolder, config.options);
+        const taskName = await askForTaskName(config.taskName, tasks);
+        if ( taskName ) {        
+            const task = tasks[taskName];
+            await proxyCommnad[config.command](task);
+        }
+    } catch(error) {
+        console.error(error.message);
     }
-} catch(error) {
-    console.error(error.message);
 }
 
-function getConfigFromArgs() {
-    const config = { taskFolder: TASKS_FOLDER};
-    if ( process.argv[2] == 'help' || process.argv[2] == 'preview' ) {
-        config.command = process.argv[2];
-        config.taskName = process.argv[3];
-    } else {
-        config.command = 'run'; 
-        if ( process.argv[2] == 'subtask' ) {
-            config.taskName = process.argv[3];
-            config.taskFolder = SUBTASKS_FOLDER;
+export function getConfigFromArgs(processArgs) {
+    const config = { options : {}  };
+    const args = [];
+    // Divide --xxx como options el resto como args
+    for ( const argName of processArgs ) {
+        if ( argName.startsWith('--') ) {
+            let [optionName, optionValue] = argName.substring(2).split('='); 
+            if ( !optionValue) { // Si no viene option value con opciones booleanas tipo --setDefault
+                optionValue = true;
+            }
+            config.options[optionName] = optionValue;
         } else {
-            config.taskName = process.argv[2];
+            args.push(argName);
         }
     }
+    // De acuerdo a args separa comando[help, preview, task o subtask]  de taskName 
+    let currentArgument = args.shift(1);
+    const comandosValidos = Object.keys(proxyCommnad); 
+    if ( comandosValidos.includes(currentArgument)  ) {
+        config.command = currentArgument;
+        currentArgument = args.shift(1);
+    } else {
+        config.command = 'task';
+    }
+    // Setea el taskFolder segun si es un task o subtask
+    if ( (config.command == 'help' || config.command == 'preview') && ( currentArgument == 'subtask' || currentArgument == 'task') ) {
+        config.taskFolder =  currentArgument == 'subtask' ?  SUBTASKS_FOLDER: TASKS_FOLDER;
+        currentArgument = args.shift(1);
+    } else {
+        config.taskFolder =  config.command == 'subtask' ?  SUBTASKS_FOLDER: TASKS_FOLDER;
+    }
+
+    config.taskName = currentArgument;
+    config.arguments = args; 
     return config;
 }
 

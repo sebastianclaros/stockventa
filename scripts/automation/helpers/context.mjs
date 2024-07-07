@@ -107,7 +107,8 @@ class Context {
               name: "newIssueNumber",
               message: "Por favor ingrese el nuevo issueNumber?"
             }
-          ]);                
+          ]);  
+                        
         return answer.newIssueNumber;
     }
 
@@ -152,6 +153,13 @@ class Context {
                 }
                 this[input.name] =  answer[input.name];
             }
+        }
+    }
+
+    setAll( fields ) {
+        for ( const field in fields ) {
+            console.log(field, fields[field]);
+            this[field] = fields[field];    
         }
     }
 

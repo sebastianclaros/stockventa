@@ -14,8 +14,9 @@ function getTaskLists(folder) {
     return files.map( filename => filename.split(".")[0] );
 }
 
-export function getTasks(folder=TASKS_FOLDER) {
+export function getTasks(folder=TASKS_FOLDER, options) {
   const tasks = {};
+  context.setAll(options); 
   for (const taskName of getTaskLists(folder)) {
     tasks[taskName] = getTask(taskName, folder);
   }
