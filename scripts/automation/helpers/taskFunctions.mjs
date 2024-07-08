@@ -17,7 +17,6 @@ function mergeArgs(args) {
         return argsObject;
     }
     return null;
-
 }
 function convertArgsToString(args) {
     let argsString = '';

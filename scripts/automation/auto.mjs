@@ -16,11 +16,11 @@ if ( process.argv[1].endsWith('/auto.mjs') ) {
 export async function main() {
     try {
         const config = getConfigFromArgs(process.argv.slice(2));
-        const tasks = getTasks(config.taskFolder, config.options);
+        const tasks = getTasks(config.taskFolder);
         const taskName = await askForTaskName(config.taskName, tasks);
         if ( taskName ) {        
             const task = tasks[taskName];
-            await proxyCommnad[config.command](task);
+            await proxyCommnad[config.command](task, config);
         }
     } catch(error) {
         console.error(error.message);

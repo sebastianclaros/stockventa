@@ -156,10 +156,17 @@ class Context {
         }
     }
 
-    setAll( fields ) {
-        for ( const field in fields ) {
-            console.log(field, fields[field]);
-            this[field] = fields[field];    
+    setArray( fields, values ) {
+        console.log('Array', fields, values);
+        for ( const value of values ) {
+            const field = fields.shift();
+            this[field] = value;    
+        }
+    }
+    setObject( obj ) {
+        console.log('Object', obj);
+        for ( const field in obj ) {
+            this[field] = obj[field];    
         }
     }
 

@@ -14,9 +14,8 @@ function getTaskLists(folder) {
     return files.map( filename => filename.split(".")[0] );
 }
 
-export function getTasks(folder=TASKS_FOLDER, options) {
+export function getTasks(folder=TASKS_FOLDER) {
   const tasks = {};
-  context.setAll(options); 
   for (const taskName of getTaskLists(folder)) {
     tasks[taskName] = getTask(taskName, folder);
   }
@@ -49,13 +48,29 @@ function isCriteriaMet(criteria) {
 export async function helpTask(task){
 
 }
-export async function runTask(task, tabs = ''){
+export async function runTask(task, taskContext, tabs = ''){
   // Valida que este ya esten las variables de enotorno y  configuracion
   if ( task.guards ) {
     await context.validate(task.guards);
   }
   // Pide datos de entrada y los deja en context
   if ( task.arguments ) {
+    console.log(task.arguments, taskContext);
+    const fields = Array.isArray(task.arguments) ? task.arguments: Object.keys(task.arguments);
+
+    if ( taskContext.options ) {
+      let obj = {};
+      for ( const field of fields ) {
+        const value = taskContext.options[field];
+        if ( value ) {
+          obj[field] = value; 
+        }
+      }
+      context.setObject(obj);
+    } else if (taskContext.arguments) {
+      context.setArray( fields, taskContext.arguments);
+    }
+
     await context.askForArguments(task.arguments);
   }
 
@@ -100,7 +115,7 @@ async function runStep(task, tabs) {
     return await executeFunction(task.function, task.arguments);
   } else if ( task.subtask ) {
     const subtask = getTask(task.subtask, SUBTASKS_FOLDER);
-    return await runTask(subtask, tabs);
+    return await runTask(subtask, [],tabs);
   }
   throw new Error(`No se pudo ejecutar el step ${task.name} porque no tiene command, function o subtasks`);
 }
