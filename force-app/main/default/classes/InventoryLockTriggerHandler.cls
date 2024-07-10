@@ -11,7 +11,7 @@ public with sharing class InventoryLockTriggerHandler extends BaseTriggerHandler
 
     public override void afterDelete() {
         // Decrementa a las rollup de inventarios segun producto y punto de venta
-        InventoryLockTriggerHelper.liberarReserva(Trigger.new);
+        InventoryLockTriggerHelper.liberarReserva(Trigger.old);
     }
 
     public override void afterUndelete() {

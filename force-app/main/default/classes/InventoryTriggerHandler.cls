@@ -63,7 +63,7 @@ public with sharing class InventoryTriggerHandler extends BaseTriggerHandler  {
 
     public override void afterDelete() {
         // Decrementa a las rollup de inventarios segun producto y punto de venta
-        MaterialTriggerHelper.removerInventario(Trigger.new);
+        MaterialTriggerHelper.removerInventario(Trigger.old);
     }
 
     public override void afterUndelete() {
