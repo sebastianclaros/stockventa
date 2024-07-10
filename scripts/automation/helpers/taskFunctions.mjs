@@ -35,8 +35,9 @@ function convertArgsToString(args) {
 export function executeShell(command, args) {
     try {
        const buffer = execSync( command + ' ' + convertArgsToString(args)) ;
-       const salida = buffer.toString().trim();
-       return ( salida.endsWith("\n") ? salida.slice(0, -1) : salida );
+       //const salida = buffer.toString().trim();
+       //return ( salida.endsWith("\n") ? salida.slice(0, -1) : salida );
+       return true;
     } catch (error) {
         return false;
     }
