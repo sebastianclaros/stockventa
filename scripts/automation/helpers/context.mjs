@@ -88,16 +88,41 @@ class Context {
         }
     }
 
-    async _newBranchName() {       
-        if ( !this.newIssueNumber  ) {
-            this.newIssueNumber = await this._newIssueNumber();
+    issueFromBranch(branchName) {
+
+    }
+    branchNameFromIssue (issueType, issueNumber, title) {
+        let baseName =  issueType + '/' + issueNumber;
+        if ( title ) {
+            baseName += ' - ' + title.replaceAll(' ', '-');
         }
-        
-        if ( !this.newIssueType  ) {
-            this.newIssueType = await this._newIssueType();
+        return baseName;
+    } 
+    set newIssueNumber(value) {
+        this.newIssueNumber = value;        
+        if ( this.newIssueType )  {
+            this.newBranchName =  this.branchNameFromIssue(this.newIssueType, this.newIssueNumber );
         }
-        
-        return this.newIssueType + '/' + this.newIssueNumber;
+    }
+    set newIssueType(value) {
+        this.newIssueType = value;
+        if ( this.newIssueNumber )  {
+            this.newBranchName =  this.branchNameFromIssue(this.newIssueType, this.newIssueNumber );
+        }
+    }
+
+    async _newBranchName() { 
+        if ( !this.newBranchName ) {
+            if ( !this.newIssueType  ) {
+                this.newIssueType = await this._newIssueType();
+            }
+
+            if ( !this.newIssueNumber  ) {
+                this.newIssueNumber = await this._newIssueNumber();
+            }
+            this.newBranchName =  this.branchNameFromIssue(this.newIssueType, this.newIssueNumber );
+        }
+        return this.newBranchName;
     }    
 
     async _newIssueNumber() {
@@ -156,7 +181,6 @@ class Context {
         }
     }
     setObject( obj ) {
-        console.log('Object', obj);
         for ( const field in obj ) {
             this[field] = obj[field];    
         }

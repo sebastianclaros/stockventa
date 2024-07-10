@@ -189,17 +189,17 @@ export const taskFunctions = {
         const issue = await getIssueObject(issueNumber);
         // Setea el issueType segun el issue
         try {
+            let newIssueType = 'feature';
             if ( issue.labels?.length > 0 ) {
                 if ( issue.labels.includes('documentation') ) {
-                    context.set('newIssueType', 'doc');
+                    newIssueType = 'doc';
                 } else if ( issue.labels.includes('automation') ) {
-                    context.set('newIssueType', 'automation');
+                    newIssueType = 'automation';
                 } else if ( issue.labels.includes('bug') ) {
-                    context.set('newIssueType', 'fix');
+                    newIssueType = 'fix';
                 }
-            } else {
-                context.set('newIssueType', 'feature');
             }
+            context.newIssueType =  newIssueType;
         } catch (error) {
             console.log(error);
         }
