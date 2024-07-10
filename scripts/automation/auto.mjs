@@ -1,5 +1,5 @@
 // Comandos validos
-import {getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
+import {createObject, getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
 import prompts from "prompts";
 const proxyCommnad = {
     'preview': previewTask , 
@@ -27,16 +27,6 @@ export async function main() {
         console.error(error.message);
     }
 }
-
-function createObject(fields, values) {
-    const argsObject = {};    
-    for ( const value of values ) {
-        const field = fields.shift();
-        argsObject[field] = value;    
-    }
-    return argsObject;
-}    
-
 
 export function getConfigFromArgs(processArgs) {
     const config = { options : {}  };

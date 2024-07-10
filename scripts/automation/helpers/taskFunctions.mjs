@@ -197,6 +197,8 @@ export const taskFunctions = {
                 } else if ( issue.labels.includes('bug') ) {
                     context.set('newIssueType', 'fix');
                 }
+            } else {
+                context.set('newIssueType', 'feature');
             }
         } catch (error) {
             console.log(error);

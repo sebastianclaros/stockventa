@@ -1,7 +1,7 @@
 {
     "name": "checkout-branch",
     "guards": [ "isGitRepo" ], 
-    "arguments": { "newBranchName": { "name": "newBranchName", "option": "--newBranchName" } },
+    "arguments": ["newBranchName"],
     "description": "Comando para cambiar de branch y baja cualquier cambio que este en la remote branch o en main",
     "steps": [
         { "name": "valida que no sea la branch actual", "function": "validaNoseaBranchActual", "arguments": ["${newBranchName}"], "description": "Valida que no sea la branch actual", "errorMessage": "Ya esta parado sobre la branch ${newBranchName}" },

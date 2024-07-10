@@ -93,17 +93,31 @@ function previewStep(step, tabs = '') {
     logStep(`${step.name}`, tabs );
   }
 }
-
-async function runStep(task, tabs) {
-  if ( task.command ) {
-    return executeShell( task.command, task.arguments );
-  } else if ( task.function ) {
-    return await executeFunction(task.function, task.arguments);
-  } else if ( task.subtask ) {
-    const subtask = getTask(task.subtask, SUBTASKS_FOLDER);
-    return await runTask(subtask, mergeArgs(subtask.arguments) ,tabs);
+export function createObject(fields, values) {
+  const fieldArray = Array.isArray(fields) ? fields: Object.keys(fields); 
+  const argsObject = {};    
+  for ( const value of values ) {
+      const field = fieldArray.shift();
+      argsObject[field] = value;    
   }
-  throw new Error(`No se pudo ejecutar el step ${task.name} porque no tiene command, function o subtasks`);
+  return argsObject;
+}    
+
+async function runStep(step, tabs) {
+  if ( step.command ) {
+    return executeShell( step.command, step.arguments );
+  } else if ( step.function ) {
+    return await executeFunction(step.function, step.arguments);
+  } else if ( step.subtask ) {
+    const subtask = getTask(step.subtask, SUBTASKS_FOLDER);
+    
+    let stepContext = mergeArgs(step.arguments);
+    if ( Array.isArray(stepContext) ) {
+      stepContext = createObject( subtask.arguments, stepContext);    
+    }     
+    return await runTask(subtask, stepContext ,tabs);
+  }
+  throw new Error(`No se pudo ejecutar el step ${step.name} porque no tiene command, function o subtasks`);
 }
 
 async function askForContinue() {
