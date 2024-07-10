@@ -2,7 +2,7 @@ import {execSync} from "child_process";
 import context from "./context.mjs";
 import { getIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
 
-function mergeArgs(args) {
+export function mergeArgs(args) {
     if ( Array.isArray(args) ) {
         let argsArray = [];
         for ( const argName of args) {

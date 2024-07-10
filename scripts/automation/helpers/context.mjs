@@ -155,14 +155,6 @@ class Context {
             }
         }
     }
-
-    setArray( fields, values ) {
-        console.log('Array', fields, values);
-        for ( const value of values ) {
-            const field = fields.shift();
-            this[field] = value;    
-        }
-    }
     setObject( obj ) {
         console.log('Object', obj);
         for ( const field in obj ) {

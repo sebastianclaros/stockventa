@@ -2,7 +2,7 @@
 import context from "./context.mjs";
 import { logError, logStep } from "./color.mjs";
 import fs from "fs";
-import { executeFunction, executeShell } from "./taskFunctions.mjs";
+import { mergeArgs, executeFunction, executeShell } from "./taskFunctions.mjs";
 import prompts from "prompts";
 export const TASKS_FOLDER = process.cwd() + "/scripts/automation/tasks";
 export const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
@@ -55,25 +55,11 @@ export async function runTask(task, taskContext, tabs = ''){
   }
   // Pide datos de entrada y los deja en context
   if ( task.arguments ) {
-    console.log(task.arguments, taskContext);
-    const fields = Array.isArray(task.arguments) ? task.arguments: Object.keys(task.arguments);
-
-    if ( taskContext.options ) {
-      let obj = {};
-      for ( const field of fields ) {
-        const value = taskContext.options[field];
-        if ( value ) {
-          obj[field] = value; 
-        }
-      }
-      context.setObject(obj);
-    } else if (taskContext.arguments) {
-      context.setArray( fields, taskContext.arguments);
+    if ( taskContext ) {
+      context.setObject(taskContext);
     }
-
     await context.askForArguments(task.arguments);
   }
-
   logStep( `[INICIO] ${task.name}`, tabs );
   for ( const step of task.steps ) {
     if ( isCriteriaMet(step.criteria) ) {
@@ -115,7 +101,7 @@ async function runStep(task, tabs) {
     return await executeFunction(task.function, task.arguments);
   } else if ( task.subtask ) {
     const subtask = getTask(task.subtask, SUBTASKS_FOLDER);
-    return await runTask(subtask, [],tabs);
+    return await runTask(subtask, mergeArgs(subtask.arguments) ,tabs);
   }
   throw new Error(`No se pudo ejecutar el step ${task.name} porque no tiene command, function o subtasks`);
 }

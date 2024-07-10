@@ -20,12 +20,23 @@ export async function main() {
         const taskName = await askForTaskName(config.taskName, tasks);
         if ( taskName ) {        
             const task = tasks[taskName];
-            await proxyCommnad[config.command](task, config);
+            const options = config.arguments ? {...config.options, ...createObject( task.arguments, config.arguments)} : config.options;
+            await proxyCommnad[config.command](task, options );
         }
     } catch(error) {
         console.error(error.message);
     }
 }
+
+function createObject(fields, values) {
+    const argsObject = {};    
+    for ( const value of values ) {
+        const field = fields.shift();
+        argsObject[field] = value;    
+    }
+    return argsObject;
+}    
+
 
 export function getConfigFromArgs(processArgs) {
     const config = { options : {}  };
