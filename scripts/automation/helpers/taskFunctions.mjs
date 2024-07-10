@@ -168,7 +168,9 @@ export const taskFunctions = {
     },
     
     async moveIssue(issueNumber, state) {
+        console.log(issueNumber, state);
         const result = await moveIssue(issueNumber, state);    
+        console.log(result)
         return result;
     },
 
