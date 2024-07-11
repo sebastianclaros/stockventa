@@ -135,12 +135,12 @@ export async function moveIssue(issueNumber, columnName) {
         value: {singleSelectOptionId: $columnValue}
       }
     ) {
-      clientMutationId
+      projectV2Item
     }
   }`;
   const {updateProjectV2ItemFieldValue } = await graphqlAuth(mutation, { projectId, itemId, fieldId, columnValue });
   console.log(updateProjectV2ItemFieldValue);
-  return updateProjectV2ItemFieldValue?.clientMutationId ? true: false ;  
+  return updateProjectV2ItemFieldValue?.projectV2Item ? true: false ;  
 }
 
 export async function assignIssueToMe(issueNumber) {
