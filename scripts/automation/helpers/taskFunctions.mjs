@@ -16,6 +16,7 @@ export function mergeArgs(args) {
         for ( const argName in args) {
             argsObject[argName] =  context.merge(args[argName]);
         }
+        console.log(argsObject);    
         return argsObject;
     }
     return null;
