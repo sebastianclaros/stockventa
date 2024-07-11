@@ -54,6 +54,7 @@ export async function executeFunction(functionName, args) {
                 returnValue = await taskFunctions[functionName]();            
             }
         } else {
+            console.log('error');
             throw new Error(`No se encontro la funcion ${functionName}`);
         }
     } catch (error) {
