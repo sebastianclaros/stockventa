@@ -54,10 +54,13 @@ export function validateFunction(functionName, args) {
         logError(`No se encontro la funcion ${functionName}`);
         return false;
     }
-    if ( typeof args !== 'object' && typeof args !== 'undefined' ) {
-        logError(`La funcion ${functionName} recibio un argumento de tipo ${typeof args} y solo soporta object`);
-        return false;    
+    if ( typeof args !== 'undefined' ) {        
+        if ( typeof args !== 'object'  ) {
+            logError(`La funcion ${functionName} recibio un argumento de tipo ${typeof args} y solo soporta object`);
+            return false;    
+        }
     }
+
     return true;
 }
 
