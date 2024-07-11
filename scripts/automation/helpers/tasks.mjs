@@ -34,17 +34,14 @@ function getTask(taskName, folder) {
 
 function isCriteriaMet(criteria) {
   if ( !criteria ) {
-    console.log('sin criterio'); 
     return true;
   }
   const { field, value} = criteria;
   // si no viene valor solo verifica que tenga no este vacio
-  if ( !value ) {
-    console.log(value); 
+  if ( typeof value == 'undefined') {
     return context[field] ;
   }
   const result = context[field] == value;
-  console.log(field, value, result); 
   return result;
 }
 
