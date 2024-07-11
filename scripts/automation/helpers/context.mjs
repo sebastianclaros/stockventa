@@ -19,8 +19,8 @@ class Context {
     issueNumber;
     issueType;
 
-    newIssueNumber;
-    newIssueType;
+    _newIssueNumber;
+    _newIssueType;
     newBranchName;
 
     defaultDias = 7
@@ -98,34 +98,40 @@ class Context {
         }
         return baseName;
     } 
+    get newIssueNumber() {
+        return this._newIssueNumber;
+    }
     set newIssueNumber(value) {
-        this.newIssueNumber = value;        
+        this._newIssueNumber = value;        
         if ( this.newIssueType )  {
             this.newBranchName =  this.branchNameFromIssue(this.newIssueType, this.newIssueNumber );
         }
     }
+    get newIssueType() {
+        return this._newIssueType;
+    }
     set newIssueType(value) {
-        this.newIssueType = value;
+        this._newIssueType = value;
         if ( this.newIssueNumber )  {
             this.newBranchName =  this.branchNameFromIssue(this.newIssueType, this.newIssueNumber );
         }
     }
 
-    async _newBranchName() { 
+    async askFornewBranchName() { 
         if ( !this.newBranchName ) {
             if ( !this.newIssueType  ) {
-                this.newIssueType = await this._newIssueType();
+                this.newIssueType = await this.askFornewIssueType();
             }
 
             if ( !this.newIssueNumber  ) {
-                this.newIssueNumber = await this._newIssueNumber();
+                this.newIssueNumber = await this.askFornewIssueNumber();
             }
-            this.newBranchName =  this.branchNameFromIssue(this.newIssueType, this.newIssueNumber );
+            this.newBranchName =  this.branchNameFromIssue(this._newIssueType, this._newIssueNumber );
         }
         return this.newBranchName;
     }    
 
-    async _newIssueNumber() {
+    async askFornewIssueNumber() {
         const answer = await prompts([
             {
               type: "text",
@@ -137,7 +143,7 @@ class Context {
         return answer.newIssueNumber;
     }
 
-    async _newIssueType() {
+    async askFornewIssueType() {
         const answer = await prompts([
             {
               type: "list",
@@ -190,10 +196,12 @@ class Context {
         this[field] = value;    
     }
 
+    // Devuelve el valor o hace un askFor si esta vacio
     async get(variable) { 
         if ( !this[variable] ) {
-            if ( this['_' + variable] && typeof this['_' + variable] == 'function' ) {
-                this[variable] = await this['_' + variable]();
+            const askForMethod = 'askFor' + variable;
+            if ( this[askForMethod] && typeof this[askForMethod] == 'function' ) {
+                this[variable] = await this[askForMethod]();
             }
         }
         return this[variable];
