@@ -32,7 +32,8 @@ function convertArgsToString(args) {
     return argsString;
 
 }
-export function executeShell(command, args) {
+
+export function executeCommand(command, args) {
     try {
        const buffer = execSync( command + ' ' + convertArgsToString(args)) ;
        //const salida = buffer.toString().trim();
@@ -46,12 +47,14 @@ export function executeShell(command, args) {
 export async function executeFunction(functionName, args) {
     let returnValue = false;
     try {
+        console.log(typeof taskFunctions[functionName]);
         if ( typeof taskFunctions[functionName] === 'function' ) {       
             if ( args )  {
                 returnValue = await taskFunctions[functionName](...mergeArgs(args));            
             } else {
                 returnValue = await taskFunctions[functionName]();            
             }
+            console.log(returnValue);
         } else {
             throw new Error(`No se encontro la funcion ${functionName}`);
         }
@@ -61,13 +64,22 @@ export async function executeFunction(functionName, args) {
     return returnValue;  
 }
 
+function executeShell(command ) {
+    try {
+        const buffer = execSync( command ) ;
+        const salida = buffer.toString().trim();
+        return ( salida.endsWith("\n") ? salida.slice(0, -1) : salida );
+     } catch (error) {
+        return false;
+     }     
+}
+
 
 export const taskFunctions = {   
 
     // type: 'scratchOrgs', 'sandboxes', others
     getOrganizationObject(alias, type = 'scratchOrgs') {
-        const buffer = execSync( 'sf org list --json' ) ;
-        const salida = buffer.toString().trim();
+        const salida = executeShell( 'sf org list --json' ) ;
         const salidaJson = JSON.parse(salida);
         const orgObject =  salidaJson.result[type].filter( scratch => scratch.alias === branchName );
 
@@ -78,8 +90,7 @@ export const taskFunctions = {
     },
 
     getTargetOrg() {
-        const buffer = execSync( 'sf force config get target-org --json' ) ;
-        const salida = buffer.toString().trim();
+        const salida = executeShell( 'sf force config get target-org --json' ) ;
         const salidaJson = JSON.parse(salida);
         return salidaJson.result[0].value;
     },
@@ -103,23 +114,18 @@ export const taskFunctions = {
         return arrayStates.includes(currentState.toLocaleLowerCase().replace(' ', ''));
     },
     validateScratch() {
-        // hayCambios=$(sf project retrieve preview)
-    
-        // if [[ $hayCambios == *"No files will be deleted"* ]] && [[ $hayCambios == *"No files will be retrieved"* ]] && [[ $hayCambios == *"No conflicts found"* ]]; then
-        //     doInfo "No hay cambios"
-        // else
-        //     doInfo "$hayCambios"
-        //     doExit "Hay cambios en la Org que no estan impactados $hayCambios"
-        // fi
+        const salida = executeShell( "sf project retrieve preview" ) ;
+        const noHayCambios = salida.substring('No files will be deleted') === -1 && hayCambios.substring('No files will be retrieved') === -1 && hayCambios.substring('No conflicts found') === -1
+        if ( !noHayCambios ) {
+            context.set('hayCambios', salida );
+        }
+        return noHayCambios;
     },
     
-  
     
     getBranchName() {
         try {
-            const buffer = execSync( "git branch --show-current" ) ;
-            const salida = buffer.toString().trim();
-            return ( salida.endsWith("\n") ? salida.slice(0, -1) : salida );
+            return  executeShell( "git branch --show-current" ) ;
         } catch (error) {
         }
     },
@@ -131,9 +137,7 @@ export const taskFunctions = {
     
     async checkCommitPending() {
         try {
-            const buffer = execSync( "git status --porcelain=v1 2>/dev/null | wc -l" ) ;
-            const salida = buffer.toString().trim();
-            const cambios = ( salida.endsWith("\n") ? salida.slice(0, -1) : salida );
+            const cambios = executeShell( "git status --porcelain=v1 2>/dev/null | wc -l" ) ;
             return cambios == '0' ;
         } catch (error) {
         }
@@ -142,39 +146,34 @@ export const taskFunctions = {
     
     async checkoutBranch(newBranch) {
         try {
-            const buffer = execSync( `git checkout -b ${newBranch}` ) ;
-            const salida = buffer.toString().trim();
+            executeShell( `git checkout -b ${newBranch}` ) ;
             return true ;
         } catch (error) {
             console.log(error);
         }
         // mergeBranch
         return false;
-    },
-    
+    },    
     async mergeBranch() {
         try {
-            execSync( `git fetch` ) ;
+            executeShell( `git fetch` ) ;
 
-            execSync( `git merge origin/main` ) ;
+            executeShell( `git merge origin/main` ) ;
             
             return true ;
         } catch (error) {
             console.log(error);
         }
         return false;
-        // git fetch
-        // 
     },
     
     async moveIssue(issueNumber, state) {
-        console.log(issueNumber, state);
         const result = await moveIssue(issueNumber, state);    
         return result;
     },
-
+    
     async assignBranchToIssue(issueNumber, newBranchName) {
-        const commitSha = '';//commitSha=$(git rev-parse --verify main)
+        const commitSha = executeShell( `git rev-parse --verify main` ) ; 
         const result = await assignBranchToIssue(issueNumber,newBranchName, commitSha);
         console.log(result);
         return result;

@@ -2,7 +2,7 @@
 import context from "./context.mjs";
 import { logError, logStep } from "./color.mjs";
 import fs from "fs";
-import { mergeArgs, executeFunction, executeShell } from "./taskFunctions.mjs";
+import { mergeArgs, executeFunction, executeCommand } from "./taskFunctions.mjs";
 import prompts from "prompts";
 export const TASKS_FOLDER = process.cwd() + "/scripts/automation/tasks";
 export const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
@@ -105,7 +105,7 @@ export function createObject(fields, values) {
 
 async function runStep(step, tabs) {
   if ( step.command ) {
-    return executeShell( step.command, step.arguments );
+    return executeCommand( step.command, step.arguments );
   } else if ( step.function ) {
     return await executeFunction(step.function, step.arguments);
   } else if ( step.subtask ) {
