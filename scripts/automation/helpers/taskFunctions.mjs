@@ -12,11 +12,9 @@ export function mergeArgs(args) {
         return argsArray;
     } else if ( typeof args === 'object' ) {
         let argsObject = {};    
-        console.log(args);    
         for ( const argName in args) {
             argsObject[argName] =  context.merge(args[argName]);
         }
-        console.log(argsObject);    
         return argsObject;
     }
     return null;
@@ -66,11 +64,48 @@ export function validateFunction(functionName, args) {
     return true;
 }
 
+function getParams(func) {
+    // String representation of the function code
+    let str = func.toString(); 
+    str = str.replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/\/\/(.)*/g, '')
+        .replace(/{[\s\S]*}/, '')
+        .replace(/=>/g, '')
+        .trim();
+    // Start parameter names after first '('
+    let start = str.indexOf("(") + 1;
+    // End parameter names is just before last ')'
+    let end = str.length - 1;
+    let result = str.substring(start, end).split(", ");
+    let params = [];
+    result.forEach(element => {
+        element = element.replace(/=[\s\S]*/g, '').trim();
+        if (element.length > 0)
+            params.push(element);
+    });
+    return params;
+}
+function createArray(fields, object) {
+    const fieldArray =[]; 
+    for ( const field of fields ) {
+        const value = object[field];
+        fieldArray.push( value );    
+    }
+    return fieldArray;
+} 
+   
+  
+
 export async function executeFunction(functionName, args) {
     let returnValue = false;
     if ( typeof taskFunctions[functionName] === 'function' ) {       
-        if ( args )  {
-            returnValue = await taskFunctions[functionName](...mergeArgs(args));            
+        if ( args ) {
+            if ( Array.isArray(args) ) {
+                returnValue = await taskFunctions[functionName](...mergeArgs(args));            
+            } else if ( typeof args === 'object' ) {
+                const paramNames = getParams(taskFunctions[functionName]);
+                returnValue = await taskFunctions[functionName](...createArray(paramNames, args));            
+            }
         } else {
             returnValue = await taskFunctions[functionName]();            
         }
