@@ -26,11 +26,11 @@ const BgCyan = "\x1b[46m"
 const BgWhite = "\x1b[47m"
 const BgGray = "\x1b[100m"
 
-export function logError( message, tabs ){
+export function logError( message, tabs = ''){
     console.error(getColored(`${tabs}${message}`, "red") );    
 }
 
-export function logStep( message, tabs ){
+export function logStep( message, tabs = ''){
     console.info(getColored(`${tabs}${message}`, "green") );    
 } 
 

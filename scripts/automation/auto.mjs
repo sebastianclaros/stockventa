@@ -1,5 +1,6 @@
 // Comandos validos
 import {createObject, validateTask, getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
+import { logError} from "./helpers/color.mjs";
 import prompts from "prompts";
 const proxyCommnad = {
     'preview': previewTask , 
@@ -24,6 +25,8 @@ export async function main() {
             // Valida los json de task y subtask
             if ( validateTask(task) ) {
                 await proxyCommnad[config.command](task, options );
+            } else {
+                logError('Verifique que los json de task y subtask esten validos');
             }
         }
     } catch(error) {

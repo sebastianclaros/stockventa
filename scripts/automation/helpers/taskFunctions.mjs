@@ -1,6 +1,7 @@
 import {execSync} from "child_process";
 import context from "./context.mjs";
 import { getIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
+import { logError} from "./color.mjs";
 
 export function mergeArgs(args) {
     if ( Array.isArray(args) ) {
@@ -42,6 +43,22 @@ export function executeCommand(command, args) {
     } catch (error) {
         return false;
     }
+}
+
+export function validateCommand(command, args) {
+    return true;
+}
+
+export function validateFunction(functionName, args) {
+    if ( typeof taskFunctions[functionName] !== 'function' ) {       
+        logError(`No se encontro la funcion ${functionName}`);
+        return false;
+    }
+    if ( typeof args !== 'object' && typeof args !== 'undefined' ) {
+        logError(`La funcion ${functionName} recibio un argumento de tipo ${typeof args} y solo soporta object`);
+        return false;    
+    }
+    return true;
 }
 
 export async function executeFunction(functionName, args) {
@@ -137,8 +154,9 @@ export const taskFunctions = {
         }
         return false;
     },
-    async createBranch(newBranchName) {
+    async createBranch() {
         try {
+            const newBranchName = context.newBranchName;
             executeShell( `git checkout -b ${newBranchName}` ) ;
             context.set('branchName', this.getBranchName() );
             return true ;

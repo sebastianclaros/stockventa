@@ -1,8 +1,7 @@
-//import { getContext } from "./taskFunctions.mjs"
 import context from "./context.mjs";
 import { logError, logStep } from "./color.mjs";
 import fs from "fs";
-import { mergeArgs, executeFunction, executeCommand } from "./taskFunctions.mjs";
+import { mergeArgs, validateCommand, validateFunction, executeFunction, executeCommand } from "./taskFunctions.mjs";
 import prompts from "prompts";
 export const TASKS_FOLDER = process.cwd() + "/scripts/automation/tasks";
 export const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
@@ -48,7 +47,36 @@ function isCriteriaMet(criteria) {
 export async function helpTask(task){
   console.log('not implemented');
 }
-export function validateTask() {
+export function validateTask(task) {
+  if ( task.guards ) {
+    // Valida que sea 
+  }
+  // Pide datos de entrada y los deja en context
+  if ( task.arguments ) {
+    // Valida que sea 
+  }
+  
+  for ( const step of task.steps ) {
+    if ( step.criteria ) {
+      // Valida que sea
+    }
+  
+    let validateStep = false;
+    if ( step.command ) {
+      validateStep = validateCommand( step.command, step.arguments );      
+    } else if ( step.function ) {
+      validateStep = validateFunction(step.function, step.arguments);
+    } else if ( step.subtask ) {
+      const subtask = getTask(step.subtask, SUBTASKS_FOLDER);
+      validateStep = validateTask(subtask);
+    } else {
+      console.log('Step no tiene command ni function ni subtask');
+    }
+    if (!validateStep) {  
+      return false;        
+    }
+  }
+
   return true;
 }
 export async function runTask(task, taskContext, tabs = ''){
