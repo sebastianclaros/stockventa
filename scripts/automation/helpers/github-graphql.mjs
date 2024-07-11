@@ -192,12 +192,14 @@ export async function assignBranchToIssue(issueNumber, branchName, commitSha) {
         name: $branchName
       })
       {
-        clientMutationId
+        issue {
+          id
+        }
       }
     }`;
   const {createLinkedBranch } = await graphqlAuth(mutation, { issueId: issue.id, oid: commit.oid, branchName });
-  
-  return createLinkedBranch?.clientMutationId ? true: false ;  
+  console.log(createLinkedBranch);
+  return createLinkedBranch?.issue?.id ? true: false ;  
 }
 
 export async function getValidateIssueColumn(issueNumber, columnName) {
