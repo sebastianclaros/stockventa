@@ -46,7 +46,10 @@ function isCriteriaMet(criteria) {
 }
 
 export async function helpTask(task){
-
+  console.log('not implemented');
+}
+export function validateTask() {
+  return true;
 }
 export async function runTask(task, taskContext, tabs = ''){
   // Valida que este ya esten las variables de enotorno y  configuracion

@@ -1,5 +1,5 @@
 // Comandos validos
-import {createObject, getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
+import {createObject, validateTask, getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
 import prompts from "prompts";
 const proxyCommnad = {
     'preview': previewTask , 
@@ -21,7 +21,10 @@ export async function main() {
         if ( taskName ) {        
             const task = tasks[taskName];
             const options = config.arguments ? {...config.options, ...createObject( task.arguments, config.arguments)} : config.options;
-            await proxyCommnad[config.command](task, options );
+            // Valida los json de task y subtask
+            if ( validateTask(task) ) {
+                await proxyCommnad[config.command](task, options );
+            }
         }
     } catch(error) {
         console.error(error.message);

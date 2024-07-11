@@ -54,15 +54,7 @@ class Context {
         this.branchName = taskFunctions.getBranchName();
 
         if ( this.branchName ) {
-            const branchSplit = this.branchName.split("/");
-            if ( branchSplit.length > 1 ) {
-                this.issueType = branchSplit[0];
-                if ( Number.isInteger(branchSplit[1]) ) {
-                    this.issueNumber = branchSplit[1];
-                } else {
-//                    [this.issueNumber, this.issueTitle] = branchSplit[1].split() // /^([^ -]+)[ -](.*)$/.exec( branchSplit[1]).slice(1);
-                }
-            }
+            this.issueFromBranch(this.branchName);
         }
     }
 
@@ -89,7 +81,15 @@ class Context {
     }
 
     issueFromBranch(branchName) {
-
+        const branchSplit = branchName.split("/");
+        if ( branchSplit.length > 1 ) {
+            this.issueType = branchSplit[0];
+            if ( Number.isInteger(branchSplit[1]) ) {
+                this.issueNumber = branchSplit[1];
+            } else {
+//                    [this.issueNumber, this.issueTitle] = branchSplit[1].split() // /^([^ -]+)[ -](.*)$/.exec( branchSplit[1]).slice(1);
+            }
+        }
     }
     branchNameFromIssue (issueType, issueNumber, title) {
         let baseName =  issueType + '/' + issueNumber;

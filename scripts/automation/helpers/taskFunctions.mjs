@@ -137,10 +137,10 @@ export const taskFunctions = {
         }
         return false;
     },
-    
-    async checkoutBranch(newBranch) {
+    async createBranch(newBranchName) {
         try {
-            executeShell( `git checkout -b ${newBranch}` ) ;
+            executeShell( `git checkout -b ${newBranchName}` ) ;
+            context.set('branchName', this.getBranchName() );
             return true ;
         } catch (error) {
             console.log(error);
