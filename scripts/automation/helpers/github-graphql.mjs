@@ -136,7 +136,7 @@ export async function moveIssue(issueNumber, columnName) {
       }
     ) {
       projectV2Item {
-        status
+        id
       }
     }
   }`;
