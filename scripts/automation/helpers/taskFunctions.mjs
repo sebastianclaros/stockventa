@@ -46,19 +46,14 @@ export function executeCommand(command, args) {
 
 export async function executeFunction(functionName, args) {
     let returnValue = false;
-    try {
-        if ( typeof taskFunctions[functionName] === 'function' ) {       
-            if ( args )  {
-                returnValue = await taskFunctions[functionName](...mergeArgs(args));            
-            } else {
-                returnValue = await taskFunctions[functionName]();            
-            }
+    if ( typeof taskFunctions[functionName] === 'function' ) {       
+        if ( args )  {
+            returnValue = await taskFunctions[functionName](...mergeArgs(args));            
         } else {
-            console.log('error');
-            throw new Error(`No se encontro la funcion ${functionName}`);
+            returnValue = await taskFunctions[functionName]();            
         }
-    } catch (error) {
-        returnValue=false;        
+    } else {
+        throw new Error(`No se encontro la funcion ${functionName}`);
     }
     return returnValue;  
 }
