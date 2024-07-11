@@ -99,14 +99,15 @@ function createArray(fields, object) {
 export async function executeFunction(functionName, args) {
     let returnValue = false;
     if ( typeof taskFunctions[functionName] === 'function' ) {       
-        if ( args ) {
-            if ( Array.isArray(args) ) {
-                returnValue = await taskFunctions[functionName](...mergeArgs(args));            
-            } else if ( typeof args === 'object' ) {
+        if ( args && typeof args === 'object' ) {
+            let mergedArgs = mergeArgs(args);
+            if ( !Array.isArray(mergedArgs) ) {
                 const paramNames = getParams(taskFunctions[functionName]);
-                console.log(...createArray(paramNames, mergeArgs(args)));
-                returnValue = await taskFunctions[functionName](...createArray(paramNames, mergeArgs(args)));            
+                console.log(paramNames);
+                mergedArgs = createArray(paramNames, mergedArgs );
             }
+            console.log(mergedArgs);
+            returnValue = await taskFunctions[functionName](...mergedArgs);            
         } else {
             returnValue = await taskFunctions[functionName]();            
         }
