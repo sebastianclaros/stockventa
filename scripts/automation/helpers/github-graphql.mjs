@@ -135,7 +135,9 @@ export async function moveIssue(issueNumber, columnName) {
         value: {singleSelectOptionId: $columnValue}
       }
     ) {
-      projectV2Item
+      projectV2Item {
+        status
+      }
     }
   }`;
   const {updateProjectV2ItemFieldValue } = await graphqlAuth(mutation, { projectId, itemId, fieldId, columnValue });
