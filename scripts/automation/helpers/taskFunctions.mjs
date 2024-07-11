@@ -104,6 +104,7 @@ export async function executeFunction(functionName, args) {
                 returnValue = await taskFunctions[functionName](...mergeArgs(args));            
             } else if ( typeof args === 'object' ) {
                 const paramNames = getParams(taskFunctions[functionName]);
+                console.log(...createArray(paramNames, args));
                 returnValue = await taskFunctions[functionName](...createArray(paramNames, args));            
             }
         } else {
