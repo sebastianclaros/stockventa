@@ -47,14 +47,12 @@ export function executeCommand(command, args) {
 export async function executeFunction(functionName, args) {
     let returnValue = false;
     try {
-        console.log(typeof taskFunctions[functionName]);
         if ( typeof taskFunctions[functionName] === 'function' ) {       
             if ( args )  {
                 returnValue = await taskFunctions[functionName](...mergeArgs(args));            
             } else {
                 returnValue = await taskFunctions[functionName]();            
             }
-            console.log(returnValue);
         } else {
             throw new Error(`No se encontro la funcion ${functionName}`);
         }

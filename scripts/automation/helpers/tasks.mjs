@@ -143,9 +143,19 @@ async function executeStep(step, tabs) {
     logStep(`[INICIO] ${step.name}`, tabs);
   }
   
-  const success = await runStep(step, tabs);
+  let success = false;
+  let error;
+  try {
+    success = await runStep(step, tabs);
+  } catch(e) {
+    error = e;
+  }
   if ( !success) {
-    logError(`[ERROR] ${getStepError(step)}`, tabs );
+    if ( error ) {
+      logError(`[ERROR] ${error.message}`, tabs );
+    } else {
+      logError(`[ERROR] ${getStepError(step)}`, tabs );
+    }
     if ( ! await askForContinue() ) {
       return false;
     } 
