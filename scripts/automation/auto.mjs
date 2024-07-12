@@ -84,8 +84,7 @@ async function askForTaskName(taskName, tasks) {
         ? `${taskName} no es un comando valido`
         : "Seleccione un comando",
         choices: Object.values(tasks).map((task) => {
-            const selected = task.name == 'new';
-            return { selected, title: task.name, value: task.name, description: task.description };
+            return { title: task.name, value: task.name, description: task.description };
         })
     });
 
