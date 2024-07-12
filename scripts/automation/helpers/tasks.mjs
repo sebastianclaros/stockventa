@@ -187,7 +187,7 @@ async function executeStep(step, tabs) {
     } else {
       logError(`[ERROR] ${getStepError(step)}`, tabs );
     }
-    if ( ! await askForContinue() ) {
+    if ( !step.subtask && ! await askForContinue() ) {
       return false;
     } 
   }
