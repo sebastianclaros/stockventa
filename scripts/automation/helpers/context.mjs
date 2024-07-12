@@ -2,13 +2,6 @@ import { executeShell, taskFunctions } from "./taskFunctions.mjs"
 import prompts from "prompts";
 import fs from "fs";
 
-/*
-branchName 
-defaultDias
-permissionSet
-issueNumber
-*/
-
 class Context {
     isGitRepo = true;
     sfInstalled = true; 
@@ -22,8 +15,6 @@ class Context {
     _newIssueNumber;
     _newIssueType;
     newBranchName;
-
-    existScratch = false;
     
     defaultDias = 7
     permissionSet;
@@ -66,8 +57,12 @@ class Context {
         }
         return this._targetOrg;
     }
+
+    get existScratch() {
+        return typeof this.scratch !== 'undefined';
+    }
     get scratch() {
-        if ( !this._scratch ) {
+        if ( !this._scratch && this.branchName ) {
             this._scratch= taskFunctions.getOrganizationObject(this.branchName);
         }
         return this._scratch;
