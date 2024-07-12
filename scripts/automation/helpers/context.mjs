@@ -23,6 +23,8 @@ class Context {
     _newIssueType;
     newBranchName;
 
+    existScratch = false;
+    
     defaultDias = 7
     permissionSet;
     issueTitle;
