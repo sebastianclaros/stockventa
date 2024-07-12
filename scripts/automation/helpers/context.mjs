@@ -1,4 +1,4 @@
-import { taskFunctions } from "./taskFunctions.mjs"
+import { executeShell, taskFunctions } from "./taskFunctions.mjs"
 import prompts from "prompts";
 import fs from "fs";
 
@@ -29,7 +29,7 @@ class Context {
     isVerbose = false;
     projectPath = process.cwd();
     _scratch;
-    existNewBranch = false; // git show-ref refs/heads/
+    existNewBranch = false; 
 
     loadConfig() {
         const filename =  this.projectPath +  "/.autoforce.json";
@@ -104,7 +104,7 @@ class Context {
     set newIssueNumber(value) {
         this._newIssueNumber = value;        
         if ( this.newIssueType )  {
-            this.newBranchName =  this.branchNameFromIssue(this.newIssueType, this.newIssueNumber );
+            this.setNewBranchName();
         }
     }
     get newIssueType() {
@@ -113,10 +113,13 @@ class Context {
     set newIssueType(value) {
         this._newIssueType = value;
         if ( this.newIssueNumber )  {
-            this.newBranchName =  this.branchNameFromIssue(this.newIssueType, this.newIssueNumber );
+            this.setNewBranchName();
         }
     }
-
+    setNewBranchName() {
+        this.newBranchName =  this.branchNameFromIssue(this.newIssueType, this.newIssueNumber );
+        this.existNewBranch =  executeShell(`git show-ref refs/heads/${newBranchName}`) ? true : false;        
+    }
     async askFornewBranchName() { 
         if ( !this.newBranchName ) {
             if ( !this.newIssueType  ) {
@@ -126,7 +129,7 @@ class Context {
             if ( !this.newIssueNumber  ) {
                 this.newIssueNumber = await this.askFornewIssueNumber();
             }
-            this.newBranchName =  this.branchNameFromIssue(this._newIssueType, this._newIssueNumber );
+            this.setNewBranchName();
         }
         return this.newBranchName;
     }    

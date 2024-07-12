@@ -103,10 +103,8 @@ export async function executeFunction(functionName, args) {
             let mergedArgs = mergeArgs(args);
             if ( !Array.isArray(mergedArgs) ) {
                 const paramNames = getParams(taskFunctions[functionName]);
-                console.log(paramNames);
                 mergedArgs = createArray(paramNames, mergedArgs );
             }
-            console.log(mergedArgs);
             returnValue = await taskFunctions[functionName](...mergedArgs);            
         } else {
             returnValue = await taskFunctions[functionName]();            
@@ -117,7 +115,7 @@ export async function executeFunction(functionName, args) {
     return returnValue;  
 }
 
-function executeShell(command ) {
+export function executeShell(command ) {
     try {
         const buffer = execSync( command ) ;
         const salida = buffer.toString().trim();
@@ -229,7 +227,6 @@ export const taskFunctions = {
     async assignBranchToIssue(issueNumber, newBranchName) {
         const commitSha = executeShell( `git rev-parse --verify main` ) ; 
         const result = await assignBranchToIssue(issueNumber,newBranchName, commitSha);
-        console.log(result);
         return result;
         
     },    
