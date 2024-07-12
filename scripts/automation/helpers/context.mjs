@@ -118,7 +118,8 @@ class Context {
     }
     setNewBranchName() {
         this.newBranchName =  this.branchNameFromIssue(this.newIssueType, this.newIssueNumber );
-        this.existNewBranch =  executeShell(`git show-ref refs/heads/${this.newBranchName}`) ? true : false;        
+        const salida =  executeShell(`git show-ref refs/heads/${this.newBranchName}`);
+        this.existNewBranch = (salida.includes(this.newBranchName));        
     }
     async askFornewBranchName() { 
         if ( !this.newBranchName ) {
