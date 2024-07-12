@@ -179,7 +179,8 @@ Archivos, JS => JSDoc
     if (DEBUG) {
       console.log(e);
     }
-    throw `Error buscando metadata de los lwc ${fullNames}. ERR-NAME: ${e.name}`;
+    const msg = ( e.name == 'ERROR_HTTP_420' ) ? 'El accesstoken y el instance url en el .env parece que no coinciden, verifique con sf org display' : `Error buscando metadata de los lwc ${fullNames}. ERR-NAME: ${e.name}`;
+    throw msg;
   }
 }
 
@@ -210,7 +211,8 @@ async function getClasses(fullNames) {
     if (DEBUG) {
       console.log(e);
     }
-    throw `Error buscando metadata de las clases ${fullNames}. ERR-NAME: ${e.name}`;
+    const msg = ( e.name == 'ERROR_HTTP_420' ) ? 'El accesstoken y el instance url en el .env parece que no coinciden, verifique con sf org display' : `Error buscando metadata de las clases ${fullNames}. ERR-NAME: ${e.name}`;
+    throw msg;
   }
 }
 
@@ -239,7 +241,8 @@ async function customObjects(fullNames) {
     if (DEBUG) {
       console.log(e);
     }
-    throw `Error buscando metadata de los objetos ${fullNames}. ERR-NAME: ${e.name}`;
+    const msg = ( e.name == 'ERROR_HTTP_420' ) ? 'El accesstoken y el instance url en el .env parece que no coinciden, verifique con sf org display' : `Error buscando metadata de los objetos ${fullNames}. ERR-NAME: ${e.name}`;
+    throw msg;
   }
 }
 

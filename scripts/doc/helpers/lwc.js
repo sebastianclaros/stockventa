@@ -40,8 +40,18 @@ async function getContext(items, opciones) {
     contexts = getLwcCache( DEFAULT_FILENAME) || [];
     const itemsEnCache = contexts.map((lwc) => lwc.Name);
     contexts = await getLwc(itemsEnCache);
+  }
+  
+  // cualquier cosa que no encontro lo busca
+  if ( contexts ) {
+    const itemsInContext = contexts.map((l) => l.Name);
+    const itemsNotInContext = items.filter( x => !itemsInContext.includes(x) ); 
+    if (itemsNotInContext.length > 0 ) {
+      // Sino buscar la metadata segun los items
+      const newContexts = await getLwc(itemsNotInContext);
+      contexts = contexts.concat(newContexts);
+    }
   } else {
-    // Sino buscar la metadata segun los items
     contexts = await getLwc(items);
   }
 

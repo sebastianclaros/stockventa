@@ -11,8 +11,8 @@ title: MaterialTriggerHelper
 
 - Status: Active
 - Api Version: 59
-- Creada: 13 de junio de 24
-- Modificada: 13 de junio de 24
+- Creada: 27 de junio de 24
+- Modificada: 27 de junio de 24
 - Interface 
 
 ## Diagrama
@@ -21,6 +21,15 @@ classDiagram
 
 class MaterialTriggerHelper {
     
+     ERROR_NMU_DOES_NOT_EXIST $    
+     ERROR_WERKS_DOES_NOT_EXIST $    
+     CAMPO_SEGUN_ESTADO $    
+     getInventoryKey(Material__c material) String $
+     buscarInventarios(List materiales) Map $
+     agregarInventario(List materiales) void $
+     cambiarEstadoInventario(Map materialesOldList materialesNew) void $
+     moverDepositoInventario(Map materialesOldList materialesNew) void $
+     removerInventario(List materiales) void $
      completarProducto(List materiales) void $
      completarBusinessSite(List materiales) void $
 
@@ -33,6 +42,12 @@ class MaterialTriggerHelper {
 *Metodos*
 | #   | Nombre | Return | Argumentos |
 | --- | ------ | ------ | ---------- |
+| <div class="icons">$</div> | getInventoryKey | String| <ul><li>Material__c material</li></ul>|
+| <div class="icons">$</div> | buscarInventarios | Map| <ul><li>List materiales</li></ul>|
+| <div class="icons">$</div> | agregarInventario | void| <ul><li>List materiales</li></ul>|
+| <div class="icons">$</div> | cambiarEstadoInventario | void| <ul><li>Map materialesOld</li><li>List materialesNew</li></ul>|
+| <div class="icons">$</div> | moverDepositoInventario | void| <ul><li>Map materialesOld</li><li>List materialesNew</li></ul>|
+| <div class="icons">$</div> | removerInventario | void| <ul><li>List materiales</li></ul>|
 | <div class="icons">$</div> | completarProducto | void| <ul><li>List materiales</li></ul>|
 | <div class="icons">$</div> | completarBusinessSite | void| <ul><li>List materiales</li></ul>|
 

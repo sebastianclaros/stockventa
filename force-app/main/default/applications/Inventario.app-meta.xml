@@ -16,5 +16,7 @@
     <navType>Standard</navType>
     <tabs>Material__c</tabs>
     <tabs>standard-Product2</tabs>
+    <tabs>Inventory__c</tabs>
+    <tabs>InventoryLock__c</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>

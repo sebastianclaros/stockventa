@@ -46,8 +46,18 @@ async function getContext(items, opciones) {
     contexts = getClassesCache( DEFAULT_FILENAME) || [];
     const itemsEnCache = contexts.map((clase) => clase.Name);
     contexts = await getClasses(itemsEnCache);
+  }
+
+  // cualquier cosa que no encontro lo busca
+  if ( contexts ) { 
+    const itemsInContext = contexts.map((clase) => clase.Name);
+    const itemsNotInContext = items.filter( x => !itemsInContext.includes(x) ); 
+    if (itemsNotInContext.length > 0 ) {
+      // Sino buscar la metadata segun los items
+      const newContexts = await getClasses(itemsNotInContext);
+      contexts = contexts.concat(newContexts);
+    }
   } else {
-    // Sino buscar la metadata segun los items
     contexts = await getClasses(items);
   }
 

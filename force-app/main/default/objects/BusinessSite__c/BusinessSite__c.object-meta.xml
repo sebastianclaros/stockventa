@@ -153,12 +153,12 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>Private</externalSharingModel>
-    <label>Business Site</label>
+    <label>Punto de Venta</label>
     <nameField>
         <label>Business Site Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Business Sites</pluralLabel>
+    <pluralLabel>Puntos de Venta</pluralLabel>
     <searchLayouts></searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>

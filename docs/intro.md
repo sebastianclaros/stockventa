@@ -21,16 +21,26 @@ Antes de empezar lea el **[Readme](./readme)** del proyecto, donde explica el co
 
 ```mermaid
 erDiagram
+            Inventory__c ||..|{ InventoryLock__c : "Bloqueos por Cantidad"
+            BusinessSite__c ||..|{ Inventory__c : ""
+            Product2 ||..|{ Inventory__c : ""
             BusinessSite__c ||..|{ Material__c : "Materials"
             Product2 ||..|{ Material__c : "Materials"
 
-BusinessSite__c {
+InventoryLock__c {
+            Inventory__c Inventory__c
+}
+Inventory__c {
+            BusinessSite__c BusinessSite__c
+            Product__c Product2
 }
 Material__c {
             BusinessSite__c BusinessSite__c
             Product__c Product2
 }
 Product2 {
+}
+BusinessSite__c {
 }
 
 ```
@@ -39,9 +49,11 @@ Product2 {
 
 | #   | Label | Api Name | Descripcion |
 | --- | ----- | -------- | ----------- |
-| <div class="icons"></div> | [Business Site](/diccionarios/objects/BusinessSite__c) | BusinessSite__c ||
+| <div class="icons">![Track History](/img/tracker_60.png)</div> | [Bloqueo por Cantidad](/diccionarios/objects/InventoryLock__c) | InventoryLock__c ||
+| <div class="icons">![Track History](/img/tracker_60.png)</div> | [Inventario](/diccionarios/objects/Inventory__c) | Inventory__c |Objeto que contiene cantidad total, reservas, muletos y disponibles de cada Punto de Venta / NMU|
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | [Material](/diccionarios/objects/Material__c) | Material__c ||
 | <div class="icons"></div> | [Product](/diccionarios/objects/Product2) | Product2 ||
+| <div class="icons"></div> | [Punto de Venta](/diccionarios/objects/BusinessSite__c) | BusinessSite__c ||
 
 ### Configuracion
 
@@ -83,6 +95,24 @@ classDiagram
     link BaseTriggerHandlerException "./diccionarios/classes/BaseTriggerHandlerException" 
 
 
+    class InventoryLockTriggerHandler {
+
+    }
+
+    link InventoryLockTriggerHandler "./diccionarios/classes/InventoryLockTriggerHandler" 
+
+
+    class InventoryTriggerHandler {
+         flagInventoryTrigger $    
+         beforeInsert() void o
+         beforeUpdate() void o
+         beforeDelete() void o
+
+    }
+
+    link InventoryTriggerHandler "./diccionarios/classes/InventoryTriggerHandler" 
+
+
     class LoopCount {
      LoopCount()  
      LoopCount(Integer max)  
@@ -100,6 +130,11 @@ classDiagram
     class MaterialTriggerHandler {
          beforeInsert() void o
          beforeUpdate() void o
+         beforeDelete() void o
+         afterInsert() void o
+         afterUpdate() void o
+         afterDelete() void o
+         afterUndelete() void o
 
     }
 
@@ -107,6 +142,10 @@ classDiagram
 
 
     class MaterialTriggerHelper {
+         agregarInventario(List materiales) void $
+         cambiarEstadoInventario(Map materialesOldList materialesNew) void $
+         moverDepositoInventario(Map materialesOldList materialesNew) void $
+         removerInventario(List materiales) void $
          completarProducto(List materiales) void $
          completarBusinessSite(List materiales) void $
 
@@ -123,6 +162,7 @@ classDiagram
 
 
     class TriggerHelper {
+         validateFieldUnchanged(Map newMapMap oldMapString fieldName) void $
          getRecordChanges(Map newMapMap oldMapString fieldName) List $
          getFieldsFromSObjects(List recordsString fieldName) Set $
          getExternalMap(String objectNameString externalFieldSet values) Map $
@@ -144,6 +184,8 @@ classDiagram
 | --- | ----- | ----------- | ----------- |
 | <div class="icons"></div> | [BaseTriggerHandler](./diccionarios/classes/BaseTriggerHandler) |59||
 | <div class="icons"></div> | [BaseTriggerHandlerException](./diccionarios/classes/BaseTriggerHandlerException) |||
+| <div class="icons"></div> | [InventoryLockTriggerHandler](./diccionarios/classes/InventoryLockTriggerHandler) |61||
+| <div class="icons"></div> | [InventoryTriggerHandler](./diccionarios/classes/InventoryTriggerHandler) |61||
 | <div class="icons"></div> | [LoopCount](./diccionarios/classes/LoopCount) |||
 | <div class="icons"></div> | [MaterialTriggerHandler](./diccionarios/classes/MaterialTriggerHandler) |59||
 | <div class="icons"></div> | [MaterialTriggerHelper](./diccionarios/classes/MaterialTriggerHelper) |59||

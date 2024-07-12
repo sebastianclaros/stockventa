@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>PaisOrigen__c</fullName>
+    <fullName>OriginCountry__c</fullName>
     <description>Esto se usa en material importados y tiene el pais de donde se realizó la importación</description>
     <externalId>false</externalId>
     <label>Pais de Origen</label>
@@ -14,12 +14,12 @@
             <value>
                 <fullName>MX</fullName>
                 <default>false</default>
-                <label>MX</label>
+                <label>Mexico</label>
             </value>
             <value>
                 <fullName>CH</fullName>
                 <default>false</default>
-                <label>CH</label>
+                <label>China</label>
             </value>
         </valueSetDefinition>
     </valueSet>

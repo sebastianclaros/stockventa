@@ -13,6 +13,10 @@
         <label>Information</label>
         <layoutColumns>
             <layoutItems>
+                <behavior>Required</behavior>
+                <field>Status__c</field>
+            </layoutItems>
+            <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>Name</field>
             </layoutItems>
@@ -37,7 +41,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>SerialNumber__c</field>
+                <field>Serial__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -56,13 +60,13 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>PaisOrigen__c</field>
+                <field>OriginCountry__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>AnoImportacion__c</field>
+                <field>ImportYear__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -96,6 +100,9 @@
         <layoutColumns/>
         <style>CustomLinks</style>
     </layoutSections>
+    <miniLayout>
+        <fields>Status__c</fields>
+    </miniLayout>
     <relatedLists>
         <relatedList>RelatedEntityHistoryList</relatedList>
     </relatedLists>
@@ -121,7 +128,7 @@
             <posY>0</posY>
         </summaryLayoutItems>
         <summaryLayoutItems>
-            <field>SerialNumber__c</field>
+            <field>Serial__c</field>
             <posX>3</posX>
             <posY>0</posY>
         </summaryLayoutItems>

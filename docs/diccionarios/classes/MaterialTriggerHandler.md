@@ -11,8 +11,8 @@ title: MaterialTriggerHandler
 
 - Status: Active
 - Api Version: 59
-- Creada: 13 de junio de 24
-- Modificada: 13 de junio de 24
+- Creada: 27 de junio de 24
+- Modificada: 28 de junio de 24
 - Interface 
 
 ## Diagrama
@@ -23,6 +23,11 @@ class MaterialTriggerHandler {
     
      beforeInsert() void o
      beforeUpdate() void o
+     beforeDelete() void o
+     afterInsert() void o
+     afterUpdate() void o
+     afterDelete() void o
+     afterUndelete() void o
 
 }
 ```
@@ -35,6 +40,11 @@ class MaterialTriggerHandler {
 | --- | ------ | ------ | ---------- |
 | <div class="icons">o</div> | beforeInsert | void| <ul></ul>|
 | <div class="icons">o</div> | beforeUpdate | void| <ul></ul>|
+| <div class="icons">o</div> | beforeDelete | void| <ul></ul>|
+| <div class="icons">o</div> | afterInsert | void| <ul></ul>|
+| <div class="icons">o</div> | afterUpdate | void| <ul></ul>|
+| <div class="icons">o</div> | afterDelete | void| <ul></ul>|
+| <div class="icons">o</div> | afterUndelete | void| <ul></ul>|
 
 
 | #  | Referencia       | #  | Referencia |
