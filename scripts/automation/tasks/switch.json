@@ -1,0 +1,12 @@
+{
+    "name": "switch",
+    "guards": [ "gitToken" ], 
+    "description": "Comando para cambiar el requerimiento a desarrollar",
+    "steps": [
+        { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "update-documentation"},
+        { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "validate-scratch" },
+        { "subtask": "checkout-branch", "arguments": ["${newBranchName}"] },
+        { "criteria": { "field": "isDevelopment", "value": true }, "name": "switch scratch", "command": "sf force config set target-org", "arguments": { "--target-org": "${newScratchName}" }, "description": "Cambia la scratch", "errorMessage": "No se pudo mover al scratch ${newScratchName}. Hagalo manualmente ${command}" },
+        { "criteria": { "field": "isDevelopment", "value": true }, "name": "deploy scratch localmente", "command": "sf project deploy start", "arguments": { "--target-org": "${newScratchName}" }, "description": "Deploy por si hubo cambios en main", "errorMessage": "No se pudo mover al scratch ${newScratchName}. Hagalo manualmente ${command}" }
+    ] 
+}

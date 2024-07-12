@@ -1,0 +1,8 @@
+{
+    "name": "stop",
+    "guards": [ "gitToken" ], 
+    "description": "Comando para dejar a un lado un requerimiento",
+    "steps": [
+        { "name": "Ver datos del issue", "function": "viewIssue" }
+    ] 
+}

@@ -51,30 +51,6 @@ export async function getColumnValueMap() {
   return mapValues;
 }
 
-export async function createPullRequest(title, headBranch, draft = false) {
-  const repository = await getRepository();
-  const repositoryId = repository.id;
-  const mutation = `
-    mutation ($repositoryId: ID!, $title: String!, $baseBranch: String!, $headBranch: String!, $draft; Boolean! ) {
-      createPullRequest(
-        input: {
-            repositoryId: $repositoryId,
-            headRefName: $headBranch,
-            baseRefName: $baseBranch,
-            draft: $draft,
-            title: $title
-        }
-      ) {
-          pullRequest {
-            id
-            url
-          }
-        }
-      }`;
-  const { createPullRequest } = await graphqlAuth(mutation, { repositoryId,  headBranch, baseBranch: 'main', title, draft });
-  return createPullRequest.pullRequest;
-}
-
 export async function createIssue(title, columnName, label, milestone, body ) {
   const user = await getUser();
   const repository = await getRepository(label);
@@ -159,11 +135,13 @@ export async function moveIssue(issueNumber, columnName) {
         value: {singleSelectOptionId: $columnValue}
       }
     ) {
-      clientMutationId
+      projectV2Item {
+        id
+      }
     }
   }`;
   const {updateProjectV2ItemFieldValue } = await graphqlAuth(mutation, { projectId, itemId, fieldId, columnValue });
-  return updateProjectV2ItemFieldValue?.clientMutationId ? true: false ;  
+  return updateProjectV2ItemFieldValue?.projectV2Item ? true: false ;  
 }
 
 export async function assignIssueToMe(issueNumber) {
@@ -214,12 +192,14 @@ export async function assignBranchToIssue(issueNumber, branchName, commitSha) {
         name: $branchName
       })
       {
-        clientMutationId
+        issue {
+          id
+        }
       }
     }`;
   const {createLinkedBranch } = await graphqlAuth(mutation, { issueId: issue.id, oid: commit.oid, branchName });
-  
-  return createLinkedBranch?.clientMutationId ? true: false ;  
+  console.log(createLinkedBranch);
+  return createLinkedBranch?.issue?.id ? true: false ;  
 }
 
 export async function getValidateIssueColumn(issueNumber, columnName) {

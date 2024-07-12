@@ -1,0 +1,8 @@
+{
+    "name": "view",
+    "guards": [ "gitToken" ], 
+    "description": "Comando para ver en detalle el requerimiento",
+    "steps": [
+        { "name": "Ver datos del issue", "function": "viewIssue" }
+    ] 
+}

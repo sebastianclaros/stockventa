@@ -1,4 +1,4 @@
-import {createIssue} from "./github-graphql.mjs";
+import {createIssue} from "../helpers/github-graphql.mjs";
 
 const title = process.argv[2];
 const issueType  = process.argv[3];
