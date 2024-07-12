@@ -98,6 +98,10 @@ class Context {
         }
         return baseName;
     } 
+    get isNewDevelopment() {
+        return this.newIssueType === 'feature' || this.newIssueType === 'fix';
+    }
+
     get newIssueNumber() {
         return this._newIssueNumber;
     }
