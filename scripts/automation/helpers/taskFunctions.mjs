@@ -38,9 +38,7 @@ export function executeCommand(command, args) {
     try {
        const execute = command + ' ' + convertArgsToString(args);
        context.set('command', execute );
-       const buffer = execSync( execute) ;
-       //const salida = buffer.toString().trim();
-       //return ( salida.endsWith("\n") ? salida.slice(0, -1) : salida );
+       execSync( execute) ;
        return true;
     } catch (error) {
         return false;
@@ -199,7 +197,7 @@ export const taskFunctions = {
     async createBranch() {
         try {
             const newBranchName = context.newBranchName;
-            executeShell( `git checkout -b ${newBranchName}` ) ;
+            executeShell( `git checkout -b ${newBranchName} origin/main` ) ;
             context.set('branchName', this.getBranchName() );
             return true ;
         } catch (error) {
