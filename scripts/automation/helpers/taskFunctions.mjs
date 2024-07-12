@@ -36,7 +36,9 @@ function convertArgsToString(args) {
 
 export function executeCommand(command, args) {
     try {
-       const buffer = execSync( command + ' ' + convertArgsToString(args)) ;
+       const execute = command + ' ' + convertArgsToString(args);
+       context.set('command', execute );
+       const buffer = execSync( execute) ;
        //const salida = buffer.toString().trim();
        //return ( salida.endsWith("\n") ? salida.slice(0, -1) : salida );
        return true;
