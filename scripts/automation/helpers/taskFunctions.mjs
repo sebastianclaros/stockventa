@@ -228,7 +228,6 @@ export const taskFunctions = {
         const commitSha = executeShell( `git rev-parse --verify main` ) ; 
         const result = await assignBranchToIssue(issueNumber,newBranchName, commitSha);
         return result;
-        
     },    
 
     
