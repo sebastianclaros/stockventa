@@ -183,7 +183,7 @@ async function executeStep(step, tabs) {
   }
   if ( !success) {
     if ( error ) {
-      logError(`[ERROR!] ${error.message}`, tabs );
+      logError(`[ERROR] ${error.message}`, tabs );
     } else {
       logError(`[ERROR] ${getStepError(step)}`, tabs );
     }
