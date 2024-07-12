@@ -166,12 +166,13 @@ async function askForContinue() {
   return answer.continue;
 } 
 
-function getStepError(step) {
-  return step.errorMessage ? context.merge(step.errorMessage): step.name ? `Fallo el step ${step.name}` : '';
+function getStepError(step, stepName) {
+  return step.errorMessage ? context.merge(step.errorMessage): stepName ? `Fallo el step ${stepName}` : '';
 }
 async function executeStep(step, tabs) {
-  if ( step.name ) {
-    logStep(`[INICIO] ${step.name}`, tabs);
+  const stepName = step.name ? context.merge(step.name): undefined;
+  if ( stepName ) {
+    logStep(`[INICIO] ${stepName}`, tabs);
   }
   
   let success = false;
@@ -185,14 +186,14 @@ async function executeStep(step, tabs) {
     if ( error ) {
       logError(`[ERROR] ${error.message}`, tabs );
     } else {
-      logError(`[ERROR] ${getStepError(step)}`, tabs );
+      logError(`[ERROR] ${getStepError(step, stepName)}`, tabs );
     }
     if ( !step.subtask && ! await askForContinue() ) {
       return false;
     } 
   }
-  if ( step.name ) {
-    logStep(`[FIN] ${step.name}`, tabs );
+  if ( stepName ) {
+    logStep(`[FIN] ${stepName}`, tabs );
   }
   return true;
 }

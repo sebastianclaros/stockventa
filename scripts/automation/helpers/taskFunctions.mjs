@@ -1,4 +1,4 @@
-import {execSync} from "child_process";
+import {execSync, spawn} from "child_process";
 import context from "./context.mjs";
 import { getIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
 import { logError} from "./color.mjs";
@@ -27,19 +27,23 @@ function convertArgsToString(args) {
         }    
     } else if ( typeof args === 'object' ) {
         for ( const argName in args) {
-            argsString += argName + '=' + context.merge(args[argName]) + ' ';
+            if ( !args[argName]  ) {
+                argsString += argName + ' ';                
+            } else {
+                argsString += argName + '=' + context.merge(args[argName]) + ' ';
+            }
         }
     }
     return argsString;
 
 }
 
-export function executeCommand(command, args) {
+export async function executeCommand(command, args) {
     try {
-       const execute = command + ' ' + convertArgsToString(args);
-       context.set('command', execute );
-       execSync( execute) ;
-       return true;
+        context.set('command', command + ' ' + convertArgsToString(args) );
+        execSync(command + ' ' + convertArgsToString(args), {stdio: 'inherit'});   
+   
+        return true;
     } catch (error) {
         return false;
     }
@@ -132,9 +136,8 @@ export const taskFunctions = {
     getOrganizationObject(alias, type = 'scratchOrgs') {
         const salida = executeShell( 'sf org list --json' ) ;
         const salidaJson = JSON.parse(salida);
-        const orgObject =  salidaJson.result[type].filter( scratch => scratch.alias === branchName );
-
-        if ( orgObject.isExpired === true ) {
+        const orgObject =  salidaJson.result[type].filter( scratch => scratch.alias === alias )[0];
+        if ( orgObject?.isExpired === true ) {
             throw new Error(`La scratch ${scratch.alias} ha expirado!`);
         }  
         return orgObject;

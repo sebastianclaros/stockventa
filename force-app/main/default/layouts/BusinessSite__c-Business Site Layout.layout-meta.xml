@@ -60,9 +60,6 @@
     <relatedLists>
         <fields>NAME</fields>
         <fields>Product__c</fields>
-        <fields>Available__c</fields>
-        <fields>LockedBySerial__c</fields>
-        <fields>LockedByQuantity__c</fields>
         <fields>Total__c</fields>
         <relatedList>Inventory__c.BusinessSite__c</relatedList>
         <sortField>Product__c</sortField>
