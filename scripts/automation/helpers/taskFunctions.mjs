@@ -169,11 +169,8 @@ export const taskFunctions = {
     },
     validateScratch() {
         const salida = executeShell( "sf project retrieve preview" ) ;
-        const noHayCambios = salida.substring('No files will be deleted') === -1 && hayCambios.substring('No files will be retrieved') === -1 && hayCambios.substring('No conflicts found') === -1
-        if ( !noHayCambios ) {
-            context.set('hayCambios', salida );
-        }
-        return noHayCambios;
+        const hayCambios = salida.substring('No files will be deleted') === -1 && hayCambios.substring('No files will be retrieved') === -1 && hayCambios.substring('No conflicts found') === -1
+        return !hayCambios;
     },
     
     
