@@ -95,6 +95,9 @@ class Context {
         }
         return baseName;
     } 
+    get isDevelopment() {
+        return this.issueType === 'feature' || this.issueType === 'fix';
+    }
     get isNewDevelopment() {
         return this.newIssueType === 'feature' || this.newIssueType === 'fix';
     }

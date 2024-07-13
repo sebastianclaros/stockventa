@@ -162,8 +162,10 @@ async function askForContinue() {
       message: "Desea continuar?"
     }
   ]);
-
-  return answer.continue;
+  if (!answer.continue ) {
+    process.exit(-1);
+  }
+  return true;
 } 
 
 function getStepError(step, stepName) {
@@ -188,7 +190,7 @@ async function executeStep(step, tabs) {
     } else {
       logError(`[ERROR] ${getStepError(step, stepName)}`, tabs );
     }
-    if ( !step.subtask && ! await askForContinue() ) {
+    if (! await askForContinue() ) {
       return false;
     } 
   }
