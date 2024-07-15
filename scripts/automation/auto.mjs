@@ -1,11 +1,12 @@
 // Comandos validos
-import {createObject, validateTask, getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
+import {createObject, createConfigurationFile,  validateTask, getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
 import { logError} from "./helpers/color.mjs";
 import prompts from "prompts";
 const proxyCommnad = {
     'preview': previewTask , 
     'help': helpTask, 
     'task': runTask,
+    'config': createConfigurationFile,
     'subtask': runTask
 }
 

@@ -1,25 +1,20 @@
-require("dotenv").config();
-const jsforce = require("jsforce");
+import context from "./context.mjs";
+import jsforce from "jsforce";
 const DEBUG = process.env.DEBUG || false;
 const API_VERSION = "60.0";
 
 let conn;
 
 async function connect() {
-  const username = process.env.SF_USERNAME;
-  const password = process.env.SF_PASSWORD;
-  const accessToken = process.env.SF_AUTHTOKEN;
-  const instanceUrl = process.env.SF_INSTANCEURL;
-
-  if (!(username && password) && !(accessToken && instanceUrl)) {
+  const orgObject = context.scratch();
+  console.log(orgObject);
+  const accessToken = orgObject.accessToken;
+  const instanceUrl = orgObject.accessToken;
+  if (!(accessToken && instanceUrl)) {
     console.error(
-      "Para bajar la metadata la herramienta se loguea a Salesforce."
+      "Para bajar la metadata la herramienta se loguea a Salesforce con la default org. Verifique sf config get target-org"
     );
-    console.error(
-      "Puede correr el comando de config o modificar manualmente el .env"
-    );
-    console.error("yarn doc:config");
-    throw new Error("Falta configurar ejecute: yarn doc:config");
+    throw new Error("Falta configurar ejecute: yarn auto config");
   }
 
   if (accessToken && instanceUrl) {
@@ -246,7 +241,7 @@ async function customObjects(fullNames) {
   }
 }
 
-module.exports = {
+export default {
   connect,
   check,
   customObjects,

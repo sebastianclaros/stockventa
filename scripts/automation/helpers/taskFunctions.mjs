@@ -173,7 +173,10 @@ export const taskFunctions = {
         return !hayCambios;
     },
     
-    
+    saveCredentials() {
+        context.saveCredentials();
+    },
+
     getBranchName() {
         try {
             return  executeShell( "git branch --show-current" ) ;

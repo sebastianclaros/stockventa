@@ -179,6 +179,11 @@ class Context {
         return inputsArray;
     }
 
+    saveCredentials() {
+        const scratchInfo = this.scratch();
+        console.log(scratchInfo);
+    }
+
     async askForArguments(inputs) {
         // unifica los dos tipos de inputs (array y objeto) en un array de inputs
         const inputsArray = this.convertToArrayOfInputs(inputs);

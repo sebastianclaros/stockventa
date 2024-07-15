@@ -57,7 +57,7 @@ function createMatchObject(matches) {
   return matchObject;
 }
 
-function merge(newContent, existingContent, cleanNotExistingTags) {
+export function merge(newContent, existingContent, cleanNotExistingTags) {
   let mergeContent = existingContent;
   const regexp = /<!--[ ]*(start|end)[ ]*([^>]*)-->/gi;
   const newMatches = createMatchObject(newContent.matchAll(regexp));
@@ -88,8 +88,6 @@ function merge(newContent, existingContent, cleanNotExistingTags) {
 
   return mergeContent;
 }
-
-module.exports = { merge };
 
 /* podria ser mas performante 
 

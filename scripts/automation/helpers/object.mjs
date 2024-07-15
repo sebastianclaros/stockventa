@@ -1,7 +1,9 @@
-const sf = require("./connect");
-const prompts = require("prompts");
-const templateEngine = require("./template")("dictionary", "md");
-const {
+import sf from "./connect.mjs";
+import prompts from "prompts";
+import templateGenerator from "./template.mjs";
+const templateEngine = templateGenerator("dictionary", "md");
+
+import {
   getObjectsCache,
   setObjectsCache,
   sortByLabel,
@@ -10,7 +12,7 @@ const {
   DOCS_FOLDER,
   WORKING_FOLDER,
   DEFAULT_INTRO
-} = require("./util");
+} from "./util.mjs";
 const DEFAULT_FILENAME = DOCS_FOLDER + "/.object.json";
 
 async function getObjects(objetos) {
@@ -201,8 +203,9 @@ async function execute({ items, opciones }) {
   templateEngine.save(filename, folder);
 }
 
-module.exports = {
-  help,
+
+export default {
   prompt,
+  help,
   execute
 };

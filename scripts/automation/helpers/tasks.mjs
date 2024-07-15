@@ -8,6 +8,10 @@ export const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
 
 const filterJson = (file) => file.endsWith(".json");
 
+
+export function createConfigurationFile() {
+  console.log('not implemented');
+}
 function getTaskLists(folder) {
     const files = getFiles(folder, filterJson);
     return files.map( filename => filename.split(".")[0] );

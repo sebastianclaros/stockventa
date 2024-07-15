@@ -1,15 +1,17 @@
-const templateEngine = require("./template")(".", "md");
-const fs = require("fs");
-const { getMetadataArray, DOCS_FOLDER } = require("./util");
-const prompts = require("prompts");
+import prompts from "prompts";
+import { getMetadataArray } from "./util.mjs";
+import objectImport from "./object.mjs";
+import classImport  from "./class.mjs";
+import lwc  from "./lwc.mjs";
+import newHelper  from "./new.mjs";
 
+// Logica especificas de cada componente
 const helpers = {
-  objects: require("./object"),
-  classes: require("./class"),
-  lwc: require("./lwc")
+  objects: objectImport,
+  classes: classImport,
+  lwc
 };
 
-const newHelper = require("./new");
 
 async function prompt(config) {
   const opciones = Object.keys(config.opciones);
@@ -89,12 +91,12 @@ async function execute({ opciones }) {
   }
 }
 
-module.exports = {
+
+export default {
   prompt,
   help,
   execute
 };
-
 /**
  * example json
 

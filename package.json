@@ -13,7 +13,7 @@
     "prettier": "prettier --write \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "prettier:verify": "prettier --list-different \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "postinstall": "husky install",
-    "doc:create": "node scripts/doc/doc.js",
+    "doc:create": "node scripts/doc/doc.mjs",
     "doc:start": "docusaurus start",
     "doc:build": "docusaurus build",
     "doc:config": "node scripts/doc/config.js",
