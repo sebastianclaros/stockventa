@@ -5,5 +5,13 @@
     "descripcion": "Modelo de datos del Modulo de Gestion de Stock disponible para la venta",
     "classes": ["InventoryLockTriggerHandler", "InventoryTriggerHandler", "BaseTriggerHandler", "MaterialTriggerHandler", "MaterialTriggerHelper", "TriggerHelper"],
     "objects": ["Material__c", "Inventory__c", "InventoryLock__c", "Product2", "BusinessSite__c"]
+  },
+  {
+    "folder": "servicio",
+    "name": "getAvaliability",
+    "descripcion": "Servicio que consulta la disponibilidad de materiales en un punto de venta",
+    "classes": ["InventoryService"],
+    "objects": [ "Inventory__c", "InventoryLock__c"]
   }
+
 ]
