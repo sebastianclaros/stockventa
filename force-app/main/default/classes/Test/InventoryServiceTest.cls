@@ -13,7 +13,8 @@ public with sharing class InventoryServiceTest {
 
         insert materiales;
 
-        List<Inventory__c> inventarios = InventoryService.getAvailabilityByWerks(b1.Werks__c);
+        List<Inventory__c> inventarios = new List<Inventory__c>();
+        inventarios = InventoryService.getAvailabilityByWerks(b1.Werks__c, 10);
 
         System.assertEquals(inventarios.size(), 1, 'Tiene que devolver un solo objeto');
         System.assertEquals(inventarios.get(0).mtpl__c, 2, 'Tiene que encontrar 2 avaiable');
@@ -34,7 +35,7 @@ public with sharing class InventoryServiceTest {
 
         insert materiales;
 
-        List<Inventory__c> inventarios = InventoryService.getAvailabilityByWerks('');
+        List<Inventory__c> inventarios = InventoryService.getAvailabilityByWerks('', 0);
 
         System.assertEquals(inventarios.size(), 2, 'Tiene que devolver 2 objetos');
 
@@ -53,7 +54,7 @@ public with sharing class InventoryServiceTest {
 
         insert materiales;
 
-        List<Inventory__c> inventarios = InventoryService.getAvailabilityByWerks(b2.Werks__c);
+        List<Inventory__c> inventarios = InventoryService.getAvailabilityByWerks(b2.Werks__c, 0);
 
         System.assertEquals(inventarios.size(), 0, 'Tiene que devolver vacío');
 
@@ -72,10 +73,11 @@ public with sharing class InventoryServiceTest {
 
         insert materiales;
 
-        List<Inventory__c> inventarios = InventoryService.getAvailabilityByWerksAndNmu(b1.Werks__c, p1.NMU__c);
+        Inventory__c inv = new Inventory__c();
+        inv = InventoryService.getAvailabilityByWerksAndNmu(b1.Werks__c, p1.NMU__c);
 
-        System.assertEquals(inventarios.size(), 1, 'Tiene que devolver 1 objeto');
-        System.assertEquals(inventarios.get(0).mtpl__c, 3, 'Tiene que devolver 3 materiales disponibles');
+        //System.assertEquals(inventarios.size(), 1, 'Tiene que devolver 1 objeto');
+        System.assertEquals(inv.mtpl__c, 3, 'Tiene que devolver 3 materiales disponibles');
 
     }
 }
