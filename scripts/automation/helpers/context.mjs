@@ -196,6 +196,36 @@ class Context {
         return inputsArray;
     }
 
+    async askForExit() {
+        const answer = await prompts([
+            {
+              type: "confirm",
+              name: "exit",
+              initial: true,
+              message: "Desea salir?"
+            }
+          ]);
+        if ( answer.exit ) {
+            process.exit(-1);
+        }
+    }
+    mergeArgs(args) {
+        if ( Array.isArray(args) ) {
+            let argsArray = [];
+            for ( const argName of args) {
+                argsArray.push( this.merge(argName) );
+            }
+            return argsArray;
+        } else if ( typeof args === 'object' ) {
+            let argsObject = {};    
+            for ( const argName in args) {
+                argsObject[argName] =  this.merge(args[argName]);
+            }
+            return argsObject;
+        }
+        return null;
+    }
+    
     async askForArguments(inputs) {
         // unifica los dos tipos de inputs (array y objeto) en un array de inputs
         const inputsArray = this.convertToArrayOfInputs(inputs);
@@ -203,10 +233,8 @@ class Context {
         for(const input of inputsArray) {
             const hasValue = await this.get(input.name);
             if ( !hasValue ) {
-                const answer = await prompts([input]);
-                if ( !answer ) {
-                    process.exit();
-                }
+                console.log(JSON.stringify(this.mergeArgs(input)) );
+                const answer = await prompts([this.mergeArgs(input)], {onCancel: this.askForExit});
                 this[input.name] =  answer[input.name];
             }
         }
@@ -233,13 +261,33 @@ class Context {
     }
 
     merge(text) {
-        const mergeVariables = (t) => {
-            if (!t) return '';
-            return t.replace(/\$\{([^}]+)}/g, (match, variable) => {
-                return this[variable];
-            });
-        };
+        // const mergeVariables = (t) => {
+        //     if (!t) return '';
+        //     return t.replace(/\$\{([^}]+)}/g, (match, variable) => {
+        //         return this[variable];
+        //     });
+        // };
+
+        const matches = text.matchAll(/\$\{([^}]+)}/g);
+        // si es un texto con merges 
+        for (const match of matches) {
+            console.log(match);
+        }
+
+        // si no tiene para merge
+        if( matches === null ) {
+            return text; 
+        }
+        // si es una sola variable
+        if( matches.length === 1 && matches[0] === text ) {
         
+        }
+
+        // si es un texto con merges 
+        for (const match of matches) {
+            console.log(match);
+        }
+        process.exit(0);
         return mergeVariables(text);
     }
 }

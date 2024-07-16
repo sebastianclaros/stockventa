@@ -1,7 +1,7 @@
 import context from "./context.mjs";
 import { logError, logStep } from "./color.mjs";
 import fs from "fs";
-import { mergeArgs, validateCommand, validateFunction, executeFunction, executeCommand } from "./taskFunctions.mjs";
+import { validateCommand, validateFunction, executeFunction, executeCommand } from "./taskFunctions.mjs";
 import prompts from "prompts";
 export const TASKS_FOLDER = process.cwd() + "/scripts/automation/tasks";
 export const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
@@ -146,7 +146,7 @@ async function runStep(step, tabs) {
   } else if ( step.subtask ) {
     const subtask = getTask(step.subtask, SUBTASKS_FOLDER);
     
-    let stepContext = mergeArgs(step.arguments);
+    let stepContext = context.mergeArgs(step.arguments);
     if ( Array.isArray(stepContext) ) {
       stepContext = createObject( subtask.arguments, stepContext);    
     }     

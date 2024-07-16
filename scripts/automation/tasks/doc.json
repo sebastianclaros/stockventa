@@ -1,6 +1,6 @@
 {
     "name": "doc",
-    "arguments": { "process": { "required": true }, "module": { "type": "text"} },
+    "arguments": { "module": { "type": "select", "choices": "${modules}" }, "process": { "required": true } },
     "description": "Comando para documentar un proceso",
     "steps": [
         { "name": "Documenta un proceso", "function": "docProcess" }
