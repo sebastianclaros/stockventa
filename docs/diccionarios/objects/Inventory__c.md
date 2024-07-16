@@ -18,13 +18,17 @@ Objeto que contiene cantidad total, reservas, muletos y disponibles de cada Punt
 
 | #   | Label | Api Name | Tipo | Descripcion |
 | --- | ----- | -------- | ---- | ----------- |
-| <div class="icons"></div> | Disponibles | Available__c | Number(8) | Cantidad disponible <ul></ul> |
 | <div class="icons"></div> | Punto de Venta | BusinessSite__c | [Lookup a BusinessSite__c](/diccionarios/objects/BusinessSite__c) | Lookup a Business Site <ul></ul> |
 | <div class="icons"></div> | Bloqueos por Cantidad | LockedByQuantity__c | Number(8) |  <ul></ul> |
-| <div class="icons"></div> | Bloqueos Unitarios | LockedBySerial__c | Number(8) |  <ul></ul> |
 | <div class="icons"></div> | Product | Product__c | [Lookup a Product2](/diccionarios/objects/Product2) | Lookup a Product <ul></ul> |
-| <div class="icons"></div> | Muletos | Substitutes__c | Number(8) |  <ul></ul> |
-| <div class="icons"></div> | Total | Total__c | Number(18) | Cantidad total de materiales del NMU / Punto de venta <ul></ul> |
+| <div class="icons"></div> | Total | Total__c | Number(10) | Cantidad total de materiales del NMU / Punto de venta <ul></ul> |
+| <div class="icons"></div> | Vendidos | mclv__c | Number(8) |  <ul></ul> |
+| <div class="icons"></div> | Devuelto en Garantia | mtdg__c | Number(8) |  <ul></ul> |
+| <div class="icons"></div> | Disponibles | mtpl__c | Number(8) | Cantidad disponible <ul></ul> |
+| <div class="icons"></div> | Muletos | mtpm__c | Number(8) |  <ul></ul> |
+| <div class="icons"></div> | Muletos Prestados | mtpo__c | Number(8) |  <ul></ul> |
+| <div class="icons"></div> | Bloqueos Unitarios | mtre__c | Number(8) |  <ul></ul> |
+| <div class="icons"></div> | Siniestrados | mtsc__c | Number(8) |  <ul></ul> |
 
 | #                                                              | Referencia    |
 | -------------------------------------------------------------- | ------------- |

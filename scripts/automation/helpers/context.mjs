@@ -62,8 +62,8 @@ class Context {
         return typeof this.scratch !== 'undefined';
     }
     get scratch() {
-        if ( !this._scratch && this.branchName ) {
-            this._scratch= taskFunctions.getOrganizationObject(this.branchName);
+        if ( !this._scratch ) {
+            this._scratch= taskFunctions.getCurrentOrganization();
         }
         return this._scratch;
     }

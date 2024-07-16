@@ -11,8 +11,8 @@ title: MaterialTriggerHelper
 
 - Status: Active
 - Api Version: 59
-- Creada: 27 de junio de 24
-- Modificada: 27 de junio de 24
+- Creada: 12 de julio de 24
+- Modificada: 12 de julio de 24
 - Interface 
 
 ## Diagrama
@@ -21,15 +21,26 @@ classDiagram
 
 class MaterialTriggerHelper {
     
+     ERROR_CAMBIO_DE_ESTADO $    
      ERROR_NMU_DOES_NOT_EXIST $    
      ERROR_WERKS_DOES_NOT_EXIST $    
+     ESTADO_DISPONIBLE $    
+     ESTADO_RESERVADO $    
+     ESTADO_VENDIDO $    
+     ESTADO_PRESTADO $    
+     ESTADO_SINIESTRADO_TELECOM $    
+     ESTADO_DISPONIBLE_PRESTAMO $    
+     ESTADO_DEVOLUCION_GARANTIA $    
+     SIN_ESTADO_PREVIO $    
      CAMPO_SEGUN_ESTADO $    
+     CAMBIOS_ESTADO_PROCESO $    
      getInventoryKey(Material__c material) String $
      buscarInventarios(List materiales) Map $
      agregarInventario(List materiales) void $
      cambiarEstadoInventario(Map materialesOldList materialesNew) void $
      moverDepositoInventario(Map materialesOldList materialesNew) void $
      removerInventario(List materiales) void $
+     validateStatusChanges(Map oldMaterialList newMaterial) void $
      completarProducto(List materiales) void $
      completarBusinessSite(List materiales) void $
 
@@ -48,6 +59,7 @@ class MaterialTriggerHelper {
 | <div class="icons">$</div> | cambiarEstadoInventario | void| <ul><li>Map materialesOld</li><li>List materialesNew</li></ul>|
 | <div class="icons">$</div> | moverDepositoInventario | void| <ul><li>Map materialesOld</li><li>List materialesNew</li></ul>|
 | <div class="icons">$</div> | removerInventario | void| <ul><li>List materiales</li></ul>|
+| <div class="icons">$</div> | validateStatusChanges | void| <ul><li>Map oldMaterial</li><li>List newMaterial</li></ul>|
 | <div class="icons">$</div> | completarProducto | void| <ul><li>List materiales</li></ul>|
 | <div class="icons">$</div> | completarBusinessSite | void| <ul><li>List materiales</li></ul>|
 

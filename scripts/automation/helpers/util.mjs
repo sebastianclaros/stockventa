@@ -71,7 +71,7 @@ function setClassesCache(fileName, items) {
 }
 function setObjectsCache(fileName, items) {
   const itemKeys = items.map((item) => item.fullName);
-  filterFn = (item) => !itemKeys.includes(item.fullName);
+  const filterFn = (item) => !itemKeys.includes(item.fullName);
   setContextCache(fileName, items, "objects", filterFn);
 }
 
