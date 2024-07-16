@@ -68,6 +68,13 @@ class Context {
         return this._branchScratch;
     }
 
+    get modules() {
+        return [
+            { title: "Si (baja y actualiza el cache en docs)", value: true },
+            { title: "No (lee el cache que esta en docs)", value: false }
+          ];
+    }
+
     get existScratch() {
         return typeof this.scratch !== 'undefined';
     }
@@ -187,11 +194,6 @@ class Context {
             }
         }
         return inputsArray;
-    }
-
-    saveCredentials() {
-        const scratchInfo = this.scratch();
-        console.log(scratchInfo);
     }
 
     async askForArguments(inputs) {

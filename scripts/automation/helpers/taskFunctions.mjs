@@ -1,6 +1,6 @@
 import {execSync, spawn} from "child_process";
 import context from "./context.mjs";
-import { getIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
+import { getIssue, createIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
 import { logError} from "./color.mjs";
 
 export function mergeArgs(args) {
@@ -132,6 +132,10 @@ export function executeShell(command ) {
 
 export const taskFunctions = {   
 
+    docProcess() {
+        console.log("Not implemented");
+        return true;
+    },
     getCurrentOrganization() {
         const salidaConfig = executeShell( 'sf config get target-org --json' ) ;
         const salidaConfigJson = JSON.parse(salidaConfig);
@@ -179,8 +183,10 @@ export const taskFunctions = {
     rollbackIssue() {
         console.log('Not implemented');
     },
-    createIssue() {
-        console.log('Not implemented');
+    async createIssue(title) {
+        const result = await createIssue(title, 'Backlog' );
+        console.log(result);
+        return result ? true:false;
     },
     
     async validateIssue(issueNumber, states) {        
@@ -194,10 +200,6 @@ export const taskFunctions = {
         return !hayCambios;
     },
     
-    saveCredentials() {
-        context.saveCredentials();
-    },
-
     getBranchName() {
         try {
             return  executeShell( "git branch --show-current" ) ;

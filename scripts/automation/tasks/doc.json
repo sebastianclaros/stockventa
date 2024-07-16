@@ -1,0 +1,8 @@
+{
+    "name": "doc",
+    "arguments": { "process": { "required": true }, "module": { "type": "text"} },
+    "description": "Comando para documentar un proceso",
+    "steps": [
+        { "name": "Documenta un proceso", "function": "docProcess" }
+    ] 
+}
