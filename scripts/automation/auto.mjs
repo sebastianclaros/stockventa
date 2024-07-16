@@ -1,11 +1,12 @@
 // Comandos validos
-import {createObject, validateTask, getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
+import {createObject, createConfigurationFile,  validateTask, getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
 import { logError} from "./helpers/color.mjs";
 import prompts from "prompts";
 const proxyCommnad = {
     'preview': previewTask , 
     'help': helpTask, 
     'task': runTask,
+    'config': createConfigurationFile,
     'subtask': runTask
 }
 
@@ -21,7 +22,7 @@ export async function main() {
         const taskName = await askForTaskName(config.taskName, tasks);
         if ( taskName ) {        
             const task = tasks[taskName];
-            const options = config.arguments ? {...config.options, ...createObject( task.arguments, config.arguments)} : config.options;
+            const options = config.arguments && task.arguments ? {...config.options, ...createObject( task.arguments, config.arguments)} : config.options;
             // Valida los json de task y subtask
             if ( validateTask(task) ) {
                 await proxyCommnad[config.command](task, options );
@@ -84,8 +85,7 @@ async function askForTaskName(taskName, tasks) {
         ? `${taskName} no es un comando valido`
         : "Seleccione un comando",
         choices: Object.values(tasks).map((task) => {
-            const selected = task.name == 'new';
-            return { selected, title: task.name, value: task.name, description: task.description };
+            return { title: task.name, value: task.name, description: task.description };
         })
     });
 

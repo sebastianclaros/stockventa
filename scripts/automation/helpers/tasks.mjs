@@ -8,6 +8,10 @@ export const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
 
 const filterJson = (file) => file.endsWith(".json");
 
+
+export function createConfigurationFile() {
+  console.log('not implemented');
+}
 function getTaskLists(folder) {
     const files = getFiles(folder, filterJson);
     return files.map( filename => filename.split(".")[0] );
@@ -162,8 +166,10 @@ async function askForContinue() {
       message: "Desea continuar?"
     }
   ]);
-
-  return answer.continue;
+  if (!answer.continue ) {
+    process.exit(-1);
+  }
+  return true;
 } 
 
 function getStepError(step, stepName) {
@@ -188,7 +194,7 @@ async function executeStep(step, tabs) {
     } else {
       logError(`[ERROR] ${getStepError(step, stepName)}`, tabs );
     }
-    if ( !step.subtask && ! await askForContinue() ) {
+    if (! await askForContinue() ) {
       return false;
     } 
   }

@@ -1,8 +1,8 @@
-const sf = require("./connect");
-const prompts = require("prompts");
-const templateEngine = require("./template")("dictionary", "md");
+import sf from "./connect.mjs";
+import templateGenerator from "./template.mjs";
+const templateEngine = templateGenerator("dictionary", "md");
 
-const {
+import {
   getLwcCache,
   setLwcCache,
   sortByName,
@@ -11,7 +11,7 @@ const {
   DOCS_FOLDER,
   WORKING_FOLDER,
   DEFAULT_INTRO
-} = require("./util");
+} from "./util.mjs";
 const DEFAULT_FILENAME = DOCS_FOLDER + "/.lwc.json";
 
 async function getLwc(lwc) {
@@ -114,7 +114,7 @@ async function execute({ items, opciones }) {
   templateEngine.save(filename, folder);
 }
 
-module.exports = {
+export default {
   prompt,
   help,
   execute

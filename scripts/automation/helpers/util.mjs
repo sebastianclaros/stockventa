@@ -4,7 +4,7 @@ const WORKING_FOLDER = process.env.INIT_CWD || ".";
 const DEFAULT_METADATAFILENAME = DOCS_FOLDER + "/metadata.json";
 
 const DEFAULT_INTRO = "intro";
-const fs = require("fs");
+import fs from "fs";
 
 function sortByName(objA, objB) {
   return objA.Name > objB.Name ? 1 : objA.Name < objB.Name ? -1 : 0;
@@ -58,6 +58,12 @@ function setContextCache(fileName, items, propName, filterFn) {
   );
 }
 
+function setLwcCache(fileName, items) {
+  const itemKeys = items.map((item) => item.Name);
+  filterFn = (item) => !itemKeys.includes(item.Name);
+  setContextCache(fileName, items, "lwc", filterFn);
+}
+
 function setClassesCache(fileName, items) {
   const itemKeys = items.map((item) => item.Name);
   filterFn = (item) => !itemKeys.includes(item.Name);
@@ -65,8 +71,13 @@ function setClassesCache(fileName, items) {
 }
 function setObjectsCache(fileName, items) {
   const itemKeys = items.map((item) => item.fullName);
-  filterFn = (item) => !itemKeys.includes(item.fullName);
+  const filterFn = (item) => !itemKeys.includes(item.fullName);
   setContextCache(fileName, items, "objects", filterFn);
+}
+
+function getLwcCache(fileName) {
+  const cache = getContextCache(fileName, false);
+  return cache ? cache.lwc: [];
 }
 
 function getClassesCache(fileName) {
@@ -185,7 +196,7 @@ function splitFilename(fullname, defaultFolder) {
   return { filename, folder };
 }
 
-module.exports = {
+export {
   DICTIONARY_FOLDER,
   DOCS_FOLDER,
   WORKING_FOLDER,
@@ -196,8 +207,10 @@ module.exports = {
   sortByLabel,
   sortByName,
   getObjectsCache,
+  getLwcCache,
   getClassesCache,
   setObjectsCache,
   setClassesCache,
+  setLwcCache,
   verFecha
 };

@@ -132,6 +132,27 @@ export function executeShell(command ) {
 
 export const taskFunctions = {   
 
+    getCurrentOrganization() {
+        const salidaConfig = executeShell( 'sf config get target-org --json' ) ;
+        const salidaConfigJson = JSON.parse(salidaConfig);
+        const targetOrg =  salidaConfigJson.result[0];
+
+        const salidaOrgList = executeShell( 'sf org list --json' ) ;
+        const salidaOrgListJson = JSON.parse(salidaOrgList);
+        
+        for ( const orgType in salidaOrgListJson.result ) {
+            for ( const orgObject of salidaOrgListJson.result[orgType] ) {
+                if ( orgObject.alias === targetOrg.value ) {
+                    if ( orgObject?.isExpired === true ) {
+                        throw new Error(`La scratch ${scratch.alias} ha expirado!`);
+                    }  
+                    return orgObject;
+                }
+            }
+        }
+        return null;
+    },
+
     // type: 'scratchOrgs', 'sandboxes', others
     getOrganizationObject(alias, type = 'scratchOrgs') {
         const salida = executeShell( 'sf org list --json' ) ;
@@ -169,14 +190,14 @@ export const taskFunctions = {
     },
     validateScratch() {
         const salida = executeShell( "sf project retrieve preview" ) ;
-        const noHayCambios = salida.substring('No files will be deleted') === -1 && hayCambios.substring('No files will be retrieved') === -1 && hayCambios.substring('No conflicts found') === -1
-        if ( !noHayCambios ) {
-            context.set('hayCambios', salida );
-        }
-        return noHayCambios;
+        const hayCambios = salida.substring('No files will be deleted') === -1 && hayCambios.substring('No files will be retrieved') === -1 && hayCambios.substring('No conflicts found') === -1
+        return !hayCambios;
     },
     
-    
+    saveCredentials() {
+        context.saveCredentials();
+    },
+
     getBranchName() {
         try {
             return  executeShell( "git branch --show-current" ) ;

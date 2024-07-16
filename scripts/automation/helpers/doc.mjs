@@ -1,13 +1,17 @@
-const fs = require("fs");
-const prompts = require("prompts");
+import prompts from "prompts";
+import objectImport from "./object.mjs";
+import classImport  from "./class.mjs";
+import lwc  from "./lwc.mjs";
+import metadata from "./metadata.mjs";
+import newImport  from "./new.mjs";
 
 // Logica especificas de cada componente
 const helpers = {
-  object: require("./object"),
-  class: require("./class"),
-  lwc: require("./lwc"),
-  metadata: require("./metadata"),
-  new: require("./new")
+  object: objectImport,
+  class: classImport,
+  lwc,
+  metadata,
+  new: newImport
 };
 
 async function prompt(config) {
@@ -92,7 +96,7 @@ async function execute({ componente, argumentos }) {
   }
 }
 
-module.exports = {
+export default {
   prompt,
   help,
   execute

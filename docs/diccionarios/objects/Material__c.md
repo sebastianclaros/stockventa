@@ -6,7 +6,7 @@ title: Material
 
 ## Descripción
 
-
+Este objeto contiene todos los bienes de cambio y de prestamo que estan en las sucursales. El alta viene por interface desde SAP, y cuando se venden y se concilian en SAP ya se pueden archivar.
 
 - Label: Material
 - ApiName: Material__c
@@ -24,7 +24,7 @@ title: Material
 | <div class="icons"></div> | Pais de Origen | OriginCountry__c | Picklist | Esto se usa en material importados y tiene el pais de donde se realizó la importación <ul><li>Mexico</li><li>China</li></ul> |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | Product | Product__c | [Lookup a Product2](/diccionarios/objects/Product2) | Lookup a Products. La relación es gestionada por un Trigger al insertarse el material. <ul></ul> |
 | <div class="icons">![External Id](/img/database_60.png)</div> | Serial | Serial__c | Text(80) | Código único que identifica el material. En tipo &quot;Terminales&quot; se trata del IMEI. En tipo &quot;Simcard&quot; refiere al IMSI <ul></ul> |
-| <div class="icons">![Required](/img/lock_60.png)</div> | Status | Status__c | Picklist | Estado del material. Sólo el estado &lt;MTPL&gt; Disponible va a permitir ser reservado. <ul><li>Disponible</li><li>Reservado</li><li>Muleto</li><li>No Disponible</li></ul> |
+| <div class="icons">![Required](/img/lock_60.png)</div> | Status | Status__c | Picklist | Estado del material. Sólo el estado &lt;MTPL&gt; Disponible va a permitir ser reservado. <ul><li>Disponible</li><li>Reservado</li><li>Disponible Prestamo</li><li>No Disponible</li><li>Devuelto en garantia</li><li>Prestado</li><li>Vendido</li><li>Siniestro</li></ul> |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | Werks | Werks__c | Text(10) | Código único que identifica la Bodega en SAP. <ul></ul> |
 
 | #                                                              | Referencia    |

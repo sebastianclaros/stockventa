@@ -1,7 +1,8 @@
-const templateEngine = require("./template")(".", "md");
-const fs = require("fs");
-const prompts = require("prompts");
-const { splitFilename, WORKING_FOLDER } = require("./util");
+import prompts from "prompts";
+import fs from "fs";
+import { splitFilename, WORKING_FOLDER } from "./util.mjs";
+import templateGenerator from "./template.mjs";
+const templateEngine = templateGenerator(".", "md");
 
 async function prompt(config) {
   const templates = templateEngine.getTemplates();
@@ -105,7 +106,7 @@ async function execute({ template, filename, context }) {
   templateEngine.save(file.filename, file.folder, { create: true });
 }
 
-module.exports = {
+export default {
   prompt,
   help,
   execute

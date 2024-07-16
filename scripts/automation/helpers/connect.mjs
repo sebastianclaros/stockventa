@@ -1,27 +1,20 @@
-require("dotenv").config();
-const jsforce = require("jsforce");
+import context from "./context.mjs";
+import jsforce from "jsforce";
 const DEBUG = process.env.DEBUG || false;
 const API_VERSION = "60.0";
 
 let conn;
 
 async function connect() {
-  const username = process.env.SF_USERNAME;
-  const password = process.env.SF_PASSWORD;
-  const accessToken = process.env.SF_AUTHTOKEN;
-  const instanceUrl = process.env.SF_INSTANCEURL;
-
-  if (!(username && password) && !(accessToken && instanceUrl)) {
+  const orgObject = context.scratch;
+  const accessToken = orgObject.accessToken;
+  const instanceUrl = orgObject.instanceUrl;
+  if (!(accessToken && instanceUrl)) {
     console.error(
-      "Para bajar la metadata la herramienta se loguea a Salesforce."
+      "Para bajar la metadata la herramienta se loguea a Salesforce con la default org. Verifique sf config get target-org"
     );
-    console.error(
-      "Puede correr el comando de config o modificar manualmente el .env"
-    );
-    console.error("yarn doc:config");
-    throw new Error("Falta configurar ejecute: yarn doc:config");
+    throw new Error("Falta configurar ejecute: yarn auto config");
   }
-
   if (accessToken && instanceUrl) {
     try {
       conn = new jsforce.Connection({
@@ -44,24 +37,24 @@ async function connect() {
     }
   }
 
-  if (username && password) {
-    try {
-      conn = new jsforce.Connection({
-        loginUrl: process.env.SF_LOGINURL || "https://test.salesforce.com",
-        version: API_VERSION
-      });
-      const userInfo = await conn.login(username, password);
-
-      if (DEBUG) {
-        console.log("accessToken", conn.accessToken);
-      }
-    } catch (e) {
-      if (DEBUG) {
-        console.log(e);
-      }
-      throw `Por favor verifique usuario y password ${username} ${password}`;
-    }
-  }
+//  if (username && password) {
+//    try {
+//      conn = new jsforce.Connection({
+//        loginUrl: process.env.SF_LOGINURL || "https://test.salesforce.com",
+//        version: API_VERSION
+//      });
+//      const userInfo = await conn.login(username, password);
+//
+//      if (DEBUG) {
+//        console.log("accessToken", conn.accessToken);
+//      }
+//    } catch (e) {
+//      if (DEBUG) {
+//        console.log(e);
+//      }
+//      throw `Por favor verifique usuario y password ${username} ${password}`;
+//    }
+//  }
 }
 
 function check() {
@@ -246,7 +239,7 @@ async function customObjects(fullNames) {
   }
 }
 
-module.exports = {
+export default {
   connect,
   check,
   customObjects,

@@ -38,7 +38,7 @@ BusinessSite__c {
 | --- | ----- | -------- | ----------- |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | [Bloqueo por Cantidad](/diccionarios/objects/InventoryLock__c) | InventoryLock__c ||
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | [Inventario](/diccionarios/objects/Inventory__c) | Inventory__c |Objeto que contiene cantidad total, reservas, muletos y disponibles de cada Punto de Venta / NMU|
-| <div class="icons">![Track History](/img/tracker_60.png)</div> | [Material](/diccionarios/objects/Material__c) | Material__c ||
+| <div class="icons">![Track History](/img/tracker_60.png)</div> | [Material](/diccionarios/objects/Material__c) | Material__c |Este objeto contiene todos los bienes de cambio y de prestamo que estan en las sucursales. El alta viene por interface desde SAP, y cuando se venden y se concilian en SAP ya se pueden archivar.|
 | <div class="icons"></div> | [Product](/diccionarios/objects/Product2) | Product2 ||
 | <div class="icons"></div> | [Punto de Venta](/diccionarios/objects/BusinessSite__c) | BusinessSite__c ||
 
@@ -131,10 +131,19 @@ classDiagram
 
 
     class MaterialTriggerHelper {
+         ESTADO_DISPONIBLE $    
+         ESTADO_RESERVADO $    
+         ESTADO_VENDIDO $    
+         ESTADO_PRESTADO $    
+         ESTADO_SINIESTRADO_TELECOM $    
+         ESTADO_DISPONIBLE_PRESTAMO $    
+         ESTADO_DEVOLUCION_GARANTIA $    
+         SIN_ESTADO_PREVIO $    
          agregarInventario(List materiales) void $
          cambiarEstadoInventario(Map materialesOldList materialesNew) void $
          moverDepositoInventario(Map materialesOldList materialesNew) void $
          removerInventario(List materiales) void $
+         validateStatusChanges(Map oldMaterialList newMaterial) void $
          completarProducto(List materiales) void $
          completarBusinessSite(List materiales) void $
 
@@ -151,6 +160,7 @@ classDiagram
 
 
     class TriggerHelper {
+         validateFieldsUnchanged(Map newMapMap oldMapList fieldNames) void $
          validateFieldUnchanged(Map newMapMap oldMapString fieldName) void $
          getRecordChanges(Map newMapMap oldMapString fieldName) List $
          getFieldsFromSObjects(List recordsString fieldName) Set $
