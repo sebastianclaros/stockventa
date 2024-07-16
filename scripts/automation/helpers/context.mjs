@@ -58,16 +58,16 @@ class Context {
         return this._targetOrg;
     }
 
-    get existBranchScratch() {
-        if ( !this._scratch ) {
-            this._scratch= taskFunctions.getOrganizationObject(this.getBranchName);
+    get existBranchScratch() {  
+        return typeof this._branchScratch !== 'undefined';        
+    }
+    get branchScratch() {    
+        if ( !this._branchScratch ) {
+            this._branchScratch= taskFunctions.getOrganizationObject(this.branchName);
         }
-        return this._scratch;
-
-        return typeof this.scratch !== 'undefined';
+        return this._branchScratch;
     }
 
-    
     get existScratch() {
         return typeof this.scratch !== 'undefined';
     }
