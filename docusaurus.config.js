@@ -1,5 +1,29 @@
 // const lightCodeTheme = require('prism-react-renderer/themes/github');
 // const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+import {getFiles, filterDirectory} from "./scripts/automation/helpers/util.mjs";
+
+const modules = getFiles(process.cwd() + "/docs", filterDirectory, false, ['diccionarios']);
+const modulesSidebar = modules.map( module=> {
+  return {
+    type: "docSidebar",
+    sidebarId: module,
+    position: "left",
+    label: module
+  }
+});
+
+const items = [  ...modulesSidebar ,
+  // {
+  //   to: 'blog',
+  //   label: 'Blog',
+  //   position: 'right'
+  // },
+  {
+    type: "docSidebar",
+    sidebarId: "diccionarios",
+    position: "right",
+    label: "Diccionarios"
+  }];
 
 export default {
   title: "StockVenta",
@@ -60,43 +84,7 @@ export default {
           alt: "Stock Venta",
           src: "img/logo.png"
         },
-        items: [
-          {
-            type: "docSidebar",
-            sidebarId: "integraciones",
-            position: "left",
-            label: "Integraciones"
-          },
-          {
-            type: "docSidebar",
-            sidebarId: "modelo",
-            position: "left",
-            label: "Modelo"
-          },
-          {
-            type: "docSidebar",
-            sidebarId: "servicio",
-            position: "left",
-            label: "Servicio"
-          },
-          {
-            type: "docSidebar",
-            sidebarId: "aplicacion",
-            position: "left",
-            label: "Aplicacion"
-          },
-          // {
-          //   to: 'blog',
-          //   label: 'Blog',
-          //   position: 'right'
-          // },
-          {
-            type: "docSidebar",
-            sidebarId: "diccionario",
-            position: "right",
-            label: "Diccionarios"
-          }
-        ]
+        items
       },
       footer: {
         style: "dark",

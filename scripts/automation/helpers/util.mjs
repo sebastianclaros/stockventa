@@ -196,6 +196,26 @@ function splitFilename(fullname, defaultFolder) {
   return { filename, folder };
 }
 
+const filterJson = (fullPath) => fullPath.endsWith(".json");
+const filterDirectory = (fullPath) => fs.lstatSync(fullPath).isDirectory();
+const filterFiles = (fullPath) => !fs.lstatSync(fullPath).isDirectory();
+
+function getFiles(source, filter=(file)=>true, recursive = false, ignoreList = []) {
+  const files = [];
+  for (const file of fs.readdirSync(source)) {
+    const fullPath = source + "/" + file;
+    const filtered = filter(fullPath);
+    if ( filtered && !ignoreList.includes(file)) {
+        if (fs.lstatSync(fullPath).isDirectory() && recursive ) {
+          getFiles(fullPath, recursive, ignoreList).forEach((x) => files.push(file + "/" + x));
+        } else {
+          files.push(file);
+        }
+    }
+  }
+  return files;
+}
+
 export {
   DICTIONARY_FOLDER,
   DOCS_FOLDER,
@@ -204,6 +224,10 @@ export {
   splitFilename,
   getMetadataArray,
   getNamesByExtension,
+  getFiles,
+  filterJson,
+  filterDirectory,
+  filterFiles,
   sortByLabel,
   sortByName,
   getObjectsCache,

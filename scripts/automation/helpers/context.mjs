@@ -1,4 +1,5 @@
 import { executeShell, taskFunctions } from "./taskFunctions.mjs"
+import { getFiles, filterDirectory } from "./util.mjs";
 import prompts from "prompts";
 import fs from "fs";
 
@@ -69,10 +70,8 @@ class Context {
     }
 
     get modules() {
-        return [
-            { title: "Si (baja y actualiza el cache en docs)", value: true },
-            { title: "No (lee el cache que esta en docs)", value: false }
-          ];
+        const modules = getFiles(process.cwd() + "/docs", filterDirectory, false, ['dictionary']);
+        return modules.map( module => { return { value: module, title: module } } ) ;    
     }
 
     get existScratch() {
@@ -233,7 +232,6 @@ class Context {
         for(const input of inputsArray) {
             const hasValue = await this.get(input.name);
             if ( !hasValue ) {
-                console.log(JSON.stringify(this.mergeArgs(input)) );
                 const answer = await prompts([this.mergeArgs(input)], {onCancel: this.askForExit});
                 this[input.name] =  answer[input.name];
             }
@@ -268,27 +266,29 @@ class Context {
         //     });
         // };
 
-        const matches = text.matchAll(/\$\{([^}]+)}/g);
-        // si es un texto con merges 
-        for (const match of matches) {
-            console.log(match);
+        if( typeof text == 'undefined' || text.indexOf('${') === -1 ) {
+            return text; 
         }
 
+        const matches = text.matchAll(/\$\{([^}]+)}/g);
         // si no tiene para merge
         if( matches === null ) {
             return text; 
         }
-        // si es una sola variable
-        if( matches.length === 1 && matches[0] === text ) {
-        
-        }
-
+                
         // si es un texto con merges 
         for (const match of matches) {
-            console.log(match);
+            const mergedValue = this[match[1]];
+            // si es una sola variable
+            if (match.index == 0 && text === match[0]) {
+                return mergedValue;
+            }
+            text = text.replace(match[0], mergedValue);
+
         }
-        process.exit(0);
-        return mergeVariables(text);
+
+return text; 
+        //return mergeVariables(text);
     }
 }
 

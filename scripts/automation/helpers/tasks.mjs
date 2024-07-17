@@ -1,13 +1,11 @@
 import context from "./context.mjs";
 import { logError, logStep } from "./color.mjs";
 import fs from "fs";
+import { getFiles, filterJson } from "./util.mjs";
 import { validateCommand, validateFunction, executeFunction, executeCommand } from "./taskFunctions.mjs";
 import prompts from "prompts";
 export const TASKS_FOLDER = process.cwd() + "/scripts/automation/tasks";
 export const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
-
-const filterJson = (file) => file.endsWith(".json");
-
 
 export function createConfigurationFile() {
   console.log('not implemented');
@@ -203,20 +201,4 @@ async function executeStep(step, tabs) {
   }
   return true;
 }
-
-function getFiles(source, filter=(file)=>true, recursive = false, ignoreList = []) {
-    const files = [];
-    for (const file of fs.readdirSync(source)) {
-      const fullPath = source + "/" + file;
-      const filtered = filter(file);
-      if ( filtered ) {
-          if (fs.lstatSync(fullPath).isDirectory() && recursive && !ignoreList.includes(file)) {
-            getFiles(fullPath, recursive, ignoreList).forEach((x) => files.push(file + "/" + x));
-          } else {
-            files.push(file);
-          }
-      }
-    }
-    return files;
-  }
   

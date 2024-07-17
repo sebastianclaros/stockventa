@@ -1,6 +1,7 @@
 import fs from "fs";
 import Handlebars from "handlebars";
 import { merge } from "./merge.mjs";
+import { getFiles } from "./util.mjs";
 
 
 const TEMPLATE_ROOT_FOLDER = process.cwd() + "/templates";
@@ -34,19 +35,6 @@ function openTemplate(sourceFolder, templateName, extension) {
   return content;
 }
 
-function getFiles(source, recursive = true, ignoreList = []) {
-  const files = [];
-  for (const file of fs.readdirSync(source)) {
-    const fullPath = source + "/" + file;
-    if (fs.lstatSync(fullPath).isDirectory() && recursive && !ignoreList.includes(file)) {
-      getFiles(fullPath, recursive, ignoreList).forEach((x) => files.push(file + "/" + x));
-    } else {
-      files.push(file);
-    }
-  }
-  return files;
-}
-
 class TemplateEngine {
   _template;
   _rendered;
@@ -62,13 +50,13 @@ class TemplateEngine {
   };
   
   getTemplates() {
+    const filterThisExtension = file => file.endsWith(`.${this._extension}`);
+
     const templates = [];
-    const files = getFiles(this._sourceFolder, true, ['dictionary']);
+    const files = getFiles(this._sourceFolder, filterThisExtension , true, ['dictionary']);
     for (const filename of files) {
-      const [name, ext] = filename.split(".");
-      if (ext === this._extension) {
-        templates.push(name);
-      }
+      const [name] = filename.split(".");
+      templates.push(name);
     }
     return templates;
   }
