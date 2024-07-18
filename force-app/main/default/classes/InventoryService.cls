@@ -1,11 +1,10 @@
 public with sharing class InventoryService {
-    private static String query = 'SELECT Id, Name, BusinessSite__c, Product__c,Total__c, mtpl__c, LockedByQuantity__c, mtre__c, mtpm__c FROM Inventory__c';
 
     public static List<Inventory__c> GetAvailabilityByWerks(String werks) {
         // Si no envía LIMITE se asume Default = 200 y devuelve todos los campos
 
         List<Inventory__c> listaInventario = new List<Inventory__c>();
-        String queryF = queryFormulate (werks, '', 0, new List<String>());
+        String queryF = queryFormulate (werks, '', 0, new Set<String>());
 
         try {
             listaInventario = Database.query(queryF);
@@ -19,7 +18,7 @@ public with sharing class InventoryService {
     public static List<Inventory__c> GetAvailabilityByWerks(String werks, Integer limite) {
 
         List<Inventory__c> listaInventario = new List<Inventory__c>();
-        String queryF = queryFormulate (werks, '', limite, new List<String>());
+        String queryF = queryFormulate (werks, '', limite, new Set<String>());
         try {
             listaInventario = Database.query(queryF);
         } catch (Exception e) {
@@ -29,7 +28,7 @@ public with sharing class InventoryService {
         return listaInventario;
     }
 
-    public static List<Inventory__c> GetAvailabilityByWerks(String werks, Integer limite, List<String> filters) {
+    public static List<Inventory__c> GetAvailabilityByWerks(String werks, Integer limite, Set<String> filters) {
         List<Inventory__c> listaInventario = new List<Inventory__c>();
         String queryF = queryFormulate(werks, '', limite, filters);
 
@@ -45,7 +44,7 @@ public with sharing class InventoryService {
     public static Inventory__c GetAvailabilityByWerksAndNmu (String werks, String nmu) {
         Inventory__c inventario = new Inventory__c();
 
-        String queryF = queryFormulate (werks, nmu, 1, new List<String>());
+        String queryF = queryFormulate (werks, nmu, 1, new Set<String>());
     
         try {
             inventario = Database.query(queryF);
@@ -57,7 +56,7 @@ public with sharing class InventoryService {
         return inventario;
     }
 
-    private static String queryFormulate (String werks, String nmu, Integer limite, List<String> filters) {
+    private static String queryFormulate (String werks, String nmu, Integer limite, Set<String> filters) {
         String baseQuery = 'SELECT Id, Name, BusinessSite__c, Product__c,Total__c, mtpl__c, LockedByQuantity__c, mtre__c, mtpm__c FROM Inventory__c WHERE BusinessSite__r.Werks__c =:werks ';
         String formQuery = '';
 
@@ -70,8 +69,8 @@ public with sharing class InventoryService {
         } else if (filters.size() > 0) {
             String filtros = String.join(filters,',');
 
-            query = 'SELECT Id,' + filtros;
-            formQuery = query + ' FROM Inventory__c WHERE BusinessSite__r.Werks__c =:werks LIMIT ' + limite;
+            formQuery = 'SELECT Id,' + filtros;
+            formQuery += ' FROM Inventory__c WHERE BusinessSite__r.Werks__c =:werks LIMIT ' + limite;
         }
         return formQuery;
     }
