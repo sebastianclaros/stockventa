@@ -1,7 +1,9 @@
 import { executeShell, taskFunctions } from "./taskFunctions.mjs"
-import { getFiles, filterDirectory } from "./util.mjs";
+import { convertNameToKey, convertKeyToName,  getFiles, filterDirectory, filterFiles } from "./util.mjs";
 import prompts from "prompts";
+import matter from 'gray-matter';
 import fs from "fs";
+const filterProcesses = (fullPath) => fullPath.endsWith(".md");
 
 class Context {
     isGitRepo = true;
@@ -69,9 +71,40 @@ class Context {
         return this._branchScratch;
     }
 
+    getProcessHeader(fullpath) {
+        const fileContents = fs.readFileSync(fullpath, 'utf8');
+        const { data } = matter(fileContents);
+        return data;
+    }
+
+    getProcessMetadata() {
+        const folders = getFiles(process.cwd() + "/docs", filterDirectory, true, ['diccionarios']);
+        let retArray = [];
+        for ( const folder of folders )  {
+            const fullpath = `${process.cwd()}/docs/${folder}`;
+            const processes = getFiles( fullpath, filterProcesses );
+            for ( const process of processes ) {
+                const header = this.getProcessHeader(fullpath + "/" + process); 
+                const processKey = convertNameToKey(header.slug || header.title || process);
+                if ( this.processes[processKey] ) {
+                    retArray.push( 
+                        {
+                            folder,
+                            name: convertKeyToName(processKey),
+                            ...this.processes[processKey]
+                        }
+                    ) 
+                } 
+            }
+        }
+        return retArray;
+    }
+
+    getModules() {
+        return getFiles(process.cwd() + "/docs", filterDirectory, false, ['diccionarios']);
+    }
     get modules() {
-        const modules = getFiles(process.cwd() + "/docs", filterDirectory, false, ['dictionary']);
-        return modules.map( module => { return { value: module, title: module } } ) ;    
+        return this.getModules().map( module => { return { value: module, title: module } } ) ;    
     }
 
     get existScratch() {
@@ -165,6 +198,18 @@ class Context {
           ]);  
                         
         return answer.newIssueNumber;
+    }
+    async askForprocess() {
+        const processes = getFiles( `${process.cwd()}/docs/${this.module}`, filterFiles);
+
+        const answer = await prompts([{
+            type: "select",
+             name: "process",
+             message: "Por favor seleccione el proceso",
+             choices: processes.map( process => { return { value: process, title: process } } )
+            }]);  
+                        
+        return answer.process;
     }
 
     async askFornewIssueType() {

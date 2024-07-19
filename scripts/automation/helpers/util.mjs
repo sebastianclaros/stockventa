@@ -1,20 +1,21 @@
-const DOCS_FOLDER = process.cwd() + "/docs";
-const DICTIONARY_FOLDER = process.cwd() + "/docs/diccionarios";
-const WORKING_FOLDER = process.env.INIT_CWD || ".";
+import fs from "fs";
+import context from "./context.mjs";
+
+export const DOCS_FOLDER = process.cwd() + "/docs";
+export const DICTIONARY_FOLDER = process.cwd() + "/docs/diccionarios";
+export const WORKING_FOLDER = process.env.INIT_CWD || ".";
+export const DEFAULT_INTRO = "intro";
 const DEFAULT_METADATAFILENAME = DOCS_FOLDER + "/metadata.json";
 
-const DEFAULT_INTRO = "intro";
-import fs from "fs";
-
-function sortByName(objA, objB) {
+export function sortByName(objA, objB) {
   return objA.Name > objB.Name ? 1 : objA.Name < objB.Name ? -1 : 0;
 }
 
-function sortByLabel(objA, objB) {
+export function sortByLabel(objA, objB) {
   return objA.label > objB.label ? 1 : objA.label < objB.label ? -1 : 0;
 }
 
-function verFecha() {
+export function verFecha() {
   try {
     const fecha = new Date(this);
     return fecha.toLocaleString("es", {
@@ -29,7 +30,7 @@ function verFecha() {
 }
 
 // Devuelve la lista de nombres de archivos de una extension de una carpeta, sin la extension.
-function getNamesByExtension(folder, extension) {
+export function getNamesByExtension(folder, extension) {
   const allFiles = fs.readdirSync(folder);
   const filterFiles = [];
 
@@ -41,7 +42,7 @@ function getNamesByExtension(folder, extension) {
   return filterFiles;
 }
 
-function setContextCache(fileName, items, propName, filterFn) {
+export function setContextCache(fileName, items, propName, filterFn) {
   const fullName =
     fileName.indexOf("/") != -1 ? fileName : WORKING_FOLDER + "/" + fileName;
   let allitems;
@@ -58,34 +59,34 @@ function setContextCache(fileName, items, propName, filterFn) {
   );
 }
 
-function setLwcCache(fileName, items) {
+export function setLwcCache(fileName, items) {
   const itemKeys = items.map((item) => item.Name);
   filterFn = (item) => !itemKeys.includes(item.Name);
   setContextCache(fileName, items, "lwc", filterFn);
 }
 
-function setClassesCache(fileName, items) {
+export function setClassesCache(fileName, items) {
   const itemKeys = items.map((item) => item.Name);
   filterFn = (item) => !itemKeys.includes(item.Name);
   setContextCache(fileName, items, "classes", filterFn);
 }
-function setObjectsCache(fileName, items) {
+export function setObjectsCache(fileName, items) {
   const itemKeys = items.map((item) => item.fullName);
   const filterFn = (item) => !itemKeys.includes(item.fullName);
   setContextCache(fileName, items, "objects", filterFn);
 }
 
-function getLwcCache(fileName) {
+export function getLwcCache(fileName) {
   const cache = getContextCache(fileName, false);
   return cache ? cache.lwc: [];
 }
 
-function getClassesCache(fileName) {
+export function getClassesCache(fileName) {
   const cache = getContextCache(fileName, false);
   return cache ? cache.classes: [];
 }
 
-function getObjectsCache(fileName) {
+export function getObjectsCache(fileName) {
   const cache = getContextCache(fileName, false);
   return cache ? cache.objects: [];
 }
@@ -106,8 +107,10 @@ function mergeArray(baseArray, newArray) {
   const notIncludeInBaseArray = (a) => baseArray.indexOf(a) === -1;
   return baseArray.concat(newArray.filter(notIncludeInBaseArray));
 }
-
-function getMetadataArray(fileName, props) {
+export function getMetadataFromContext(props) {
+  return getMetadataArray(context.getProcessMetadata(), props);
+}
+function getMetadataArray(metadata, props) {
   const mergeObject = (root, childs) => {
     for (const item of childs) {
       for (const key of props) {
@@ -139,12 +142,17 @@ function getMetadataArray(fileName, props) {
     return items;
   };
 
-  const metadata = getMetadata(fileName);
   if (Array.isArray(metadata)) {
     return getItemsFromTree({ folder: DOCS_FOLDER, childs: metadata });
   } else {
     return getItemsFromTree(metadata, "");
   }
+
+}
+
+export function getMetadataFromFile(fileName, props) {
+  const metadata = getMetadata(fileName);
+  return getMetadataArray(metadata, props);
 }
 
 function getMetadata(fileName = DEFAULT_METADATAFILENAME) {
@@ -185,7 +193,7 @@ function getContextCache(fileName, errorIfnotExist = true) {
   }
 }
 
-function splitFilename(fullname, defaultFolder) {
+export function splitFilename(fullname, defaultFolder) {
   let filename = fullname;
   let folder = defaultFolder;
   const separatorIndex = fullname.lastIndexOf("/");
@@ -196,45 +204,34 @@ function splitFilename(fullname, defaultFolder) {
   return { filename, folder };
 }
 
-const filterJson = (fullPath) => fullPath.endsWith(".json");
-const filterDirectory = (fullPath) => fs.lstatSync(fullPath).isDirectory();
-const filterFiles = (fullPath) => !fs.lstatSync(fullPath).isDirectory();
+export const filterJson = (fullPath) => fullPath.endsWith(".json");
+export const filterDirectory = (fullPath) => fs.lstatSync(fullPath).isDirectory();
+export const filterFiles = (fullPath) => !fs.lstatSync(fullPath).isDirectory();
 
-function getFiles(source, filter=(file)=>true, recursive = false, ignoreList = []) {
+export function getFiles(source, filter=(file)=>true, recursive = false, ignoreList = []) {
   const files = [];
   for (const file of fs.readdirSync(source)) {
     const fullPath = source + "/" + file;
     const filtered = filter(fullPath);
-    if ( filtered && !ignoreList.includes(file)) {
-        if (fs.lstatSync(fullPath).isDirectory() && recursive ) {
-          getFiles(fullPath, recursive, ignoreList).forEach((x) => files.push(file + "/" + x));
-        } else {
-          files.push(file);
-        }
+    if (!ignoreList.includes(file)) {
+      if ( filtered ) {
+        files.push(file);
+      }
+      if (fs.lstatSync(fullPath).isDirectory() && recursive ) {
+        getFiles(fullPath, filter, recursive, ignoreList).forEach((x) => files.push(file + "/" + x));
+      }
     }
   }
   return files;
 }
 
-export {
-  DICTIONARY_FOLDER,
-  DOCS_FOLDER,
-  WORKING_FOLDER,
-  DEFAULT_INTRO,
-  splitFilename,
-  getMetadataArray,
-  getNamesByExtension,
-  getFiles,
-  filterJson,
-  filterDirectory,
-  filterFiles,
-  sortByLabel,
-  sortByName,
-  getObjectsCache,
-  getLwcCache,
-  getClassesCache,
-  setObjectsCache,
-  setClassesCache,
-  setLwcCache,
-  verFecha
-};
+export function convertNameToKey( name ) {
+  return name.toLowerCase().replace(' ', '-')
+}
+
+export function convertKeyToName( key ) {
+  return key.replace(' ', '-')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+}

@@ -26,8 +26,6 @@ async function getLwc(lwc) {
   }
 }
 
-async function prompt(config) {}
-
 async function getContext(items, opciones) {
   let contexts;
 
@@ -59,24 +57,6 @@ async function getContext(items, opciones) {
     contexts = [contexts];
   }
   return contexts;
-}
-
-function help() {
-  console.info(
-    "Este comando se conecta a la metadata de los LWC de Salesforce y en base a los templates genera:"
-  );
-  console.info(
-    "1. Por cada lwc usa el template lwc.md para crear un diccionario de datos del componente en la carpeta " +
-      DICTIONARY_FOLDER
-  );
-  console.info(
-    "2. Crea un indice en la working folder usando el template lwcs.md"
-  );
-  console.info(
-    "\nPuede llamarse para un objeto o varios, de la siguiente forma:"
-  );
-  console.info("yarn doc:create lwc <<componentName>>");
-  console.info("yarn doc:create lwc <<componentName1>> <<componentName2>>");
 }
 
 async function execute({ items, opciones }) {
@@ -119,3 +99,25 @@ export default {
   help,
   execute
 };
+
+/** To Depracate */
+async function prompt(config) {}
+
+
+function help() {
+  console.info(
+    "Este comando se conecta a la metadata de los LWC de Salesforce y en base a los templates genera:"
+  );
+  console.info(
+    "1. Por cada lwc usa el template lwc.md para crear un diccionario de datos del componente en la carpeta " +
+      DICTIONARY_FOLDER
+  );
+  console.info(
+    "2. Crea un indice en la working folder usando el template lwcs.md"
+  );
+  console.info(
+    "\nPuede llamarse para un objeto o varios, de la siguiente forma:"
+  );
+  console.info("yarn doc:create lwc <<componentName>>");
+  console.info("yarn doc:create lwc <<componentName1>> <<componentName2>>");
+}

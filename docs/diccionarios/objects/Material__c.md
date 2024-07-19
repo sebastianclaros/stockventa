@@ -6,7 +6,7 @@ title: Material
 
 ## Descripción
 
-Este objeto contiene todos los bienes de cambio y de prestamo que estan en las sucursales. El alta viene por interface desde SAP, y cuando se venden y se concilian en SAP ya se pueden archivar.
+
 
 - Label: Material
 - ApiName: Material__c

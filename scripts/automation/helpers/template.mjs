@@ -3,8 +3,7 @@ import Handlebars from "handlebars";
 import { merge } from "./merge.mjs";
 import { getFiles } from "./util.mjs";
 
-
-const TEMPLATE_ROOT_FOLDER = process.cwd() + "/templates";
+const TEMPLATE_ROOT_FOLDER = process.cwd() + "/scripts/automation/templates";
 
 function isObjectEmpty(objectName) {
   return (

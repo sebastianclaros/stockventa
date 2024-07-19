@@ -117,6 +117,7 @@ export function executeShell(command ) {
 export const taskFunctions = {   
 
     docProcess() {
+        console.log(context.module, context.process );
         console.log("Not implemented");
         return true;
     },

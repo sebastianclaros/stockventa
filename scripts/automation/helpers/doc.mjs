@@ -5,6 +5,9 @@ import lwc  from "./lwc.mjs";
 import metadata from "./metadata.mjs";
 import newImport  from "./new.mjs";
 
+//** To Drepacte */
+
+
 // Logica especificas de cada componente
 const helpers = {
   object: objectImport,

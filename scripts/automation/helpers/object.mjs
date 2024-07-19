@@ -26,28 +26,6 @@ async function getObjects(objetos) {
   }
 }
 
-async function prompt(config) {
-  if (config.items.length === 0 && !("r" in config.opciones)) {
-    const response = await prompts({
-      type: "list",
-      name: "objects",
-      separator: ",",
-      initial: config.argumentos,
-      message: 'Ingrese Api Name usando "," si son varios'
-    });
-    config.items = response.objects;
-  }
-
-  if (config.items.length > 1 && !("m" in config.opciones)) {
-    const response = await prompts({
-      type: "text",
-      name: "modulo",
-      initial: "intro",
-      message: "Ingrese nombre archivo Markdown que seria Modulo de los objetos"
-    });
-    config.index = response.index;
-  }
-}
 function descriptionFormula(a) {
   return this.description?.replaceAll(/[\n\r]/g, "<br/>");
 }
@@ -112,24 +90,6 @@ function typeFormula() {
     return `${this.type}(${longitud})`;
   }
   return this.type;
-}
-
-function help() {
-  console.info(
-    "Este comando se conecta a la metadata de los objetos de Salesforce (fuentes) y en base a los templates genera:"
-  );
-  console.info(
-    "1. Por cada objeto usa el template object.md para crear un diccionario de datos del objeto en la carpeta " +
-      DICTIONARY_FOLDER
-  );
-  console.info(
-    "2. Crea un indice en la working folder usando el template objects.md"
-  );
-  console.info(
-    "\nPuede llamarse para un objeto o varios, de la siguiente forma:"
-  );
-  console.info("yarn doc:create object Account");
-  console.info("yarn doc:create object Account Case Contact --=index.md");
 }
 
 async function getContext(items, opciones) {
@@ -203,9 +163,52 @@ async function execute({ items, opciones }) {
   templateEngine.save(filename, folder);
 }
 
-
 export default {
   prompt,
   help,
   execute
 };
+
+/** To deprecate */
+async function prompt(config) {
+  if (config.items.length === 0 && !("r" in config.opciones)) {
+    const response = await prompts({
+      type: "list",
+      name: "objects",
+      separator: ",",
+      initial: config.argumentos,
+      message: 'Ingrese Api Name usando "," si son varios'
+    });
+    config.items = response.objects;
+  }
+
+  if (config.items.length > 1 && !("m" in config.opciones)) {
+    const response = await prompts({
+      type: "text",
+      name: "modulo",
+      initial: "intro",
+      message: "Ingrese nombre archivo Markdown que seria Modulo de los objetos"
+    });
+    config.index = response.index;
+  }
+}
+
+function help() {
+  console.info(
+    "Este comando se conecta a la metadata de los objetos de Salesforce (fuentes) y en base a los templates genera:"
+  );
+  console.info(
+    "1. Por cada objeto usa el template object.md para crear un diccionario de datos del objeto en la carpeta " +
+      DICTIONARY_FOLDER
+  );
+  console.info(
+    "2. Crea un indice en la working folder usando el template objects.md"
+  );
+  console.info(
+    "\nPuede llamarse para un objeto o varios, de la siguiente forma:"
+  );
+  console.info("yarn doc:create object Account");
+  console.info("yarn doc:create object Account Case Contact --=index.md");
+}
+
+

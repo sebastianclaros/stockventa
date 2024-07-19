@@ -31,8 +31,6 @@ const dictionaryClasses = getNamesByExtension(
   "md"
 );
 
-async function prompt(config) {}
-
 async function getContext(items, opciones) {
   let contexts;
   // flag -i lee del archivo cache
@@ -65,26 +63,6 @@ async function getContext(items, opciones) {
     contexts = [contexts];
   }
   return contexts;
-}
-
-function help() {
-  console.info(
-    "Este comando se conecta a la metadata de las clases de Salesforce (fuentes) y en base a los templates genera:"
-  );
-  console.info(
-    "1. Por cada clase usa el template class.md para crear un diccionario de datos de la clase en la carpeta " +
-      DICTIONARY_FOLDER
-  );
-  console.info(
-    "2. Crea un indice en la working folder usando el template classes.md"
-  );
-  console.info(
-    "\nPuede llamarse para un objeto o varios, de la siguiente forma:"
-  );
-  console.info("yarn doc:create class AccountController.cls");
-  console.info(
-    "yarn doc:create class AccountController.cls CaseController.cls"
-  );
 }
 
 function classLink() {
@@ -272,6 +250,31 @@ export default {
   help,
   execute
 };
+
+//** To Drepacte */
+
+async function prompt(config) {}
+
+function help() {
+  console.info(
+    "Este comando se conecta a la metadata de las clases de Salesforce (fuentes) y en base a los templates genera:"
+  );
+  console.info(
+    "1. Por cada clase usa el template class.md para crear un diccionario de datos de la clase en la carpeta " +
+      DICTIONARY_FOLDER
+  );
+  console.info(
+    "2. Crea un indice en la working folder usando el template classes.md"
+  );
+  console.info(
+    "\nPuede llamarse para un objeto o varios, de la siguiente forma:"
+  );
+  console.info("yarn doc:create class AccountController.cls");
+  console.info(
+    "yarn doc:create class AccountController.cls CaseController.cls"
+  );
+}
+
 
 /**
  * TODO
