@@ -9,7 +9,7 @@ Los comandos corren en modo interactivo, es decir que si no reciben parametros v
 Por ejemplo el siguiente shell mostrara una lista de todos los comandos
 
 ```
-yarn doc:create
+yarn auto doc
 ```
 
 Si se quiere correr en modo no interactivo entonces hay que pasar todos los argumentos necesarios, para ello se puede correr help para saber mas detalles.
@@ -17,7 +17,7 @@ Si se quiere correr en modo no interactivo entonces hay que pasar todos los argu
 Por ejemplo el siguiente shell mostrara un la ayuda del documentador de objetos
 
 ```
-yarn doc:create object help
+yarn auto help doc
 ```
 
 ## Comandos

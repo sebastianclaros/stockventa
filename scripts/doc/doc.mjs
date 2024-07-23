@@ -1,13 +1,8 @@
 // Comandos validos
-import doc from "../automation/helpers/doc.mjs";
-let config = { componente: process.argv[2], argumentos: process.argv.slice(3) };
+import {execute} from "../automation/helpers/metadata.mjs";
 
-doc.prompt(config).then(() => {
-  try {
-    if (config.componente && config.argumentos) {
-      doc.execute(config);
-    }
-  } catch (e) {
-    console.error(e);
-  }
-});
+try {
+  execute(process.argv.slice(2));
+} catch (e) {
+  console.error(e);
+}

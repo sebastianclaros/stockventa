@@ -1,6 +1,9 @@
 import { executeShell, taskFunctions } from "./taskFunctions.mjs"
+import { convertNameToKey, convertKeyToName,  getFiles, filterDirectory, addNewItems } from "./util.mjs";
 import prompts from "prompts";
+import matter from 'gray-matter';
 import fs from "fs";
+const filterProcesses = (fullPath) => !fullPath.endsWith("intro.md") && fullPath.endsWith(".md");
 
 class Context {
     isGitRepo = true;
@@ -56,6 +59,80 @@ class Context {
             this._targetOrg= taskFunctions.getTargetOrg();        
         }
         return this._targetOrg;
+    }
+
+    get existBranchScratch() {  
+        return typeof this._branchScratch !== 'undefined';        
+    }
+    get branchScratch() {    
+        if ( !this._branchScratch ) {
+            this._branchScratch= taskFunctions.getOrganizationObject(this.branchName);
+        }
+        return this._branchScratch;
+    }
+
+    getProcessHeader(fullpath) {
+        const fileContents = fs.readFileSync(fullpath, 'utf8');
+        const { data } = matter(fileContents);
+        return data;
+    }
+    addProcessMetadata(component, items) {
+        if ( !this.process ) {
+            throw new Error(`No hay proceso configurado`  );
+        }
+        const filename =  this.projectPath +  "/.autoforce.json";
+        const content = fs.readFileSync(filename, "utf8");
+        try {
+          const config = JSON.parse(content);
+          const processes = config.processes;
+          if ( !processes )  {
+            processes = {};
+          }
+          if ( !processes[this.process] )  {
+            processes[this.process] = {};
+          }
+          if ( !processes[this.process][component]  )  {
+            processes[this.process][component] = [];
+          }
+          addNewItems(processes[this.process][component], items) ;
+          config.processes = processes;
+
+          //fs.writeFileSync(filename, JSON.stringify(config, null, 2) );
+
+        } catch (error) {
+          throw new Error(`No se pudo guardar la metadata`  );
+        }
+
+    }
+
+    getProcessMetadata() {
+        const folders = getFiles(process.cwd() + "/docs", filterDirectory, true, ['diccionarios']);
+        let retArray = [];
+        for ( const folder of folders )  {
+            const fullpath = `${process.cwd()}/docs/${folder}`;
+            const processes = getFiles( fullpath, filterProcesses );
+            for ( const process of processes ) {
+                const header = this.getProcessHeader(fullpath + "/" + process); 
+                const processKey = convertNameToKey(header.slug || header.title || process);
+                if ( this.processes[processKey] ) {
+                    retArray.push( 
+                        {
+                            folder,
+                            name: convertKeyToName(processKey),
+                            ...this.processes[processKey]
+                        }
+                    ) 
+                } 
+            }
+        }
+        return retArray;
+    }
+
+    getModules() {
+        return getFiles(process.cwd() + "/docs", filterDirectory, false, ['diccionarios']);
+    }
+    get modules() {
+        return this.getModules().map( module => { return { value: module, title: module } } ) ;    
     }
 
     get existScratch() {
@@ -150,6 +227,25 @@ class Context {
                         
         return answer.newIssueNumber;
     }
+    async askForprocess() {
+        const folder = `${process.cwd()}/docs/${this.module}`;
+        const files = getFiles( folder, filterProcesses);
+        const choices = files.map( file => {
+            const header = this.getProcessHeader(`${folder}/${file}` ); 
+            const processName = header.slug || header.title || file.split('.')[0];
+            const value = convertNameToKey(processName);
+            const title = convertKeyToName(value);
+            return { value, title: `${title} (${file})`  }; 
+        });
+        const answer = await prompts([{
+            type: "select",
+             name: "process",
+             message: "Por favor seleccione el proceso",
+             choices
+            }]);  
+                        
+        return answer.process;
+    }
 
     async askFornewIssueType() {
         const answer = await prompts([
@@ -179,9 +275,34 @@ class Context {
         return inputsArray;
     }
 
-    saveCredentials() {
-        const scratchInfo = this.scratch();
-        console.log(scratchInfo);
+    async askForExit() {
+        const answer = await prompts([
+            {
+              type: "confirm",
+              name: "exit",
+              initial: true,
+              message: "Desea salir?"
+            }
+          ]);
+        if ( answer.exit ) {
+            process.exit(-1);
+        }
+    }
+    mergeArgs(args) {
+        if ( Array.isArray(args) ) {
+            let argsArray = [];
+            for ( const argName of args) {
+                argsArray.push( this.merge(argName) );
+            }
+            return argsArray;
+        } else if ( typeof args === 'object' ) {
+            let argsObject = {};    
+            for ( const argName in args) {
+                argsObject[argName] =  this.merge(args[argName]);
+            }
+            return argsObject;
+        }
+        return null;
     }
 
     async askForArguments(inputs) {
@@ -191,10 +312,7 @@ class Context {
         for(const input of inputsArray) {
             const hasValue = await this.get(input.name);
             if ( !hasValue ) {
-                const answer = await prompts([input]);
-                if ( !answer ) {
-                    process.exit();
-                }
+                const answer = await prompts([this.mergeArgs(input)], {onCancel: this.askForExit});
                 this[input.name] =  answer[input.name];
             }
         }
@@ -221,14 +339,36 @@ class Context {
     }
 
     merge(text) {
-        const mergeVariables = (t) => {
-            if (!t) return '';
-            return t.replace(/\$\{([^}]+)}/g, (match, variable) => {
-                return this[variable];
-            });
-        };
-        
-        return mergeVariables(text);
+        // const mergeVariables = (t) => {
+        //     if (!t) return '';
+        //     return t.replace(/\$\{([^}]+)}/g, (match, variable) => {
+        //         return this[variable];
+        //     });
+        // };
+
+        if( typeof text == 'undefined' || text.indexOf('${') === -1 ) {
+            return text; 
+        }
+
+        const matches = text.matchAll(/\$\{([^}]+)}/g);
+        // si no tiene para merge
+        if( matches === null ) {
+            return text; 
+        }
+                
+        // si es un texto con merges 
+        for (const match of matches) {
+            const mergedValue = this[match[1]];
+            // si es una sola variable
+            if (match.index == 0 && text === match[0]) {
+                return mergedValue;
+            }
+            text = text.replace(match[0], mergedValue);
+
+        }
+
+return text; 
+        //return mergeVariables(text);
     }
 }
 

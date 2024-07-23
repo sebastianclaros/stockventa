@@ -3,8 +3,6 @@ import templateGenerator from "./template.mjs";
 const templateEngine = templateGenerator("dictionary", "md");
 
 import {
-  getClassesCache,
-  setClassesCache,
   sortByName,
   getNamesByExtension,
   verFecha,
@@ -16,7 +14,7 @@ import {
 } from "./util.mjs";
 const DEFAULT_FILENAME = DOCS_FOLDER + "/.classes.json";
 
-async function getClasses(clases) {
+async function getContext(clases) {
   try {
     await sf.connect();
     const classRecords = await sf.getClasses(clases);
@@ -26,65 +24,17 @@ async function getClasses(clases) {
   }
 }
 
-const dictionaryClasses = getNamesByExtension(
-  DICTIONARY_FOLDER + "/classes",
-  "md"
-);
-
-async function prompt(config) {}
-
-async function getContext(items, opciones) {
+export function getClasses(files) {
   let contexts;
-  // flag -i lee del archivo cache
-  if (opciones && "i" in opciones) {
-    const allClasses = getClassesCache(
-      opciones.i ? opciones.i : DEFAULT_FILENAME
-    );
-    contexts = allClasses.filter((clase) => items.includes(clase.Name));
-  } else if (opciones && "r" in opciones) {
-    // flag -r lee del archivo cache pero vuelve a buscar la metadata
-    contexts = getClassesCache( DEFAULT_FILENAME) || [];
-    const itemsEnCache = contexts.map((clase) => clase.Name);
-    contexts = await getClasses(itemsEnCache);
-  }
+  const items = new Set();
 
-  // cualquier cosa que no encontro lo busca
-  if ( contexts ) { 
-    const itemsInContext = contexts.map((clase) => clase.Name);
-    const itemsNotInContext = items.filter( x => !itemsInContext.includes(x) ); 
-    if (itemsNotInContext.length > 0 ) {
-      // Sino buscar la metadata segun los items
-      const newContexts = await getClasses(itemsNotInContext);
-      contexts = contexts.concat(newContexts);
+  for ( const file of files ) {
+    if (file.indexOf("/classes/") > 0 ) {
+      const {filename} = splitFilename(file);
+      items.add(filename.split(".")[0]);
     }
-  } else {
-    contexts = await getClasses(items);
   }
-
-  if (contexts && !Array.isArray(contexts)) {
-    contexts = [contexts];
-  }
-  return contexts;
-}
-
-function help() {
-  console.info(
-    "Este comando se conecta a la metadata de las clases de Salesforce (fuentes) y en base a los templates genera:"
-  );
-  console.info(
-    "1. Por cada clase usa el template class.md para crear un diccionario de datos de la clase en la carpeta " +
-      DICTIONARY_FOLDER
-  );
-  console.info(
-    "2. Crea un indice en la working folder usando el template classes.md"
-  );
-  console.info(
-    "\nPuede llamarse para un objeto o varios, de la siguiente forma:"
-  );
-  console.info("yarn doc:create class AccountController.cls");
-  console.info(
-    "yarn doc:create class AccountController.cls CaseController.cls"
-  );
+  return [...items.values()];
 }
 
 function classLink() {
@@ -98,6 +48,11 @@ function classLinkGraph() {
 }
 
 function linkToType() {
+  const dictionaryClasses = getNamesByExtension(
+    DICTIONARY_FOLDER + "/classes",
+    "md"
+  );
+  
   const fullType = this.replace("<", "~").replace(">", "~");
   const types = fullType.split("~");
   for (const t in types) {
@@ -193,11 +148,12 @@ function getInnerClasses(classes) {
   return ret;
 }
 
-async function execute({ items, opciones }) {
-  const classNames = items.map((clase) => clase.replace(".cls", ""));
-
+export async function executeClasses(items) {
+  if (items.length === 0) {
+    return;
+  }
   // Busca la metadata
-  let contexts = await getContext(classNames, opciones);
+  let contexts = await getContext(items );
   if (!contexts || contexts.length === 0) {
     return;
   }
@@ -245,11 +201,6 @@ async function execute({ items, opciones }) {
   contexts.sort(sortByName);
   templateEngine.read("classes");
 
-  if ("o" in opciones) {
-    const fileName = opciones.o ? opciones.o : DEFAULT_FILENAME;
-    setClassesCache(fileName, contexts);
-  }
-
   const classContext = { classes: contexts, namespaces };
   templateEngine.render(classContext, {
     helpers: {
@@ -261,17 +212,15 @@ async function execute({ items, opciones }) {
       classLink
     }
   });
-  const intro = opciones.m ? opciones.m : DEFAULT_INTRO;
-  const { folder, filename } = splitFilename(intro, WORKING_FOLDER);
+  const { folder, filename } = splitFilename(DEFAULT_INTRO, WORKING_FOLDER);
   templateEngine.save(filename, folder);
 }
 
 
 export default {
-  prompt,
-  help,
-  execute
-};
+  getItems: getClasses,
+  execute: executeClasses
+}
 
 /**
  * TODO

@@ -1,24 +1,9 @@
 import {execSync, spawn} from "child_process";
 import context from "./context.mjs";
-import { getIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
+import { getIssue, createIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
 import { logError} from "./color.mjs";
+import metadata from './metadata.mjs';
 
-export function mergeArgs(args) {
-    if ( Array.isArray(args) ) {
-        let argsArray = [];
-        for ( const argName of args) {
-            argsArray.push( context.merge(argName) );
-        }
-        return argsArray;
-    } else if ( typeof args === 'object' ) {
-        let argsObject = {};    
-        for ( const argName in args) {
-            argsObject[argName] =  context.merge(args[argName]);
-        }
-        return argsObject;
-    }
-    return null;
-}
 function convertArgsToString(args) {
     let argsString = '';
     if ( Array.isArray(args) ) {
@@ -104,7 +89,7 @@ export async function executeFunction(functionName, args) {
     let returnValue = false;
     if ( typeof taskFunctions[functionName] === 'function' ) {       
         if ( args && typeof args === 'object' ) {
-            let mergedArgs = mergeArgs(args);
+            let mergedArgs = context.mergeArgs(args);
             if ( !Array.isArray(mergedArgs) ) {
                 const paramNames = getParams(taskFunctions[functionName]);
                 mergedArgs = createArray(paramNames, mergedArgs );
@@ -129,9 +114,35 @@ export function executeShell(command ) {
      }     
 }
 
+function getFilesChanged() {
+    let files = [];
+    const salida = executeShell( 'git diff main --raw' ) ; 
+    for ( const line of salida.split('\n') ) {
+        files.push(line.split(/[ |\t]/)[5]);
+    }
+    return files;
+}
 
 export const taskFunctions = {   
 
+    docProcess() {
+        if ( !context.process) {
+            return false;
+        }
+        const files = getFilesChanged();
+        if ( files.length > 0 ) {
+            for( const component in metadata ) {
+                const helper = metadata[component];
+                const items = helper.getItems(files);
+                if ( items.length > 0 ) {
+                    context.addProcessMetadata( component,  items);
+                    helper.execute(items);
+                }
+            }
+        }
+        
+        return true;
+    },
     getCurrentOrganization() {
         const salidaConfig = executeShell( 'sf config get target-org --json' ) ;
         const salidaConfigJson = JSON.parse(salidaConfig);
@@ -179,8 +190,9 @@ export const taskFunctions = {
     rollbackIssue() {
         console.log('Not implemented');
     },
-    createIssue() {
-        console.log('Not implemented');
+    async createIssue(title, label) {
+        const result = await createIssue(title, 'Backlog', label );
+        return result ? true:false;
     },
     
     async validateIssue(issueNumber, states) {        
@@ -194,10 +206,6 @@ export const taskFunctions = {
         return !hayCambios;
     },
     
-    saveCredentials() {
-        context.saveCredentials();
-    },
-
     getBranchName() {
         try {
             return  executeShell( "git branch --show-current" ) ;

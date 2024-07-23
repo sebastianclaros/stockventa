@@ -1,11 +1,8 @@
 import sf from "./connect.mjs";
-import prompts from "prompts";
 import templateGenerator from "./template.mjs";
 const templateEngine = templateGenerator("dictionary", "md");
 
 import {
-  getObjectsCache,
-  setObjectsCache,
   sortByLabel,
   splitFilename,
   DICTIONARY_FOLDER,
@@ -15,7 +12,7 @@ import {
 } from "./util.mjs";
 const DEFAULT_FILENAME = DOCS_FOLDER + "/.object.json";
 
-async function getObjects(objetos) {
+async function getContext(objetos) {
   try {
     await sf.connect();
     const objects = await sf.customObjects(objetos);
@@ -26,28 +23,6 @@ async function getObjects(objetos) {
   }
 }
 
-async function prompt(config) {
-  if (config.items.length === 0 && !("r" in config.opciones)) {
-    const response = await prompts({
-      type: "list",
-      name: "objects",
-      separator: ",",
-      initial: config.argumentos,
-      message: 'Ingrese Api Name usando "," si son varios'
-    });
-    config.items = response.objects;
-  }
-
-  if (config.items.length > 1 && !("m" in config.opciones)) {
-    const response = await prompts({
-      type: "text",
-      name: "modulo",
-      initial: "intro",
-      message: "Ingrese nombre archivo Markdown que seria Modulo de los objetos"
-    });
-    config.index = response.index;
-  }
-}
 function descriptionFormula(a) {
   return this.description?.replaceAll(/[\n\r]/g, "<br/>");
 }
@@ -114,98 +89,54 @@ function typeFormula() {
   return this.type;
 }
 
-function help() {
-  console.info(
-    "Este comando se conecta a la metadata de los objetos de Salesforce (fuentes) y en base a los templates genera:"
-  );
-  console.info(
-    "1. Por cada objeto usa el template object.md para crear un diccionario de datos del objeto en la carpeta " +
-      DICTIONARY_FOLDER
-  );
-  console.info(
-    "2. Crea un indice en la working folder usando el template objects.md"
-  );
-  console.info(
-    "\nPuede llamarse para un objeto o varios, de la siguiente forma:"
-  );
-  console.info("yarn doc:create object Account");
-  console.info("yarn doc:create object Account Case Contact --=index.md");
-}
+export function getObjects(files) {
+  const items = new Set();
 
-async function getContext(items, opciones) {
-  let contexts;
-
-  // flag -i lee del archivo cache
-  if (opciones && "i" in opciones) {
-    const allObjects = getObjectsCache(
-      opciones.i ? opciones.i : DEFAULT_FILENAME
-    );
-    contexts = allObjects.filter((object) => items.includes(object.fullName));
-  } else if (opciones && "r" in opciones) {
-    // flag -r lee del archivo cache pero vuelve a buscar la metadata
-    contexts = getObjectsCache(DEFAULT_FILENAME);
-    const itemsEnCache = contexts.map((object) => object.fullName);
-    contexts = await getObjects(itemsEnCache);
-  } 
-
-  // cualquier cosa que no encontro lo busca
-  if ( contexts ) {
-    const itemsInContext = contexts.map((o) => o.fullName);
-    const itemsNotInContext = items.filter( x => !itemsInContext.includes(x) ); 
-    if (itemsNotInContext.length > 0 ) {
-      // Sino buscar la metadata segun los items
-      const newContexts = await getObjects(itemsNotInContext);
-      contexts = contexts.concat(newContexts);
+  for ( const file of files ) {
+    let desde = file.indexOf("/objects/");
+    if ( desde !== -1 ) {
+      desde += 9; // se desplaza hasta el proximo slash
+      const hasta = file.indexOf("/", desde + 1);
+      const objectName = file.substring(desde, hasta);
+      items.add(objectName);
     }
-  } else {
-    contexts = await getObjects(items);
   }
-
-  if (contexts && !Array.isArray(contexts)) {
-    contexts = [contexts];
-  }
-  return contexts;
+  return [...items.values()];
 }
 
-async function execute({ items, opciones }) {
-  // Busca la metadata
-  const contexts = await getContext(items, opciones);
 
+export async function executeObjects(items) {
+  if (items.length === 0) {
+    return;
+  }
+  // Busca la metadata
+  const contexts = await getContext(items);
   if (!contexts || contexts.length === 0) {
     return;
   }
-
   // Arma el diccionario de cada Objeto
   templateEngine.read("object");
   for (const context of contexts) {
-    templateEngine.render(context, {
-      helpers: { isManaged, descriptionFormula, typeFormula, attributesFormula }
-    });
-    templateEngine.save(context.fullName, DICTIONARY_FOLDER + "/objects");
+    if ( context.fullName ) {
+      templateEngine.render(context, {
+        helpers: { isManaged, descriptionFormula, typeFormula, attributesFormula }
+      });
+      templateEngine.save(context.fullName, DICTIONARY_FOLDER + "/objects");
+    }
   }
   // Arma el documento indice del grupo de objetos
   contexts.sort(sortByLabel);
   templateEngine.read("objects");
 
-  if ("o" in opciones) {
-    const fileName = opciones.o
-      ? WORKING_FOLDER + "/" + opciones.o
-      : DEFAULT_FILENAME;
-    setObjectsCache(fileName, contexts);
-  }
-
   const objectContext = { objects: contexts };
   templateEngine.render(objectContext, {
     helpers: { isManaged, isMetadataFormula, attributesFormula }
   });
-  const intro = opciones.m ? opciones.m : DEFAULT_INTRO;
-  const { folder, filename } = splitFilename(intro, WORKING_FOLDER);
+  const { folder, filename } = splitFilename(DEFAULT_INTRO, WORKING_FOLDER);
   templateEngine.save(filename, folder);
 }
 
-
 export default {
-  prompt,
-  help,
-  execute
-};
+  getItems: getObjects,
+  execute: executeObjects
+}

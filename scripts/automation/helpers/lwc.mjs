@@ -3,8 +3,6 @@ import templateGenerator from "./template.mjs";
 const templateEngine = templateGenerator("dictionary", "md");
 
 import {
-  getLwcCache,
-  setLwcCache,
   sortByName,
   splitFilename,
   DICTIONARY_FOLDER,
@@ -14,11 +12,10 @@ import {
 } from "./util.mjs";
 const DEFAULT_FILENAME = DOCS_FOLDER + "/.lwc.json";
 
-async function getLwc(lwc) {
+async function getContext(lwc) {
   try {
     await sf.connect();
     const lwcRecords = await sf.getLwc(lwc);
-    console.log(lwcRecords);
     return lwcRecords;
   } catch (e) {
     splitFilename;
@@ -26,62 +23,25 @@ async function getLwc(lwc) {
   }
 }
 
-async function prompt(config) {}
+export function getLwc(files) {
+  const items = new Set();
 
-async function getContext(items, opciones) {
-  let contexts;
-
-  // flag -i lee del archivo cache
-  if (opciones && "i" in opciones) {
-    const allLwc = getLwcCache(opciones.i ? opciones.i : DEFAULT_FILENAME);
-    contexts = allLwc.filter((lwc) => items.includes(lwc.Name));
-  } else if (opciones && "r" in opciones) {
-    // flag -r lee del archivo cache pero vuelve a buscar la metadata
-    contexts = getLwcCache( DEFAULT_FILENAME) || [];
-    const itemsEnCache = contexts.map((lwc) => lwc.Name);
-    contexts = await getLwc(itemsEnCache);
-  }
-  
-  // cualquier cosa que no encontro lo busca
-  if ( contexts ) {
-    const itemsInContext = contexts.map((l) => l.Name);
-    const itemsNotInContext = items.filter( x => !itemsInContext.includes(x) ); 
-    if (itemsNotInContext.length > 0 ) {
-      // Sino buscar la metadata segun los items
-      const newContexts = await getLwc(itemsNotInContext);
-      contexts = contexts.concat(newContexts);
+  for ( const file of files ) {
+    if (file.indexOf("/lwc/") > 0 ) {
+      const {filename} = splitFilename(file);
+      items.add(filename.split(".")[0]);
     }
-  } else {
-    contexts = await getLwc(items);
   }
-
-  if (contexts && !Array.isArray(contexts)) {
-    contexts = [contexts];
-  }
-  return contexts;
+  return [...items.values()];
 }
 
-function help() {
-  console.info(
-    "Este comando se conecta a la metadata de los LWC de Salesforce y en base a los templates genera:"
-  );
-  console.info(
-    "1. Por cada lwc usa el template lwc.md para crear un diccionario de datos del componente en la carpeta " +
-      DICTIONARY_FOLDER
-  );
-  console.info(
-    "2. Crea un indice en la working folder usando el template lwcs.md"
-  );
-  console.info(
-    "\nPuede llamarse para un objeto o varios, de la siguiente forma:"
-  );
-  console.info("yarn doc:create lwc <<componentName>>");
-  console.info("yarn doc:create lwc <<componentName1>> <<componentName2>>");
-}
-
-async function execute({ items, opciones }) {
+export async function executeLwc( items) {
+  if (items.length === 0) {
+    return;
+  }
   // Busca la metadata
-  let contexts = await getContext(items, opciones);
+  let contexts = await getContext(items );
+
 
   if (!contexts || contexts.length === 0) {
     return;
@@ -100,22 +60,18 @@ async function execute({ items, opciones }) {
   contexts.sort(sortByName);
   templateEngine.read("lwcs");
 
-  if ("o" in opciones) {
-    const fileName = opciones.o ? opciones.o : DEFAULT_FILENAME;
-    setLwcCache(fileName, contexts);
-  }
 
   const lwcContext = { lwc: contexts, namespaces };
   templateEngine.render(lwcContext, {
     helpers: {}
   });
-  const intro = opciones.m ? opciones.m : DEFAULT_INTRO;
-  const { folder, filename } = splitFilename(intro, WORKING_FOLDER);
+  
+  const { folder, filename } = splitFilename(DEFAULT_INTRO, WORKING_FOLDER);
   templateEngine.save(filename, folder);
 }
 
+
 export default {
-  prompt,
-  help,
-  execute
-};
+  getItems: getLwc,
+  execute: executeLwc
+}

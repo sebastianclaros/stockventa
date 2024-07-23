@@ -1,20 +1,22 @@
-const DOCS_FOLDER = process.cwd() + "/docs";
-const DICTIONARY_FOLDER = process.cwd() + "/docs/diccionarios";
-const WORKING_FOLDER = process.env.INIT_CWD || ".";
+import fs from "fs";
+import context from "./context.mjs";
+
+export const DOCS_FOLDER = process.cwd() + "/docs";
+export const DICTIONARY_FOLDER = process.cwd() + "/docs/diccionarios";
+export const WORKING_FOLDER = process.env.INIT_CWD || ".";
+export const DEFAULT_INTRO = "intro";
 const DEFAULT_METADATAFILENAME = DOCS_FOLDER + "/metadata.json";
 
-const DEFAULT_INTRO = "intro";
-import fs from "fs";
-
-function sortByName(objA, objB) {
+export function sortByName(objA, objB) {
   return objA.Name > objB.Name ? 1 : objA.Name < objB.Name ? -1 : 0;
 }
 
-function sortByLabel(objA, objB) {
+export function sortByLabel(objA, objB) {
   return objA.label > objB.label ? 1 : objA.label < objB.label ? -1 : 0;
 }
 
-function verFecha() {
+export function verFecha() {
+
   try {
     const fecha = new Date(this);
     return fecha.toLocaleString("es", {
@@ -29,7 +31,8 @@ function verFecha() {
 }
 
 // Devuelve la lista de nombres de archivos de una extension de una carpeta, sin la extension.
-function getNamesByExtension(folder, extension) {
+export function getNamesByExtension(folder, extension) {
+
   const allFiles = fs.readdirSync(folder);
   const filterFiles = [];
 
@@ -40,6 +43,7 @@ function getNamesByExtension(folder, extension) {
   }
   return filterFiles;
 }
+
 
 function setContextCache(fileName, items, propName, filterFn) {
   const fullName =
@@ -106,8 +110,10 @@ function mergeArray(baseArray, newArray) {
   const notIncludeInBaseArray = (a) => baseArray.indexOf(a) === -1;
   return baseArray.concat(newArray.filter(notIncludeInBaseArray));
 }
-
-function getMetadataArray(fileName, props) {
+export function getMetadataFromContext(props) {
+  return getMetadataArray(context.getProcessMetadata(), props);
+}
+function getMetadataArray(metadata, props) {
   const mergeObject = (root, childs) => {
     for (const item of childs) {
       for (const key of props) {
@@ -139,12 +145,17 @@ function getMetadataArray(fileName, props) {
     return items;
   };
 
-  const metadata = getMetadata(fileName);
   if (Array.isArray(metadata)) {
     return getItemsFromTree({ folder: DOCS_FOLDER, childs: metadata });
   } else {
     return getItemsFromTree(metadata, "");
   }
+}
+
+export function getMetadataFromFile(fileName, props) {
+  const metadata = getMetadata(fileName);
+  return getMetadataArray(metadata, props);
+
 }
 
 function getMetadata(fileName = DEFAULT_METADATAFILENAME) {
@@ -185,7 +196,7 @@ function getContextCache(fileName, errorIfnotExist = true) {
   }
 }
 
-function splitFilename(fullname, defaultFolder) {
+export function splitFilename(fullname, defaultFolder) {
   let filename = fullname;
   let folder = defaultFolder;
   const separatorIndex = fullname.lastIndexOf("/");
@@ -196,21 +207,43 @@ function splitFilename(fullname, defaultFolder) {
   return { filename, folder };
 }
 
-export {
-  DICTIONARY_FOLDER,
-  DOCS_FOLDER,
-  WORKING_FOLDER,
-  DEFAULT_INTRO,
-  splitFilename,
-  getMetadataArray,
-  getNamesByExtension,
-  sortByLabel,
-  sortByName,
-  getObjectsCache,
-  getLwcCache,
-  getClassesCache,
-  setObjectsCache,
-  setClassesCache,
-  setLwcCache,
-  verFecha
-};
+export const filterJson = (fullPath) => fullPath.endsWith(".json");
+export const filterDirectory = (fullPath) => fs.lstatSync(fullPath).isDirectory();
+export const filterFiles = (fullPath) => !fs.lstatSync(fullPath).isDirectory();
+
+export function addNewItems(baseArray, newArray) {
+  for ( const item of newArray ) {
+    if ( !baseArray.includes(item) ) {
+      baseArray.push(item);
+    }
+  }
+}
+
+export function getFiles(source, filter=(file)=>true, recursive = false, ignoreList = []) {
+  const files = [];
+  for (const file of fs.readdirSync(source)) {
+    const fullPath = source + "/" + file;
+    const filtered = filter(fullPath);
+    if (!ignoreList.includes(file)) {
+      if ( filtered ) {
+        files.push(file);
+      }
+      if (fs.lstatSync(fullPath).isDirectory() && recursive ) {
+        getFiles(fullPath, filter, recursive, ignoreList).forEach((x) => files.push(file + "/" + x));
+      }
+    }
+  }
+  return files;
+}
+
+export function convertNameToKey( name ) {
+  return name.toLowerCase().replaceAll(/[ \/]/g, '-')
+}
+
+export function convertKeyToName( key ) {
+  return key.replaceAll('-', ' ')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+}
+

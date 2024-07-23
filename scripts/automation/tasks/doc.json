@@ -1,0 +1,8 @@
+{
+    "name": "doc",
+    "arguments": { "module": { "type": "select", "choices": "${modules}" }, "process": { "option": "p" } },
+    "description": "Comando para documentar un proceso",
+    "steps": [
+        { "name": "Documenta un proceso", "function": "docProcess" }
+    ] 
+}

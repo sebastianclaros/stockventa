@@ -38,6 +38,7 @@ public with sharing class TriggerHelper {
         Set<Object> values = new Set<Object>();
         for( SObject record: records){
             Object fieldValue = record.get(fieldName);
+            
             if ( fieldValue != null ){
                 values.add(fieldValue);
             }
