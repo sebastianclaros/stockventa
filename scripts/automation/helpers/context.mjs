@@ -1,5 +1,5 @@
 import { executeShell, taskFunctions } from "./taskFunctions.mjs"
-import { convertNameToKey, convertKeyToName,  getFiles, filterDirectory, filterFiles } from "./util.mjs";
+import { convertNameToKey, convertKeyToName,  getFiles, filterDirectory, addNewItems } from "./util.mjs";
 import prompts from "prompts";
 import matter from 'gray-matter';
 import fs from "fs";
@@ -94,10 +94,10 @@ class Context {
           if ( !processes[this.process][component]  )  {
             processes[this.process][component] = [];
           }
-          processes[this.process][component] = [...processes[this.process][component], ...items];
+          addNewItems(processes[this.process][component], items) ;
           config.processes = processes;
 
-          fs.writeFileSync(filename, JSON.stringify(config, null, 2) );
+          //fs.writeFileSync(filename, JSON.stringify(config, null, 2) );
 
         } catch (error) {
           throw new Error(`No se pudo guardar la metadata`  );

@@ -114,14 +114,15 @@ export async function executeObjects(items) {
   if (!contexts || contexts.length === 0) {
     return;
   }
-
   // Arma el diccionario de cada Objeto
   templateEngine.read("object");
   for (const context of contexts) {
-    templateEngine.render(context, {
-      helpers: { isManaged, descriptionFormula, typeFormula, attributesFormula }
-    });
-    templateEngine.save(context.fullName, DICTIONARY_FOLDER + "/objects");
+    if ( context.fullName ) {
+      templateEngine.render(context, {
+        helpers: { isManaged, descriptionFormula, typeFormula, attributesFormula }
+      });
+      templateEngine.save(context.fullName, DICTIONARY_FOLDER + "/objects");
+    }
   }
   // Arma el documento indice del grupo de objetos
   contexts.sort(sortByLabel);

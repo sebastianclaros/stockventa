@@ -134,7 +134,6 @@ export const taskFunctions = {
             for( const component in metadata ) {
                 const helper = metadata[component];
                 const items = helper.getItems(files);
-                console.log(items.length);
                 if ( items.length > 0 ) {
                     context.addProcessMetadata( component,  items);
                     helper.execute(items);

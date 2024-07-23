@@ -11,7 +11,7 @@
         { "criteria": { "field": "permissionSet" }, "name": "Asigna los permisos" , "command": "sf", "arguments": { "org assign permset": "", "--target-org": "${scratchName}", "--name": "${permissionSet}" } },
         { "name": "Subiendo los datos" , "command": "sf", "arguments": { "data tree import":"", "--target-org": "${scratchName}", "--plan": "${projectPath}/data/plan.json" } },
         { "name": "Seteando la scracth en modo debug" , "command": "sf", "arguments": { "apex run": "", "--file": "${projectPath}/scripts/apex/debugMode.apex", "--target-org": "${scratchName}" } },
-        { "name": "Generando la password" , "command": "sf", "arguments": { "org generate password": "", "--target-org": "${scratchName}" } },
+        { "name": "Generando la password" , "command": "sf", "arguments": { "org generate password": "", "--target-org": "${scratchName}" }, "errorMessage": "Pruebe manualmente ${command}" },
         { "name": "Ingresa a la scratch" , "command": "sf", "arguments": { "open org -r":"", "--target-org": "${scratchName}" } }
     ] 
 }

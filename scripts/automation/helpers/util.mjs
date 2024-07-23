@@ -159,6 +159,14 @@ export const filterJson = (fullPath) => fullPath.endsWith(".json");
 export const filterDirectory = (fullPath) => fs.lstatSync(fullPath).isDirectory();
 export const filterFiles = (fullPath) => !fs.lstatSync(fullPath).isDirectory();
 
+export function addNewItems(baseArray, newArray) {
+  for ( const item of newArray ) {
+    if ( !baseArray.includes(item) ) {
+      baseArray.push(item);
+    }
+  }
+}
+
 export function getFiles(source, filter=(file)=>true, recursive = false, ignoreList = []) {
   const files = [];
   for (const file of fs.readdirSync(source)) {
