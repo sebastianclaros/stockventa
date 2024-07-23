@@ -24,11 +24,6 @@ async function getContext(clases) {
   }
 }
 
-const dictionaryClasses = getNamesByExtension(
-  DICTIONARY_FOLDER + "/classes",
-  "md"
-);
-
 export function getClasses(files) {
   let contexts;
   const items = new Set();
@@ -53,6 +48,11 @@ function classLinkGraph() {
 }
 
 function linkToType() {
+  const dictionaryClasses = getNamesByExtension(
+    DICTIONARY_FOLDER + "/classes",
+    "md"
+  );
+  
   const fullType = this.replace("<", "~").replace(">", "~");
   const types = fullType.split("~");
   for (const t in types) {
