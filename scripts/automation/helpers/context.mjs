@@ -304,7 +304,7 @@ class Context {
         }
         return null;
     }
-    
+
     async askForArguments(inputs) {
         // unifica los dos tipos de inputs (array y objeto) en un array de inputs
         const inputsArray = this.convertToArrayOfInputs(inputs);

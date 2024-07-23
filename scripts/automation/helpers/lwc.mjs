@@ -42,6 +42,7 @@ export async function executeLwc( items) {
   // Busca la metadata
   let contexts = await getContext(items );
 
+
   if (!contexts || contexts.length === 0) {
     return;
   }
@@ -58,6 +59,7 @@ export async function executeLwc( items) {
   // Arma el documento indice del grupo de lwc
   contexts.sort(sortByName);
   templateEngine.read("lwcs");
+
 
   const lwcContext = { lwc: contexts, namespaces };
   templateEngine.render(lwcContext, {

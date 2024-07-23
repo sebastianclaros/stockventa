@@ -16,6 +16,7 @@ export function sortByLabel(objA, objB) {
 }
 
 export function verFecha() {
+
   try {
     const fecha = new Date(this);
     return fecha.toLocaleString("es", {
@@ -31,6 +32,7 @@ export function verFecha() {
 
 // Devuelve la lista de nombres de archivos de una extension de una carpeta, sin la extension.
 export function getNamesByExtension(folder, extension) {
+
   const allFiles = fs.readdirSync(folder);
   const filterFiles = [];
 
@@ -40,6 +42,56 @@ export function getNamesByExtension(folder, extension) {
     }
   }
   return filterFiles;
+}
+
+
+function setContextCache(fileName, items, propName, filterFn) {
+  const fullName =
+    fileName.indexOf("/") != -1 ? fileName : WORKING_FOLDER + "/" + fileName;
+  let allitems;
+  if (fs.existsSync(fullName)) {
+    const cache = getContextCache(fileName);
+    const filterCache = cache[propName].filter(filterFn);
+    allitems = filterCache.concat(items);
+  } else {
+    allitems = items;
+  }
+  fs.writeFileSync(
+    fileName,
+    JSON.stringify({ [propName]: allitems }, null, "\t")
+  );
+}
+
+function setLwcCache(fileName, items) {
+  const itemKeys = items.map((item) => item.Name);
+  filterFn = (item) => !itemKeys.includes(item.Name);
+  setContextCache(fileName, items, "lwc", filterFn);
+}
+
+function setClassesCache(fileName, items) {
+  const itemKeys = items.map((item) => item.Name);
+  filterFn = (item) => !itemKeys.includes(item.Name);
+  setContextCache(fileName, items, "classes", filterFn);
+}
+function setObjectsCache(fileName, items) {
+  const itemKeys = items.map((item) => item.fullName);
+  const filterFn = (item) => !itemKeys.includes(item.fullName);
+  setContextCache(fileName, items, "objects", filterFn);
+}
+
+function getLwcCache(fileName) {
+  const cache = getContextCache(fileName, false);
+  return cache ? cache.lwc: [];
+}
+
+function getClassesCache(fileName) {
+  const cache = getContextCache(fileName, false);
+  return cache ? cache.classes: [];
+}
+
+function getObjectsCache(fileName) {
+  const cache = getContextCache(fileName, false);
+  return cache ? cache.objects: [];
 }
 
 function mergeArray(baseArray, newArray) {
@@ -98,12 +150,12 @@ function getMetadataArray(metadata, props) {
   } else {
     return getItemsFromTree(metadata, "");
   }
-
 }
 
 export function getMetadataFromFile(fileName, props) {
   const metadata = getMetadata(fileName);
   return getMetadataArray(metadata, props);
+
 }
 
 function getMetadata(fileName = DEFAULT_METADATAFILENAME) {
@@ -194,3 +246,4 @@ export function convertKeyToName( key ) {
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
 }
+

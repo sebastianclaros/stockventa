@@ -5,6 +5,7 @@ import { getFiles } from "./util.mjs";
 
 const TEMPLATE_ROOT_FOLDER = process.cwd() + "/scripts/automation/templates";
 
+
 function isObjectEmpty(objectName) {
   return (
     objectName &&
@@ -56,6 +57,7 @@ class TemplateEngine {
     for (const filename of files) {
       const [name] = filename.split(".");
       templates.push(name);
+
     }
     return templates;
   }

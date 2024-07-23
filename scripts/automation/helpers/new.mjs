@@ -4,6 +4,7 @@ import { splitFilename, WORKING_FOLDER } from "./util.mjs";
 import templateGenerator from "./template.mjs";
 const templateEngine = templateGenerator(".", "md");
 
+
 async function readPipedInput() {
   let data = "";
   for await (const chunk of process.stdin) data += chunk;
@@ -54,3 +55,4 @@ export async function execute( template, filename, context) {
   templateEngine.render(view ? Object.assign(view, formulas) : formulas);
   templateEngine.save(file.filename, file.folder, { create: true });
 }
+

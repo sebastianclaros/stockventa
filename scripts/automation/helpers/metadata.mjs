@@ -42,6 +42,7 @@ export default {
     "description": "descripcion del modulo",
     "directory": "path", // si no viene es el name
     "components": [ 
+
         { 
         "name": "",
         "description": "descripcion del item",
