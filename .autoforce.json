@@ -1,14 +1,35 @@
 {
-    "isVerbose": true,
-    "permissionSet": "adminInventario",
-    "processes": {
-        "modelo-de-datos": {
-          "classes": ["InventoryLockTriggerHandler", "InventoryTriggerHandler", "BaseTriggerHandler", "MaterialTriggerHandler", "MaterialTriggerHelper", "TriggerHelper"],
-          "objects": ["Material__c", "Inventory__c", "InventoryLock__c", "Product2", "BusinessSite__c"]
-        },
-        "get-avaliavility": {
-          "classes": ["InventoryService"],
-          "objects": [ "Inventory__c", "InventoryLock__c"]
-        } 
+  "isVerbose": true,
+  "permissionSet": "adminInventario",
+  "processes": {
+    "modelo-de-datos": {
+      "classes": [
+        "InventoryLockTriggerHandler",
+        "InventoryTriggerHandler",
+        "BaseTriggerHandler",
+        "MaterialTriggerHandler",
+        "MaterialTriggerHelper",
+        "TriggerHelper"
+      ],
+      "objects": [
+        "Material__c",
+        "Inventory__c",
+        "InventoryLock__c",
+        "Product2",
+        "BusinessSite__c",
+        "docs/diccionarios/objects/",
+        "Inventory__c",
+        "Material__c"
+      ]
+    },
+    "get-avaliavility": {
+      "classes": [
+        "InventoryService"
+      ],
+      "objects": [
+        "Inventory__c",
+        "InventoryLock__c"
+      ]
     }
+  }
 }

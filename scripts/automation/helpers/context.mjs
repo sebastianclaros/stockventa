@@ -3,7 +3,7 @@ import { convertNameToKey, convertKeyToName,  getFiles, filterDirectory, filterF
 import prompts from "prompts";
 import matter from 'gray-matter';
 import fs from "fs";
-const filterProcesses = (fullPath) => fullPath.endsWith(".md");
+const filterProcesses = (fullPath) => !fullPath.endsWith("intro.md") && fullPath.endsWith(".md");
 
 class Context {
     isGitRepo = true;
@@ -75,6 +75,34 @@ class Context {
         const fileContents = fs.readFileSync(fullpath, 'utf8');
         const { data } = matter(fileContents);
         return data;
+    }
+    addProcessMetadata(component, items) {
+        if ( !this.process ) {
+            throw new Error(`No hay proceso configurado`  );
+        }
+        const filename =  this.projectPath +  "/.autoforce.json";
+        const content = fs.readFileSync(filename, "utf8");
+        try {
+          const config = JSON.parse(content);
+          const processes = config.processes;
+          if ( !processes )  {
+            processes = {};
+          }
+          if ( !processes[this.process] )  {
+            processes[this.process] = {};
+          }
+          if ( !processes[this.process][component]  )  {
+            processes[this.process][component] = [];
+          }
+          processes[this.process][component] = [...processes[this.process][component], ...items];
+          config.processes = processes;
+
+          fs.writeFileSync(filename, JSON.stringify(config, null, 2) );
+
+        } catch (error) {
+          throw new Error(`No se pudo guardar la metadata`  );
+        }
+
     }
 
     getProcessMetadata() {
@@ -200,13 +228,20 @@ class Context {
         return answer.newIssueNumber;
     }
     async askForprocess() {
-        const processes = getFiles( `${process.cwd()}/docs/${this.module}`, filterFiles);
-
+        const folder = `${process.cwd()}/docs/${this.module}`;
+        const files = getFiles( folder, filterProcesses);
+        const choices = files.map( file => {
+            const header = this.getProcessHeader(`${folder}/${file}` ); 
+            const processName = header.slug || header.title || file.split('.')[0];
+            const value = convertNameToKey(processName);
+            const title = convertKeyToName(value);
+            return { value, title: `${title} (${file})`  }; 
+        });
         const answer = await prompts([{
             type: "select",
              name: "process",
              message: "Por favor seleccione el proceso",
-             choices: processes.map( process => { return { value: process, title: process } } )
+             choices
             }]);  
                         
         return answer.process;

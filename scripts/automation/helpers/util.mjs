@@ -42,55 +42,6 @@ export function getNamesByExtension(folder, extension) {
   return filterFiles;
 }
 
-export function setContextCache(fileName, items, propName, filterFn) {
-  const fullName =
-    fileName.indexOf("/") != -1 ? fileName : WORKING_FOLDER + "/" + fileName;
-  let allitems;
-  if (fs.existsSync(fullName)) {
-    const cache = getContextCache(fileName);
-    const filterCache = cache[propName].filter(filterFn);
-    allitems = filterCache.concat(items);
-  } else {
-    allitems = items;
-  }
-  fs.writeFileSync(
-    fileName,
-    JSON.stringify({ [propName]: allitems }, null, "\t")
-  );
-}
-
-export function setLwcCache(fileName, items) {
-  const itemKeys = items.map((item) => item.Name);
-  filterFn = (item) => !itemKeys.includes(item.Name);
-  setContextCache(fileName, items, "lwc", filterFn);
-}
-
-export function setClassesCache(fileName, items) {
-  const itemKeys = items.map((item) => item.Name);
-  filterFn = (item) => !itemKeys.includes(item.Name);
-  setContextCache(fileName, items, "classes", filterFn);
-}
-export function setObjectsCache(fileName, items) {
-  const itemKeys = items.map((item) => item.fullName);
-  const filterFn = (item) => !itemKeys.includes(item.fullName);
-  setContextCache(fileName, items, "objects", filterFn);
-}
-
-export function getLwcCache(fileName) {
-  const cache = getContextCache(fileName, false);
-  return cache ? cache.lwc: [];
-}
-
-export function getClassesCache(fileName) {
-  const cache = getContextCache(fileName, false);
-  return cache ? cache.classes: [];
-}
-
-export function getObjectsCache(fileName) {
-  const cache = getContextCache(fileName, false);
-  return cache ? cache.objects: [];
-}
-
 function mergeArray(baseArray, newArray) {
   if (!Array.isArray(newArray) && !Array.isArray(baseArray)) {
     return [];
@@ -226,11 +177,11 @@ export function getFiles(source, filter=(file)=>true, recursive = false, ignoreL
 }
 
 export function convertNameToKey( name ) {
-  return name.toLowerCase().replace(' ', '-')
+  return name.toLowerCase().replaceAll(/[ \/]/g, '-')
 }
 
 export function convertKeyToName( key ) {
-  return key.replace(' ', '-')
+  return key.replaceAll('-', ' ')
       .split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');

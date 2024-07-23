@@ -2,6 +2,7 @@ import {execSync, spawn} from "child_process";
 import context from "./context.mjs";
 import { getIssue, createIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
 import { logError} from "./color.mjs";
+import metadata from './metadata.mjs';
 
 function convertArgsToString(args) {
     let argsString = '';
@@ -113,12 +114,34 @@ export function executeShell(command ) {
      }     
 }
 
+function getFilesChanged() {
+    let files = [];
+    const salida = executeShell( 'git diff main --raw' ) ; 
+    for ( const line of salida.split('\n') ) {
+        files.push(line.split(/[ |\t]/)[5]);
+    }
+    return files;
+}
 
 export const taskFunctions = {   
 
     docProcess() {
-        console.log(context.module, context.process );
-        console.log("Not implemented");
+        if ( !context.process) {
+            return false;
+        }
+        const files = getFilesChanged();
+        if ( files.length > 0 ) {
+            for( const component in metadata ) {
+                const helper = metadata[component];
+                const items = helper.getItems(files);
+                console.log(items.length);
+                if ( items.length > 0 ) {
+                    context.addProcessMetadata( component,  items);
+                    helper.execute(items);
+                }
+            }
+        }
+        
         return true;
     },
     getCurrentOrganization() {
