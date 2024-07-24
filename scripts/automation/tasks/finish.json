@@ -3,8 +3,8 @@
     "guards": [ "gitToken" ], 
     "description": "Comando para teminar un requerimiento. Automatiza las acciones cuando se termino el desarrollo de un requerimiento",
     "steps": [
-        { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "update-documentation" },
         { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "validate-scratch" },
+        { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "update-documentation" },
         { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "validate-code" },
         { "name": "publica la branch", "function": "publishBranch", "description": "Publica la branch en Remote", "errorMessage": "No se pudo publicar la branch" },
         { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "drop-scratch" }
