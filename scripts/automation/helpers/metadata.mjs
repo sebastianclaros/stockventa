@@ -6,6 +6,11 @@ import lwcHelper  from "./lwc.mjs";
 import {execute as executeNew}  from "./new.mjs";
 
 // Logica especificas de cada componente
+export const helpers = {
+  objects: objectHelper,
+  classes: classHelper,
+  lwc: lwcHelper
+};
 
 export async function execute() {
   const components = Object.keys(helpers);

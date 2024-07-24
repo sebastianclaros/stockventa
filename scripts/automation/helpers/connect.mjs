@@ -108,7 +108,7 @@ async function getDependencies(listOfIds, filterTypes) {
     }
     item.parents.push(entry);
   }
-  console.log(up, down, dependencies);
+//   console.log(up, down, dependencies);
   return dependencies;
 }
 function expiredSession() {

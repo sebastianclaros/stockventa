@@ -116,7 +116,7 @@ export function executeShell(command ) {
 
 function getFilesChanged() {
     let files = [];
-    const salida = executeShell( 'git diff main --raw' ) ; 
+    const salida = executeShell( 'git diff origin/main --raw' ) ; 
     for ( const line of salida.split('\n') ) {
         files.push(line.split(/[ |\t]/)[5]);
     }
@@ -130,6 +130,7 @@ export const taskFunctions = {
             return false;
         }
         const files = getFilesChanged();
+        console.log(files);
         if ( files.length > 0 ) {
             for( const component in metadata ) {
                 const helper = metadata[component];
@@ -142,6 +143,19 @@ export const taskFunctions = {
         }
         
         return true;
+    },
+    publishBranch() {
+        try {
+            const branchName = context.branchName;
+            executeShell( `git push ${branchName}` );
+            // Falta armar pull request
+            return true ;
+        } catch (error) {
+            console.log(error);
+        }
+        // mergeBranch
+        return false;
+
     },
     getCurrentOrganization() {
         const salidaConfig = executeShell( 'sf config get target-org --json' ) ;
@@ -202,8 +216,9 @@ export const taskFunctions = {
     },
     validateScratch() {
         const salida = executeShell( "sf project retrieve preview" ) ;
-        const hayCambios = salida.substring('No files will be deleted') === -1 && hayCambios.substring('No files will be retrieved') === -1 && hayCambios.substring('No conflicts found') === -1
-        return !hayCambios;
+        const noHayCambios = salida.indexOf('No files will be deleted') !== -1 && salida.indexOf('No files will be retrieved') !== -1 && salida.indexOf('No conflicts found') !== -1;
+        // Probar de bajarlos // sf project retrieve start
+        return noHayCambios;
     },
     
     getBranchName() {
