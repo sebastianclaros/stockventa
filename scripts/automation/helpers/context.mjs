@@ -346,7 +346,7 @@ class Context {
         //     });
         // };
 
-        if( typeof text == 'undefined' || text.indexOf('${') === -1 ) {
+        if( typeof text != 'string' || text.indexOf('${') === -1 ) {
             return text; 
         }
 
