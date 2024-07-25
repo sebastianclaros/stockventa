@@ -80,9 +80,8 @@ public with sharing class InventoryServiceTest {
         args.add('total__c');
         List<Inventory__c> inv = InventoryService.getAvailabilityByWerks(b1.Werks__c, 200, args);
 
-        //System.assertEquals(inventarios.size(), 1, 'Tiene que devolver 1 objeto');
         System.assertEquals(inv.get(0).mtpl__c, 3, 'Tiene que devolver 3 materiales disponibles');
         System.assertEquals(inv.get(0).total__c, 3, 'Tiene que devolver 3 materiales totales');
-
     }
+
 }

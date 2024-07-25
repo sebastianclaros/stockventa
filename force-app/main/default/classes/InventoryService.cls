@@ -45,7 +45,7 @@ public with sharing class InventoryService {
         Inventory__c inventario = new Inventory__c();
 
         String queryF = queryFormulate (werks, nmu, 1, new Set<String>());
-    
+
         try {
             inventario = Database.query(queryF);
 
