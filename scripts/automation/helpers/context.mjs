@@ -97,7 +97,7 @@ class Context {
           addNewItems(processes[this.process][component], items) ;
           config.processes = processes;
 
-          //fs.writeFileSync(filename, JSON.stringify(config, null, 2) );
+          fs.writeFileSync(filename, JSON.stringify(config, null, 2) );
 
         } catch (error) {
           throw new Error(`No se pudo guardar la metadata`  );

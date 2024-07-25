@@ -155,6 +155,8 @@ classDiagram
 ```mermaid
 erDiagram
 
+ {
+}
 InventoryMovement__c {
 }
 
@@ -164,6 +166,7 @@ InventoryMovement__c {
 
 | #   | Label | Api Name | Descripcion |
 | --- | ----- | -------- | ----------- |
+| <div class="icons"></div> | [](/diccionarios/objects/) |  ||
 | <div class="icons"></div> | [Inventory Movement](/diccionarios/objects/InventoryMovement__c) | InventoryMovement__c |movimientos del inventario no serializado|
 
 ### Configuracion
