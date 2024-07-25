@@ -339,13 +339,6 @@ class Context {
     }
 
     merge(text) {
-        // const mergeVariables = (t) => {
-        //     if (!t) return '';
-        //     return t.replace(/\$\{([^}]+)}/g, (match, variable) => {
-        //         return this[variable];
-        //     });
-        // };
-
         if( typeof text != 'string' || text.indexOf('${') === -1 ) {
             return text; 
         }
@@ -367,8 +360,7 @@ class Context {
 
         }
 
-return text; 
-        //return mergeVariables(text);
+        return text; 
     }
 }
 
