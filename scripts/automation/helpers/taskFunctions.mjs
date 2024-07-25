@@ -136,7 +136,7 @@ export const taskFunctions = {
                 const items = helper.getItems(files);
                 if ( items.length > 0 ) {
                     context.addProcessMetadata( component,  items);
-                    helper.execute(items);
+                    helper.execute(items, context.process, context.module);
                 }
             }
         }
