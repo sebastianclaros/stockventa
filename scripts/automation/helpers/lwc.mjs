@@ -16,7 +16,7 @@ async function getContext(lwc) {
   try {
     await sf.connect();
     const lwcRecords = await sf.getLwc(lwc);
-    return lwcRecords;
+    return Array.isArray(lwcRecords) ? lwcRecords: [lwcRecords];
   } catch (e) {
     splitFilename;
     console.error(e);

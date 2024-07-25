@@ -17,7 +17,7 @@ async function getContext(objetos) {
     await sf.connect();
     const objects = await sf.customObjects(objetos);
 
-    return objects;
+    return Array.isArray(objects) ? objects: [objects];
   } catch (e) {
     console.error(e);
   }
@@ -114,6 +114,7 @@ export async function executeObjects(items) {
   if (!contexts || contexts.length === 0) {
     return;
   }
+
   // Arma el diccionario de cada Objeto
   templateEngine.read("object");
   for (const context of contexts) {

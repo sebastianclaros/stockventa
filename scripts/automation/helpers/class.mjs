@@ -18,7 +18,7 @@ async function getContext(clases) {
   try {
     await sf.connect();
     const classRecords = await sf.getClasses(clases);
-    return classRecords;
+    return Array.isArray(classRecords) ? classRecords: [classRecords];
   } catch (e) {
     console.error(e);
   }

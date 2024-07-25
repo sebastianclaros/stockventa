@@ -154,20 +154,8 @@ classDiagram
 
 ```mermaid
 erDiagram
-            BusinessSite__c ||..|{ Inventory__c : ""
-            Product2 ||..|{ Inventory__c : ""
-            BusinessSite__c ||..|{ Material__c : "Materials"
-            Product2 ||..|{ Material__c : "Materials"
 
- {
-}
-Inventory__c {
-            BusinessSite__c BusinessSite__c
-            Product__c Product2
-}
-Material__c {
-            BusinessSite__c BusinessSite__c
-            Product__c Product2
+InventoryMovement__c {
 }
 
 ```
@@ -176,9 +164,7 @@ Material__c {
 
 | #   | Label | Api Name | Descripcion |
 | --- | ----- | -------- | ----------- |
-| <div class="icons"></div> | [](/diccionarios/objects/) |  ||
-| <div class="icons">![Track History](/img/tracker_60.png)</div> | [Inventario](/diccionarios/objects/Inventory__c) | Inventory__c |Objeto que contiene cantidad total, reservas, muletos y disponibles de cada Punto de Venta / NMU|
-| <div class="icons">![Track History](/img/tracker_60.png)</div> | [Material](/diccionarios/objects/Material__c) | Material__c |Este objeto contiene todos los bienes de cambio y de prestamo que estan en las sucursales. El alta viene por interface desde SAP, y cuando se venden y se concilian en SAP ya se pueden archivar.|
+| <div class="icons"></div> | [Inventory Movement](/diccionarios/objects/InventoryMovement__c) | InventoryMovement__c |movimientos del inventario no serializado|
 
 ### Configuracion
 

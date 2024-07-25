@@ -130,7 +130,6 @@ export const taskFunctions = {
             return false;
         }
         const files = getFilesChanged();
-        console.log(files);
         if ( files.length > 0 ) {
             for( const component in metadata ) {
                 const helper = metadata[component];
