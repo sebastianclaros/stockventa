@@ -204,8 +204,12 @@ export const taskFunctions = {
         console.log('Not implemented');
     },
     async createIssue(title, label) {
-        const result = await createIssue(title, 'Backlog', label );
-        return result ? true:false;
+        const issueNumber = await createIssue(title, 'Backlog', label );
+        if ( issueNumber) {
+            console.log(`Se creao el issue ${issueNumber}`);
+            return true;
+        }
+        return false;
     },
     
     async validateIssue(issueNumber, states) {        
