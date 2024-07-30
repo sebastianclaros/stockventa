@@ -43,6 +43,11 @@
         "MaterialTriggerHelper",
         "TriggerHelper"
       ]
+    },
+    "codigos-movimientos": {
+      "objects": [
+        "Material__c"
+      ]
     }
   }
 }
