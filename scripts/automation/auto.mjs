@@ -1,11 +1,12 @@
 // Comandos validos
-import {createObject, createConfigurationFile,  validateTask, getTasks, previewTask, helpTask, runTask, TASKS_FOLDER, SUBTASKS_FOLDER} from "./helpers/tasks.mjs";
+import {createObject, createConfigurationFile,  validateTask, getTasks, previewTask, helpTask, runTask, getTaskFolder} from "./helpers/tasks.mjs";
 import { logError} from "./helpers/color.mjs";
 import prompts from "prompts";
 const proxyCommnad = {
     'preview': previewTask , 
     'help': helpTask, 
     'task': runTask,
+    'new': runTask,
     'config': createConfigurationFile,
     'subtask': runTask
 }
@@ -61,10 +62,10 @@ export function getConfigFromArgs(processArgs) {
     }
     // Setea el taskFolder segun si es un task o subtask
     if ( (config.command == 'help' || config.command == 'preview') && ( currentArgument == 'subtask' || currentArgument == 'task') ) {
-        config.taskFolder =  currentArgument == 'subtask' ?  SUBTASKS_FOLDER: TASKS_FOLDER;
+        config.taskFolder =  getTaskFolder(currentArgument);
         currentArgument = args.shift(1);
     } else {
-        config.taskFolder =  config.command == 'subtask' ?  SUBTASKS_FOLDER: TASKS_FOLDER;
+        config.taskFolder =  getTaskFolder(config.command);
     }
 
     config.taskName = currentArgument;
