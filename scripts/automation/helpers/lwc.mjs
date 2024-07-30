@@ -6,17 +6,14 @@ import {
   sortByName,
   splitFilename,
   DICTIONARY_FOLDER,
-  DOCS_FOLDER,
-  WORKING_FOLDER,
-  DEFAULT_INTRO
+  DOCS_FOLDER
 } from "./util.mjs";
-const DEFAULT_FILENAME = DOCS_FOLDER + "/.lwc.json";
 
 async function getContext(lwc) {
   try {
     await sf.connect();
     const lwcRecords = await sf.getLwc(lwc);
-    return lwcRecords;
+    return Array.isArray(lwcRecords) ? lwcRecords: [lwcRecords];
   } catch (e) {
     splitFilename;
     console.error(e);
@@ -35,7 +32,7 @@ export function getLwc(files) {
   return [...items.values()];
 }
 
-export async function executeLwc( items) {
+export async function executeLwc( items, filename, folder) {
   if (items.length === 0) {
     return;
   }
@@ -66,8 +63,7 @@ export async function executeLwc( items) {
     helpers: {}
   });
   
-  const { folder, filename } = splitFilename(DEFAULT_INTRO, WORKING_FOLDER);
-  templateEngine.save(filename, folder);
+  templateEngine.save(filename, DOCS_FOLDER + "/" + folder);
 }
 
 

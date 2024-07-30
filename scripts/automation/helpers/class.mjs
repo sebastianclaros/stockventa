@@ -8,17 +8,14 @@ import {
   verFecha,
   splitFilename,
   DICTIONARY_FOLDER,
-  DOCS_FOLDER,
-  WORKING_FOLDER,
-  DEFAULT_INTRO
+  DOCS_FOLDER
 } from "./util.mjs";
-const DEFAULT_FILENAME = DOCS_FOLDER + "/.classes.json";
 
 async function getContext(clases) {
   try {
     await sf.connect();
     const classRecords = await sf.getClasses(clases);
-    return classRecords;
+    return Array.isArray(classRecords) ? classRecords: [classRecords];
   } catch (e) {
     console.error(e);
   }
@@ -148,7 +145,7 @@ function getInnerClasses(classes) {
   return ret;
 }
 
-export async function executeClasses(items) {
+export async function executeClasses(items, filename, folder) {
   if (items.length === 0) {
     return;
   }
@@ -212,8 +209,7 @@ export async function executeClasses(items) {
       classLink
     }
   });
-  const { folder, filename } = splitFilename(DEFAULT_INTRO, WORKING_FOLDER);
-  templateEngine.save(filename, folder);
+  templateEngine.save(filename, DOCS_FOLDER + "/" + folder);
 }
 
 

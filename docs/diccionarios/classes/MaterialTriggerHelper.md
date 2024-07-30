@@ -11,8 +11,6 @@ title: MaterialTriggerHelper
 
 - Status: Active
 - Api Version: 59
-- Creada: 12 de julio de 24
-- Modificada: 12 de julio de 24
 - Interface 
 
 ## Diagrama

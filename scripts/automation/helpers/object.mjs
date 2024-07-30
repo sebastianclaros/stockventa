@@ -4,20 +4,16 @@ const templateEngine = templateGenerator("dictionary", "md");
 
 import {
   sortByLabel,
-  splitFilename,
   DICTIONARY_FOLDER,
   DOCS_FOLDER,
-  WORKING_FOLDER,
-  DEFAULT_INTRO
 } from "./util.mjs";
-const DEFAULT_FILENAME = DOCS_FOLDER + "/.object.json";
 
 async function getContext(objetos) {
   try {
     await sf.connect();
     const objects = await sf.customObjects(objetos);
 
-    return objects;
+    return Array.isArray(objects) ? objects: [objects];
   } catch (e) {
     console.error(e);
   }
@@ -105,7 +101,7 @@ export function getObjects(files) {
 }
 
 
-export async function executeObjects(items) {
+export async function executeObjects(items, filename, folder) {
   if (items.length === 0) {
     return;
   }
@@ -114,6 +110,7 @@ export async function executeObjects(items) {
   if (!contexts || contexts.length === 0) {
     return;
   }
+
   // Arma el diccionario de cada Objeto
   templateEngine.read("object");
   for (const context of contexts) {
@@ -132,8 +129,8 @@ export async function executeObjects(items) {
   templateEngine.render(objectContext, {
     helpers: { isManaged, isMetadataFormula, attributesFormula }
   });
-  const { folder, filename } = splitFilename(DEFAULT_INTRO, WORKING_FOLDER);
-  templateEngine.save(filename, folder);
+  //const { folder, filename } = splitFilename(DEFAULT_INTRO, WORKING_FOLDER);
+  templateEngine.save(filename, DOCS_FOLDER + "/" + folder);
 }
 
 export default {

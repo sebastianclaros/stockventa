@@ -11,8 +11,6 @@ title: {{Name}}
 
 - Status: {{Status}}
 - Api Version: {{ApiVersion}}
-- Creada: {{#with CreatedDate}}{{verFecha}}{{/with}}
-- Modificada: {{#with LastModifiedDate}}{{verFecha}}{{/with}}
 - Interface 
     {{#each SymbolTable.interfaces}}
         * [{{this}}](/diccionarios/classes/{{this}})

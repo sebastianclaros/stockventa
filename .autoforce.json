@@ -29,6 +29,20 @@
         "Inventory__c",
         "InventoryLock__c"
       ]
+    },
+    "proceso-de-test": {
+      "objects": [
+        "docs/diccionarios/objects/",
+        "InventoryMovement__c"
+      ],
+      "classes": [
+        "BaseTriggerHandler",
+        "InventoryLockTriggerHandler",
+        "InventoryTriggerHandler",
+        "MaterialTriggerHandler",
+        "MaterialTriggerHelper",
+        "TriggerHelper"
+      ]
     }
   }
 }

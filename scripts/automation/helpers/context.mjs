@@ -97,7 +97,7 @@ class Context {
           addNewItems(processes[this.process][component], items) ;
           config.processes = processes;
 
-          //fs.writeFileSync(filename, JSON.stringify(config, null, 2) );
+          fs.writeFileSync(filename, JSON.stringify(config, null, 2) );
 
         } catch (error) {
           throw new Error(`No se pudo guardar la metadata`  );
@@ -339,14 +339,7 @@ class Context {
     }
 
     merge(text) {
-        // const mergeVariables = (t) => {
-        //     if (!t) return '';
-        //     return t.replace(/\$\{([^}]+)}/g, (match, variable) => {
-        //         return this[variable];
-        //     });
-        // };
-
-        if( typeof text == 'undefined' || text.indexOf('${') === -1 ) {
+        if( typeof text != 'string' || text.indexOf('${') === -1 ) {
             return text; 
         }
 
@@ -367,8 +360,7 @@ class Context {
 
         }
 
-return text; 
-        //return mergeVariables(text);
+        return text; 
     }
 }
 

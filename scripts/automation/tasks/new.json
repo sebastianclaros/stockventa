@@ -1,9 +1,0 @@
-{
-    "name": "new",
-    "guards": [ "gitToken" ], 
-    "arguments": { "title": { "required": true }, "label": { "type": "select", "choices": [ "Fix", "Feature", "Automation", "Documentation" ] } },
-    "description": "Comando para crear un requerimiento nuevo",
-    "steps": [
-        { "name": "Crear un issue nuevo", "function": "createIssue", "arguments": ["${title}"] }
-    ] 
-}

@@ -11,8 +11,6 @@ title: InventoryLockTriggerHandler
 
 - Status: Active
 - Api Version: 61
-- Creada: 12 de julio de 24
-- Modificada: 12 de julio de 24
 - Interface 
 
 ## Diagrama

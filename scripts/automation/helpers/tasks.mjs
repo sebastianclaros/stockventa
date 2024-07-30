@@ -6,6 +6,18 @@ import { validateCommand, validateFunction, executeFunction, executeCommand } fr
 import prompts from "prompts";
 export const TASKS_FOLDER = process.cwd() + "/scripts/automation/tasks";
 export const SUBTASKS_FOLDER = process.cwd() + "/scripts/automation/subtasks";
+export const NEW_FOLDER = process.cwd() + "/scripts/automation/new";
+
+export function getTaskFolder(command) {
+  const folders = {
+    'task':  TASKS_FOLDER,
+    'subtask':  SUBTASKS_FOLDER,
+    'tasks':  TASKS_FOLDER,
+    'subtasks':  SUBTASKS_FOLDER,
+    'new':  NEW_FOLDER
+  }
+  return folders[command.toLowerCase()] || folders.tasks;
+}
 
 export function createConfigurationFile() {
   console.log('not implemented');

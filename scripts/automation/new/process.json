@@ -1,0 +1,8 @@
+{
+    "name": "process",
+    "arguments": { "module": { "type": "select", "choices": "${modules}" }, "title": { "required": true  } },
+    "description": "Comando para crear un proceso nuevo",
+    "steps": [
+        { "name": "Crear un proceso nuevo", "function": "createProcess", "arguments": ["${title}", "${module}"] }
+    ] 
+}
