@@ -165,21 +165,19 @@ async function runStep(step, tabs) {
   throw new Error(`No se pudo ejecutar el step ${step.name} porque no tiene command, function o subtasks`);
 }
 
-async function askForContinue() {
+async function askForContinueOrRetry() {
   if (!context.isVerbose ) {
-    return false;
+    return 'quit'; 
   }
   const answer = await prompts([
     {
-      type: "confirm",
+      type: "select",
       name: "continue",
-      message: "Desea continuar?"
+      message: "No se pudo ejecutar el step, ¿que quiere hacer? ",
+      choices: [ { title: 'Salir', value: 'quit' }, { title: 'Continuar', value: 'continue' }, { title: 'Reintentar', value: 'retry' } ],
     }
   ]);
-  if (!answer.continue ) {
-    process.exit(-1);
-  }
-  return true;
+  return answer.continue;
 } 
 
 function getStepError(step, stepName) {
@@ -191,26 +189,35 @@ async function executeStep(step, tabs) {
     logStep(`[INICIO] ${stepName}`, tabs);
   }
   
+  let retry = false;
   let success = false;
-  let error;
-  try {
-    success = await runStep(step, tabs);
-  } catch(e) {
-    error = e;
-  }
-  if ( !success) {
-    if ( error ) {
-      logError(`[ERROR] ${error.message}`, tabs );
-    } else {
-      logError(`[ERROR] ${getStepError(step, stepName)}`, tabs );
+  do {
+    try {
+      success = await runStep(step, tabs);
+      if ( !success ) {
+        logError(getStepError(step, stepName) , tabs );
+        // Si tiene un custom handler cuando hay un error
+        if( step.onError ) {
+          success = await executeFunction(step.onError);      
+        }
+      }
+    } catch(error) {
+      logError(error.message, tabs );
     }
-    if (! await askForContinue() ) {
-      return false;
-    } 
-  }
+    if ( !success) {
+      const result = await askForContinueOrRetry()      
+      retry = result == 'retry';
+      success = result == 'continue';
+    }
+  } while ( !success && retry);
+
   if ( stepName ) {
     logStep(`[FIN] ${stepName}`, tabs );
   }
-  return true;
+  if ( !success) {
+    process.exit( !context.isVerbose ? -1 : 0 );
+  }
+  
+  return success;
 }
   

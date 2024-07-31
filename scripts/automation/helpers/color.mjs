@@ -27,7 +27,7 @@ const BgWhite = "\x1b[47m"
 const BgGray = "\x1b[100m"
 
 export function logError( message, tabs = ''){
-    console.error(getColored(`${tabs}${message}`, "red") );    
+    console.error(getColored(`[ERROR] ${tabs}${message}`, "red") );    
 }
 
 export function logStep( message, tabs = ''){

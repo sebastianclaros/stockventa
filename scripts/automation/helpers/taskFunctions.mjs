@@ -3,6 +3,7 @@ import context from "./context.mjs";
 import { getIssue, createIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
 import { logError} from "./color.mjs";
 import metadata from './metadata.mjs';
+import prompts from "prompts";
 
 function convertArgsToString(args) {
     let argsString = '';
@@ -83,7 +84,18 @@ function createArray(fields, object) {
     return fieldArray;
 } 
    
-  
+async function askForCommitMessage() {
+    const answer = await prompts([
+        {
+        type: "text",
+        name: "message",
+        initial: "fix",
+        validate: value => value.length > 0 ? true : "El mensaje es requerido",
+        message: "Mensaje del commit"
+        }
+    ]);
+    return answer.message;
+}
 
 export async function executeFunction(functionName, args) {
     let returnValue = false;
@@ -142,6 +154,13 @@ export const taskFunctions = {
         }
         
         return true;
+    },
+    async commitChanges() {
+        executeShell( `git add --all` );
+        const message = await askForCommitMessage();
+        const salidaCommit = executeShell( `git commit -m ${message}` );
+        console.log(salidaCommit);
+        return false;
     },
     publishBranch() {
         try {
