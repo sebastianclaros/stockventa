@@ -146,7 +146,7 @@ export const taskFunctions = {
     publishBranch() {
         try {
             const branchName = context.branchName;
-            executeShell( `git push ${branchName}` );
+            executeShell( `git push origin/${branchName}` );
             // Falta armar pull request
             return true ;
         } catch (error) {
