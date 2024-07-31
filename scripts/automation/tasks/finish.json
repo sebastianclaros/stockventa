@@ -7,7 +7,7 @@
         { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "validate-scratch" },
         { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "update-documentation" },
         { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "validate-code" },
-        { "name": "publica la branch", "function": "publishBranch", "description": "Publicha la branch en Remote", "errorMessage": "No se pudo publicar la branch" },
+        { "name": "publica la branch", "subtask": "publish-branch", "description": "Publicha la branch en Remote", "errorMessage": "No se pudo publicar la branch" },
         { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "drop-scratch" }
     ] 
 }
