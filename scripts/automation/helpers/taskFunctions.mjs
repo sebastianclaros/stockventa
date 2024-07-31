@@ -273,8 +273,9 @@ export const taskFunctions = {
     
     async checkCommitPending() {
         try {
-            const cambios = executeShell( "git status --porcelain=v1 2>/dev/null | wc -l" ) ;
-            return cambios == '0' ;
+            const cambios = executeShell( "git status --porcelain=v1" ) ;
+            context.salida = cambios;
+            return cambios == '' ;
         } catch (error) {
         }
         return false;
