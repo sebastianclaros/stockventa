@@ -84,6 +84,18 @@ function createArray(fields, object) {
     return fieldArray;
 } 
    
+async function askForCommit() {
+    const answer = await prompts([
+        {
+        type: "confirm",
+        name: "commit",
+        initial: true,
+        message: "Desea hacer commitear los camnbios?"
+        }
+    ]);
+    return answer.commit;
+}
+
 async function askForCommitMessage() {
     const answer = await prompts([
         {
@@ -94,6 +106,7 @@ async function askForCommitMessage() {
         message: "Mensaje del commit"
         }
     ]);
+ 
     return answer.message;
 }
 
@@ -156,11 +169,14 @@ export const taskFunctions = {
         return true;
     },
     async commitChanges() {
-        executeShell( `git add --all` );
+        const tryToCommit = await askForCommit();
+        if ( !tryToCommit ) {
+            return false;
+        }
         const message = await askForCommitMessage();
+        executeShell( `git add --all` );
         const salidaCommit = executeShell( `git commit -m ${message}` );
-        console.log(salidaCommit);
-        return false;
+        return await this.checkCommitPending();
     },
     publishBranch() {
         try {
