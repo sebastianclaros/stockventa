@@ -175,7 +175,7 @@ export const taskFunctions = {
 
     validateScratch() {
         const salida = executeShell( "sf project retrieve preview" ) ;
-        context.salida = cambios;
+        context.salida = salida;
         const noHayCambios = salida.indexOf('No files will be deleted') !== -1 && salida.indexOf('No files will be retrieved') !== -1 && salida.indexOf('No conflicts found') !== -1;
         // Probar de bajarlos // sf project retrieve start
         return noHayCambios;
