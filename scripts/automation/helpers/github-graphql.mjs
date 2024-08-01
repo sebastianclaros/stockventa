@@ -51,6 +51,35 @@ export async function getColumnValueMap() {
   return mapValues;
 }
 
+export async function createPullRequest() {
+  const user = await getUser();
+  const repository = await getRepository(label);
+  const repositoryId = repository.id;
+  const labelId = repository.label?.id;
+  const projectId = repository.projectV2.id;
+  const mutationIssue = `
+    mutation createIssue($repositoryId: ID!, $assignId: ID!, $title: String!, $body: String, ${ labelId ? '$labelId: ID!': ''} , $milestoneId: ID ) {
+      createIssue(
+          input: {
+            repositoryId: $repositoryId,
+            assigneeIds: [$assignId],
+            ${labelId ? 'labelIds: [$labelId],': ''}
+            title: $title,
+            milestoneId: $milestoneId,
+            body: $body
+          }
+      ) {
+        issue {
+          id
+          number
+        }
+      }
+    }`;
+  const { createIssue } = await graphqlAuth(mutationIssue, { labelId,  body, assignId: user.id,  projectId, repositoryId, title, label: label?  [label]: null });
+  const issue = createIssue.issue;
+
+}
+
 export async function createIssue(title, columnName, label, milestone, body ) {
   const user = await getUser();
   const repository = await getRepository(label);

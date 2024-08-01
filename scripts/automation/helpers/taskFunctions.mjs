@@ -1,8 +1,9 @@
 import {execSync, spawn} from "child_process";
 import context from "./context.mjs";
-import { getIssue, createIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
+import { getIssue, createIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState, createPullRequest } from "./github-graphql.mjs";
 import { logError} from "./color.mjs";
 import metadata from './metadata.mjs';
+import prompts from "prompts";
 
 function convertArgsToString(args) {
     let argsString = '';
@@ -83,7 +84,31 @@ function createArray(fields, object) {
     return fieldArray;
 } 
    
-  
+async function askForCommit() {
+    const answer = await prompts([
+        {
+        type: "confirm",
+        name: "commit",
+        initial: true,
+        message: "Desea hacer commitear los camnbios?"
+        }
+    ]);
+    return answer.commit;
+}
+
+async function askForCommitMessage() {
+    const answer = await prompts([
+        {
+        type: "text",
+        name: "message",
+        initial: "fix",
+        validate: value => value.length > 0 ? true : "El mensaje es requerido",
+        message: "Mensaje del commit"
+        }
+    ]);
+ 
+    return answer.message;
+}
 
 export async function executeFunction(functionName, args) {
     let returnValue = false;
@@ -143,11 +168,22 @@ export const taskFunctions = {
         
         return true;
     },
+    async commitChanges() {
+        const tryToCommit = await askForCommit();
+        if ( !tryToCommit ) {
+            return false;
+        }
+        const message = await askForCommitMessage();
+        executeShell( `git add --all` );
+        const salidaCommit = executeShell( `git commit -m ${message}` );
+        return await this.checkCommitPending();
+    },
     publishBranch() {
         try {
             const branchName = context.branchName;
-            executeShell( `git push ${branchName}` );
+            executeShell( `git push origin ${branchName}` );
             // Falta armar pull request
+            createPullRequest( branchName );
             return true ;
         } catch (error) {
             console.log(error);
@@ -238,8 +274,9 @@ export const taskFunctions = {
     
     async checkCommitPending() {
         try {
-            const cambios = executeShell( "git status --porcelain=v1 2>/dev/null | wc -l" ) ;
-            return cambios == '0' ;
+            const cambios = executeShell( "git status --porcelain=v1" ) ;
+            context.salida = cambios;
+            return cambios == '' ;
         } catch (error) {
         }
         return false;
