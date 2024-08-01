@@ -1,6 +1,6 @@
 import {execSync, spawn} from "child_process";
 import context from "./context.mjs";
-import { getIssue, createIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState } from "./github-graphql.mjs";
+import { getIssue, createIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState, createPullRequest } from "./github-graphql.mjs";
 import { logError} from "./color.mjs";
 import metadata from './metadata.mjs';
 import prompts from "prompts";
@@ -183,6 +183,7 @@ export const taskFunctions = {
             const branchName = context.branchName;
             executeShell( `git push origin ${branchName}` );
             // Falta armar pull request
+            createPullRequest( branchName );
             return true ;
         } catch (error) {
             console.log(error);
