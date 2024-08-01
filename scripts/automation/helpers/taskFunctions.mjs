@@ -84,16 +84,16 @@ function createArray(fields, object) {
     return fieldArray;
 } 
    
-async function askForCommit() {
+async function askForContinue(message) {
     const answer = await prompts([
         {
         type: "confirm",
-        name: "commit",
+        name: "continue",
         initial: true,
-        message: "Desea hacer commitear los camnbios?"
+        message
         }
     ]);
-    return answer.commit;
+    return answer.continue;
 }
 
 async function askForCommitMessage() {
@@ -168,8 +168,25 @@ export const taskFunctions = {
         
         return true;
     },
+    async retrieveCode() {
+        const tryToRetrieve = await askForContinue("Desea bajar los cambios?");
+        if ( !tryToRetrieve ) {
+            return false;
+        }
+        executeShell( `sf project retrieve start` );
+        return await this.validateScratch();
+    },
+
+    validateScratch() {
+        const salida = executeShell( "sf project retrieve preview" ) ;
+        context.salida = salida;
+        const noHayCambios = salida.indexOf('No files will be deleted') !== -1 && salida.indexOf('No files will be retrieved') !== -1 && salida.indexOf('No conflicts found') !== -1;
+        // Probar de bajarlos // sf project retrieve start
+        return noHayCambios;
+    },
+
     async commitChanges() {
-        const tryToCommit = await askForCommit();
+        const tryToCommit = await askForContinue("Desea commitear los cambios?");
         if ( !tryToCommit ) {
             return false;
         }
@@ -252,12 +269,6 @@ export const taskFunctions = {
         const currentState = await getIssueState(issueNumber);        
         const arrayStates = states.toLocaleLowerCase().replace(' ', '').split(',');
         return arrayStates.includes(currentState.toLocaleLowerCase().replace(' ', ''));
-    },
-    validateScratch() {
-        const salida = executeShell( "sf project retrieve preview" ) ;
-        const noHayCambios = salida.indexOf('No files will be deleted') !== -1 && salida.indexOf('No files will be retrieved') !== -1 && salida.indexOf('No conflicts found') !== -1;
-        // Probar de bajarlos // sf project retrieve start
-        return noHayCambios;
     },
     
     getBranchName() {
