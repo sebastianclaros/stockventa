@@ -21,7 +21,7 @@ Este objeto contiene todos los bienes de cambio y de prestamo que estan en las s
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | Business Site | BusinessSite__c | [Lookup a BusinessSite__c](/diccionarios/objects/BusinessSite__c) | Lookup a Store Location (vlocity_cmt__BusinessSite__c) para vincular los materiales a la Bodega correspondiente <ul></ul> |
 | <div class="icons"></div> | Año de Importacion | ImportYear__c | Number(4) | Para los productos importados viene el año de importación. Este dato es importante porque debe salir en la factura <ul></ul> |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | NMU | NMU__c | Text(30) | Código único de identificación del producto. SAP y el CRM manejan el mismo código. <ul></ul> |
-| <div class="icons"></div> | Orden de Venta | OrdenVenta__c | Number(4) |  <ul></ul> |
+| <div class="icons"></div> | Orden de Venta | OrdenVenta__c | Number(4) | Permite ordenar la secuencia de ventas de un productio en una oficina comercial. <ul></ul> |
 | <div class="icons"></div> | Pais de Origen | OriginCountry__c | Picklist | Esto se usa en material importados y tiene el pais de donde se realizó la importación <ul><li>Mexico</li><li>China</li></ul> |
 | <div class="icons">![Track History](/img/tracker_60.png)</div> | Product | Product__c | [Lookup a Product2](/diccionarios/objects/Product2) | Lookup a Products. La relación es gestionada por un Trigger al insertarse el material. <ul></ul> |
 | <div class="icons">![External Id](/img/database_60.png)</div> | Serial | Serial__c | Text(80) | Código único que identifica el material. En tipo &quot;Terminales&quot; se trata del IMEI. En tipo &quot;Simcard&quot; refiere al IMSI <ul></ul> |
