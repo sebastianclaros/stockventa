@@ -84,16 +84,16 @@ function createArray(fields, object) {
     return fieldArray;
 } 
    
-async function askForCommit() {
+async function askForContinue(message) {
     const answer = await prompts([
         {
         type: "confirm",
-        name: "commit",
+        name: "continue",
         initial: true,
-        message: "Desea hacer commitear los camnbios?"
+        message
         }
     ]);
-    return answer.commit;
+    return answer.continue;
 }
 
 async function askForCommitMessage() {
@@ -169,6 +169,10 @@ export const taskFunctions = {
         return true;
     },
     async retrieveCode() {
+        const tryToRetrieve = await askForContinue("Desea bajar los cambios?");
+        if ( !tryToRetrieve ) {
+            return false;
+        }
         executeShell( `sf project retrieve start` );
         return await this.validateScratch();
     },
@@ -182,7 +186,7 @@ export const taskFunctions = {
     },
 
     async commitChanges() {
-        const tryToCommit = await askForCommit();
+        const tryToCommit = await askForContinue("Desea commitear los cambios?");
         if ( !tryToCommit ) {
             return false;
         }
