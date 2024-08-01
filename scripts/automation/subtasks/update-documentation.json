@@ -1,6 +1,7 @@
 {
     "name": "update-documentation",
     "guards": [ "scratch" ],
+    "arguments": { "module": { "type": "select", "choices": "${modules}" }, "process": { "option": "p" } },
     "description": "Actualiza la documentacion que esta asociada a la metadata de Salesforce",
     "errorMessage": "No se pudo actualizar la documentacion",    
     "steps": [
