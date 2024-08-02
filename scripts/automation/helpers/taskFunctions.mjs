@@ -195,13 +195,13 @@ export const taskFunctions = {
         const salidaCommit = executeShell( `git commit -m ${message}` );
         return await this.checkCommitPending();
     },
-    publishBranch() {
+    async publishBranch() {
         try {
             const branchName = context.branchName;
             executeShell( `git push origin ${branchName}` );
             // Falta armar pull request
             context.issueFromBranch(branchName);
-            const pullRequest = createPullRequest( branchName, `resolves #${context.issueNumber} `, 'AI not implemented yet' );             
+            const pullRequest = await createPullRequest( branchName, `resolves #${context.issueNumber} `, 'AI not implemented yet' );             
             console.log(pullRequest);
             return pullRequest.number ? true : false;
         } catch (error) {
