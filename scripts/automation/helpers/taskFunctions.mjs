@@ -202,9 +202,9 @@ export const taskFunctions = {
             // Falta armar pull request
             context.issueFromBranch(branchName);
             createPullRequest( context.issueNumber );
-            return true ;
+            return false ;
         } catch (error) {
-            console.log(error);
+            console.log("!!!!!!!!!!!!",error);
         }
         // mergeBranch
         return false;
