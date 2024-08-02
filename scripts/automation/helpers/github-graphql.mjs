@@ -56,9 +56,10 @@ export async function createPullRequest(issueNumber) {
   const repositoryId = repository.id;
   const issue = await getIssue(issueNumber);
   const headRefName = 'main';
-  if ( issue.linkedBranches.nodes.length > 0 ) {
-    baseRefName = result.linkedBranches.nodes[0].ref.name;
+  if ( !issue.linkedBranches.nodes.length > 0 ) {
+    return false;
   }
+  const baseRefName = result.linkedBranches.nodes[0].ref.name;
 
   const mutationPullRequest = `
     mutation createPullRequest( $baseRefName: String!, $headRefName: String!, $headRepositoryId: ID, $repositoryId: ID!, $title: String!, $body: String ) {
