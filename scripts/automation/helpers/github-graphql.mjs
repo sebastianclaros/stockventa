@@ -79,9 +79,9 @@ export async function createPullRequest(issueNumber) {
         }
       }
     }`;
-  const { createPullRequest } = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
-  console.log(createPullRequest);
-  return createPullRequest;
+  const result = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
+  console.log(result);
+  return false;
 }
 
 export async function createIssue(title, columnName, label, milestone, body ) {
