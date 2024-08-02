@@ -262,7 +262,7 @@ export async function getIssueState(issueNumber){
 
 export async function getMyIssues(issueNumber){
 
-}y
+}
 
 function getIssueName(title) {
   return title.toLowerCase().replaceAll(' ', '-');
