@@ -195,13 +195,11 @@ export const taskFunctions = {
         const salidaCommit = executeShell( `git commit -m ${message}` );
         return await this.checkCommitPending();
     },
-    publishBranch() {
+    async publishBranch() {
         try {
             const branchName = context.branchName;
-            executeShell( `git push origin ${branchName}` );
-            // Falta armar pull request
-            createPullRequest( branchName );
-            return true ;
+            const salida = executeShell( `git push origin ${branchName}` );
+            return salida ? false : true;
         } catch (error) {
             console.log(error);
         }
@@ -209,6 +207,19 @@ export const taskFunctions = {
         return false;
 
     },
+    async createPullRequest() {
+        try {
+            context.issueFromBranch(branchName);
+            const pullRequest = await createPullRequest( branchName, `resolves #${context.issueNumber} `, 'AI not implemented yet' );             
+            return pullRequest.number ? true : false;
+        } catch (error) {
+            console.log(error);
+        }
+        // mergeBranch
+        return false;
+
+    },
+ 
     getCurrentOrganization() {
         const salidaConfig = executeShell( 'sf config get target-org --json' ) ;
         const salidaConfigJson = JSON.parse(salidaConfig);
