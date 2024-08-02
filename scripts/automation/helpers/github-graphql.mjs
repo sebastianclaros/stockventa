@@ -51,33 +51,35 @@ export async function getColumnValueMap() {
   return mapValues;
 }
 
-export async function createPullRequest() {
-  const user = await getUser();
-  const repository = await getRepository(label);
+export async function createPullRequest(issueNumber) {
+  const repository = await getRepository();
   const repositoryId = repository.id;
-  const labelId = repository.label?.id;
-  const projectId = repository.projectV2.id;
-  const mutationIssue = `
-    mutation createIssue($repositoryId: ID!, $assignId: ID!, $title: String!, $body: String, ${ labelId ? '$labelId: ID!': ''} , $milestoneId: ID ) {
+  const issue = await getIssue(issueNumber);
+  const headRefName = 'main';
+  if ( issue.linkedBranches.nodes.length > 0 ) {
+    baseRefName = result.linkedBranches.nodes[0].ref.name;
+  }
+
+  const mutationPullRequest = `
+    mutation createPullRequest( $baseRefName: String!, $headRefName: String!, $headRepositoryId: ID, $repositoryId: ID!, $title: String!, $body: String ) {
       createIssue(
           input: {
             repositoryId: $repositoryId,
-            assigneeIds: [$assignId],
-            ${labelId ? 'labelIds: [$labelId],': ''}
+            headRefName: $headRefName,
+            headRepositoryId: $headRepositoryId,
+            baseRefName: $baseRefName,
             title: $title,
-            milestoneId: $milestoneId,
             body: $body
           }
       ) {
-        issue {
+        createPullRequest {
           id
           number
         }
       }
     }`;
-  const { createIssue } = await graphqlAuth(mutationIssue, { labelId,  body, assignId: user.id,  projectId, repositoryId, title, label: label?  [label]: null });
-  const issue = createIssue.issue;
-
+  const { createPullRequest } = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
+  return createPullRequest;
 }
 
 export async function createIssue(title, columnName, label, milestone, body ) {
@@ -260,7 +262,7 @@ export async function getIssueState(issueNumber){
 
 export async function getMyIssues(issueNumber){
 
-}
+}y
 
 function getIssueName(title) {
   return title.toLowerCase().replaceAll(' ', '-');

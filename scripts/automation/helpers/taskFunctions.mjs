@@ -200,7 +200,7 @@ export const taskFunctions = {
             const branchName = context.branchName;
             executeShell( `git push origin ${branchName}` );
             // Falta armar pull request
-            createPullRequest( branchName );
+            createPullRequest( context.issueFromBranch(branchName) );
             return true ;
         } catch (error) {
             console.log(error);

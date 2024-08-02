@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "description": "Salesforce App",
   "scripts": {
+    "new": "node scripts/automation/auto.mjs new issue",
+    "start": "node scripts/automation/auto.mjs start",
+    "stop": "node scripts/automation/auto.mjs stop",
+    "finish": "node scripts/automation/auto.mjs finish",
     "lint": "eslint **/{aura,lwc}/**",
     "test": "yarn test:unit",
     "test:unit": "sfdx-lwc-jest",
