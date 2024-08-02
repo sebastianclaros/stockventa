@@ -51,7 +51,7 @@ export async function getColumnValueMap() {
   return mapValues;
 }
 
-export async function createPullRequest(branchName) {
+export async function createPullRequest(branchName, title, body) {
   const repository = await getRepository();
   const repositoryId = repository.id;
   const headRefName = 'main';

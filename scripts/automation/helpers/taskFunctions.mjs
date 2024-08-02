@@ -199,7 +199,9 @@ export const taskFunctions = {
         try {
             const branchName = context.branchName;
             executeShell( `git push origin ${branchName}` );
-            createPullRequest( branchName );
+            // Falta armar pull request
+            context.issueFromBranch(branchName);
+            createPullRequest( branchName, `resolves #${context.issueNumber} `, 'AI not implemented yet' );             
             return false ;
         } catch (error) {
             console.log(error);
