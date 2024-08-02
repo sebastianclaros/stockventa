@@ -59,7 +59,7 @@ export async function createPullRequest(branchName, title, body) {
 
   const mutationPullRequest = `
     mutation createPullRequest( $baseRefName: String!, $headRefName: String!, $headRepositoryId: ID, $repositoryId: ID!, $title: String!, $body: String ) {
-      createIssue(
+      createPullRequest(
           input: {
             repositoryId: $repositoryId,
             headRefName: $headRefName,
