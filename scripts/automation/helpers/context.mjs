@@ -158,8 +158,8 @@ class Context {
         const branchSplit = branchName.split("/");
         if ( branchSplit.length > 1 ) {
             this.issueType = branchSplit[0];
-            if ( Number.isInteger(branchSplit[1]) ) {
-                this.issueNumber = branchSplit[1];
+            if ( !isNaN(branchSplit[1]) ) {
+                this.issueNumber = parseInt( branchSplit[1] );
             } else {
                 console.log( "!!!")
 //                    [this.issueNumber, this.issueTitle] = branchSplit[1].split() // /^([^ -]+)[ -](.*)$/.exec( branchSplit[1]).slice(1);
