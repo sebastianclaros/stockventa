@@ -202,6 +202,7 @@ export const taskFunctions = {
             // Falta armar pull request
             context.issueFromBranch(branchName);
             const pullRequest = createPullRequest( branchName, `resolves #${context.issueNumber} `, 'AI not implemented yet' );             
+            console.log(pullRequest);
             return pullRequest.number ? true : false;
         } catch (error) {
             console.log(error);
