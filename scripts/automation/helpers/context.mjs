@@ -161,6 +161,7 @@ class Context {
             if ( Number.isInteger(branchSplit[1]) ) {
                 this.issueNumber = branchSplit[1];
             } else {
+                console.log( "!!!")
 //                    [this.issueNumber, this.issueTitle] = branchSplit[1].split() // /^([^ -]+)[ -](.*)$/.exec( branchSplit[1]).slice(1);
             }
         }
