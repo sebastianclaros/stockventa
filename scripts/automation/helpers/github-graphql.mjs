@@ -75,8 +75,13 @@ export async function createPullRequest(branchName, title, body) {
         }
       }
     }`;
-  const {createPullRequest} = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
-  return createPullRequest.pullRequest;
+  try {
+    const {createPullRequest} = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
+    return createPullRequest.pullRequest;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 export async function createIssue(title, columnName, label, milestone, body ) {
