@@ -75,9 +75,8 @@ export async function createPullRequest(branchName, title, body) {
         }
       }
     }`;
-  const result = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
-  console.log(result);
-  return pullRequest.number;
+  const {createPullRequest} = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
+  return createPullRequest.pullRequest;
 }
 
 export async function createIssue(title, columnName, label, milestone, body ) {
