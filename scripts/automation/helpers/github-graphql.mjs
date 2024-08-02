@@ -69,15 +69,15 @@ export async function createPullRequest(branchName, title, body) {
             body: $body
           }
       ) {
-        createPullRequest {
+        pullRequest {
           id
           number
         }
       }
     }`;
-  const result = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
-  console.log(result);
-  return false;
+  const {pullRequest} = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
+  console.log(pullRequest);
+  return pullRequest.number;
 }
 
 export async function createIssue(title, columnName, label, milestone, body ) {
