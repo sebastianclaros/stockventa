@@ -56,6 +56,7 @@ export async function createPullRequest(issueNumber) {
   const repositoryId = repository.id;
   const issue = await getIssue(issueNumber);
   const headRefName = 'main';
+  console.log(ssue.linkedBranches.nodes.length);
   if ( !issue.linkedBranches.nodes.length > 0 ) {
     return false;
   }
