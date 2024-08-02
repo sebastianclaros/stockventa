@@ -75,8 +75,8 @@ export async function createPullRequest(branchName, title, body) {
         }
       }
     }`;
-  const {pullRequest} = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
-  console.log(pullRequest);
+  const result = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
+  console.log(result);
   return pullRequest.number;
 }
 
