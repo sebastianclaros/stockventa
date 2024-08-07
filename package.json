@@ -45,6 +45,7 @@
     "lint-staged": "^12.3.7",
     "matter": "^0.2.0",
     "octokit": "^4.0.2",
+    "openai": "^4.54.0",
     "prettier": "^2.6.0",
     "prettier-plugin-apex": "^1.10.0",
     "prism-react-renderer": "^2.3.0",

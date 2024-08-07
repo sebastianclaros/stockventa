@@ -1,6 +1,6 @@
 {
     "name": "stop",
-    "guards": [ "gitToken" ], 
+    "guards": [ "isGitApi" ], 
     "description": "Comando para dejar a un lado un requerimiento",
     "steps": [
         { "criteria": { "field": "isDevelopment", "value": true }, "subtask": "validate-scratch" },

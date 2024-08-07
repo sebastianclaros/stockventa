@@ -1,6 +1,6 @@
 {
     "name": "rollback",
-    "guards": [ "gitToken" ], 
+    "guards": [ "isGitApi" ], 
     "description": "Comando para hacer un rollback de un requerimiento ya deployado",
     "steps": [
         { "name": "Rollback de un deploy", "function": "rollbackIssue" }

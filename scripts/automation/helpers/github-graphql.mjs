@@ -1,300 +1,288 @@
 import { graphql } from "@octokit/graphql";
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const OWNER = 'sebastianclaros';
-const REPO = 'stockventa';
-const PROJECT_NUMBER = 3;
 
-const repoVar = { owner: OWNER, repo: REPO }
-const graphqlAuth = graphql.defaults({
-  headers: {
-    authorization: `Bearer ${GITHUB_TOKEN}`,
-    "X-Github-Next-Global-ID": 1
-  },
-});
-
-async function getUser() {
-  const query = `{
-    viewer {
-      login
-      id
-    }
-  }`;
-  const {viewer } = await graphqlAuth(query);
-  return viewer;
-}
-
-export async function getColumnValueMap() {
-  const query = `
-      query getFieldOptions($owner:String!, $repo: String!, $projectNumber: Int!) {
-        repository(owner: $owner, name: $repo) {
-          projectV2(number: $projectNumber) {
-            field(name: "Status") {
-              ... on ProjectV2SingleSelectField {
-                id
-                name
-                options {
-                  name
-                  id
-                }
-              }                
-            }
-          }
-        }
-      }
-  `; 
-
-  const { repository } = await graphqlAuth(query, { projectNumber: PROJECT_NUMBER,...repoVar});
-  let mapValues = {}
-  for ( const option of repository.projectV2.field.options ) {
-    mapValues[option.name] = option.id;
+export class GitHubApi {
+  repoVar;
+  projectNumber; 
+  graphqlAuth;
+  
+  constructor(token, owner, repo, projectNumber) {
+    this.repoVar = { owner, repo };
+    this.projectNumber = projectNumber;
+    this.graphqlAuth = graphql.defaults({
+      headers: {
+        authorization: `Bearer ${token}`,
+        "X-Github-Next-Global-ID": 1
+      },
+    })
   }
-  return mapValues;
-}
 
-export async function createPullRequest(branchName, title, body) {
-  const repository = await getRepository();
-  const repositoryId = repository.id;
-  const headRefName = 'main';
-  const baseRefName = branchName;
-
-  const mutationPullRequest = `
-    mutation createPullRequest( $baseRefName: String!, $headRefName: String!, $headRepositoryId: ID, $repositoryId: ID!, $title: String!, $body: String ) {
-      createPullRequest(
-          input: {
-            repositoryId: $repositoryId,
-            headRefName: $headRefName,
-            headRepositoryId: $headRepositoryId,
-            baseRefName: $baseRefName,
-            title: $title,
-            body: $body
-          }
-      ) {
-        pullRequest {
-          id
-          number
-        }
-      }
-    }`;
-  try {
-    const {createPullRequest} = await graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
-    return createPullRequest.pullRequest;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
-
-export async function createIssue(title, columnName, label, milestone, body ) {
-  const user = await getUser();
-  const repository = await getRepository(label);
-  const repositoryId = repository.id;
-  const labelId = repository.label?.id;
-  const projectId = repository.projectV2.id;
-  const mutationIssue = `
-    mutation createIssue($repositoryId: ID!, $assignId: ID!, $title: String!, $body: String, ${ labelId ? '$labelId: ID!': ''} , $milestoneId: ID ) {
-      createIssue(
-          input: {
-            repositoryId: $repositoryId,
-            assigneeIds: [$assignId],
-            ${labelId ? 'labelIds: [$labelId],': ''}
-            title: $title,
-            milestoneId: $milestoneId,
-            body: $body
-          }
-      ) {
-        issue {
-          id
-          number
-        }
-      }
-    }`;
-  const { createIssue } = await graphqlAuth(mutationIssue, { labelId,  body, assignId: user.id,  projectId, repositoryId, title, label: label?  [label]: null });
-  const issue = createIssue.issue;
-  if ( !columnName || !issue.number) {
-    return issue.number;
-  }
-  const mutationItem = `
-    mutation addProjectV2ItemById($projectId: ID!, $contentId: ID! ) {
-      addProjectV2ItemById(
-          input: {
-            projectId: $projectId
-            contentId: $contentId
-          }
-      ) {
-        clientMutationId,
-        item {
-          id
-        }
-      }
-    }`;
-  const { addProjectV2ItemById } = await graphqlAuth(mutationItem, { projectId, contentId: issue.id });  
-  const itemId = addProjectV2ItemById.item.id;
-
-  const fieldId = repository.projectV2.field.id;
-  const mapValues = await getColumnValueMap();
-  const columnValue = mapValues[columnName]; 
-  const mutationColumn = `
-  mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $columnValue: String!) {
-    updateProjectV2ItemFieldValue(
-      input: {
-        projectId: $projectId,
-        itemId: $itemId,
-        fieldId: $fieldId,
-        value: {singleSelectOptionId: $columnValue}
-      }
-    ) {
-      clientMutationId
-    }
-  }`;
-  const {updateProjectV2ItemFieldValue } = await graphqlAuth(mutationColumn, { projectId, itemId, fieldId, columnValue });
-
-  return issue.number;  
-}
-
-export async function moveIssue(issueNumber, columnName) {
-  const issue = await getIssue(issueNumber);
-  const itemId = issue.projectItems.nodes[0].id;
-  const projectId = issue.projectItems.nodes[0].project.id;  
-  const fieldId = issue.projectItems.nodes[0].fieldValueByName.field.id;
-  const mapValues = await getColumnValueMap();
-  const columnValue = mapValues[columnName]; 
-  const mutation = `
-  mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $columnValue: String!) {
-    updateProjectV2ItemFieldValue(
-      input: {
-        projectId: $projectId,
-        itemId: $itemId,
-        fieldId: $fieldId,
-        value: {singleSelectOptionId: $columnValue}
-      }
-    ) {
-      projectV2Item {
+  async  getUser() {
+    const query = `{
+      viewer {
+        login
         id
       }
-    }
-  }`;
-  const {updateProjectV2ItemFieldValue } = await graphqlAuth(mutation, { projectId, itemId, fieldId, columnValue });
-  return updateProjectV2ItemFieldValue?.projectV2Item ? true: false ;  
-}
+    }`;
+    const {viewer } = await this.graphqlAuth(query);
+    return viewer;
+  }
 
-export async function assignIssueToMe(issueNumber) {
-  const user = await getUser();
-  const issue = await getIssue(issueNumber);
-  const mutation = `
-    mutation assignUser( $issueId: ID!, $userId: ID!) { 
-      addAssigneesToAssignable(input: {
-        assignableId: $issueId
-        assigneeIds: [ $userId ]
-      }) {
-        assignable {
-          assignees {
-            totalCount
-          }
-        }
-      } 
-    }    
-  `;
-  const {addAssigneesToAssignable } = await graphqlAuth(mutation, { issueId: issue.id, userId: user.id });
-  return addAssigneesToAssignable.assignable.assignees.totalCount > 0 ;  
-}
-
-export async function getCommit(commitSha) {
-  const query = `
-    query getCommit($owner:String!, $repo: String!, $commitSha: String!) {
-      repository(owner: $owner, name: $repo) {
-        object(expression: $commitSha) {
-              ... on Commit {
-                id
-                oid
+  async getColumnValueMap() {
+    const query = `
+        query getFieldOptions($owner:String!, $repo: String!, $projectNumber: Int!) {
+          repository(owner: $owner, name: $repo) {
+            projectV2(number: $projectNumber) {
+              field(name: "Status") {
+                ... on ProjectV2SingleSelectField {
+                  id
+                  name
+                  options {
+                    name
+                    id
+                  }
+                }                
               }
             }
-      }
-    } `; 
-  const { repository } = await graphqlAuth(query, { commitSha,...repoVar});
-  return repository.object; 
-}
+          }
+        }
+    `; 
 
-export async function assignBranchToIssue(issueNumber, branchName, commitSha) {
-  const issue = await getIssue(issueNumber);  
-  const commit = await getCommit(commitSha);
-  const mutation = `
-    mutation createLinkedBranch( $issueId: ID!, $oid: GitObjectID!, $branchName: String!) { 
-      createLinkedBranch(input: {
-        issueId: $issueId
-        oid: $oid
-        name: $branchName
-      })
-      {
-        issue {
+    const { repository } = await this.graphqlAuth(query, { projectNumber: this.projectNumber,...this.repoVar});
+    let mapValues = {}
+    for ( const option of repository.projectV2.field.options ) {
+      mapValues[option.name] = option.id;
+    }
+    return mapValues;
+  }
+
+  async createPullRequest(branchName, title, body) {
+    const repository = await getRepository();
+    const repositoryId = repository.id;
+    const headRefName = 'main';
+    const baseRefName = branchName;
+
+    const mutationPullRequest = `
+      mutation createPullRequest( $baseRefName: String!, $headRefName: String!, $headRepositoryId: ID, $repositoryId: ID!, $title: String!, $body: String ) {
+        createPullRequest(
+            input: {
+              repositoryId: $repositoryId,
+              headRefName: $headRefName,
+              headRepositoryId: $headRepositoryId,
+              baseRefName: $baseRefName,
+              title: $title,
+              body: $body
+            }
+        ) {
+          pullRequest {
+            id
+            number
+          }
+        }
+      }`;
+    try {
+      const {createPullRequest} = await this.graphqlAuth(mutationPullRequest, { baseRefName, headRefName, headRepositoryId: repositoryId, repositoryId, title, body });
+      return createPullRequest.pullRequest;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  async createIssue(title, columnName, label, milestone, body ) {
+    const user = await getUser();
+    const repository = await getRepository(label);
+    const repositoryId = repository.id;
+    const labelId = repository.label?.id;
+    const projectId = repository.projectV2.id;
+    const mutationIssue = `
+      mutation createIssue($repositoryId: ID!, $assignId: ID!, $title: String!, $body: String, ${ labelId ? '$labelId: ID!': ''} , $milestoneId: ID ) {
+        createIssue(
+            input: {
+              repositoryId: $repositoryId,
+              assigneeIds: [$assignId],
+              ${labelId ? 'labelIds: [$labelId],': ''}
+              title: $title,
+              milestoneId: $milestoneId,
+              body: $body
+            }
+        ) {
+          issue {
+            id
+            number
+          }
+        }
+      }`;
+    const { createIssue } = await this.graphqlAuth(mutationIssue, { labelId,  body, assignId: user.id,  projectId, repositoryId, title, label: label?  [label]: null });
+    const issue = createIssue.issue;
+    if ( !columnName || !issue.number) {
+      return issue.number;
+    }
+    const mutationItem = `
+      mutation addProjectV2ItemById($projectId: ID!, $contentId: ID! ) {
+        addProjectV2ItemById(
+            input: {
+              projectId: $projectId
+              contentId: $contentId
+            }
+        ) {
+          clientMutationId,
+          item {
+            id
+          }
+        }
+      }`;
+    const { addProjectV2ItemById } = await this.graphqlAuth(mutationItem, { projectId, contentId: issue.id });  
+    const itemId = addProjectV2ItemById.item.id;
+
+    const fieldId = repository.projectV2.field.id;
+    const mapValues = await getColumnValueMap();
+    const columnValue = mapValues[columnName]; 
+    const mutationColumn = `
+    mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $columnValue: String!) {
+      updateProjectV2ItemFieldValue(
+        input: {
+          projectId: $projectId,
+          itemId: $itemId,
+          fieldId: $fieldId,
+          value: {singleSelectOptionId: $columnValue}
+        }
+      ) {
+        clientMutationId
+      }
+    }`;
+    const {updateProjectV2ItemFieldValue } = await this.graphqlAuth(mutationColumn, { projectId, itemId, fieldId, columnValue });
+
+    return issue.number;  
+  }
+
+  async  moveIssue(issueNumber, columnName) {
+    const issue = await getIssue(issueNumber);
+    const itemId = issue.projectItems.nodes[0].id;
+    const projectId = issue.projectItems.nodes[0].project.id;  
+    const fieldId = issue.projectItems.nodes[0].fieldValueByName.field.id;
+    const mapValues = await getColumnValueMap();
+    const columnValue = mapValues[columnName]; 
+    const mutation = `
+    mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $columnValue: String!) {
+      updateProjectV2ItemFieldValue(
+        input: {
+          projectId: $projectId,
+          itemId: $itemId,
+          fieldId: $fieldId,
+          value: {singleSelectOptionId: $columnValue}
+        }
+      ) {
+        projectV2Item {
           id
         }
       }
     }`;
-  const {createLinkedBranch } = await graphqlAuth(mutation, { issueId: issue.id, oid: commit.oid, branchName });
-  console.log(createLinkedBranch);
-  return createLinkedBranch?.issue?.id ? true: false ;  
-}
+    const {updateProjectV2ItemFieldValue } = await this.graphqlAuth(mutation, { projectId, itemId, fieldId, columnValue });
+    return updateProjectV2ItemFieldValue?.projectV2Item ? true: false ;  
+  }
 
-export async function getValidateIssueColumn(issueNumber, columnName) {
+  async assignIssueToMe(issueNumber) {
+    const user = await getUser();
     const issue = await getIssue(issueNumber);
-}
-
-
-/*
-query ($owner:String!, $repo: String!, $issueNumber: Int!) {
-  repository(owner: $owner, name: $repo) {
-    issue(number: $issueNumber) {
-      title
-      linkedBranches(last:1){
-      	  nodes {
-          	  ref {
-          	    name
-          	  }
+    const mutation = `
+      mutation assignUser( $issueId: ID!, $userId: ID!) { 
+        addAssigneesToAssignable(input: {
+          assignableId: $issueId
+          assigneeIds: [ $userId ]
+        }) {
+          assignable {
+            assignees {
+              totalCount
+            }
           }
+        } 
+      }    
+    `;
+    const {addAssigneesToAssignable } = await this.graphqlAuth(mutation, { issueId: issue.id, userId: user.id });
+    return addAssigneesToAssignable.assignable.assignees.totalCount > 0 ;  
+  }
+
+  async getCommit(commitSha) {
+    const query = `
+      query getCommit($owner:String!, $repo: String!, $commitSha: String!) {
+        repository(owner: $owner, name: $repo) {
+          object(expression: $commitSha) {
+                ... on Commit {
+                  id
+                  oid
+                }
+              }
+        }
+      } `; 
+    const { repository } = await this.graphqlAuth(query, { commitSha,...this.repoVar});
+    return repository.object; 
+  }
+
+  async assignBranchToIssue(issueNumber, branchName, commitSha) {
+    const issue = await getIssue(issueNumber);  
+    const commit = await getCommit(commitSha);
+    const mutation = `
+      mutation createLinkedBranch( $issueId: ID!, $oid: GitObjectID!, $branchName: String!) { 
+        createLinkedBranch(input: {
+          issueId: $issueId
+          oid: $oid
+          name: $branchName
+        })
+        {
+          issue {
+            id
+          }
+        }
+      }`;
+    const {createLinkedBranch } = await this.graphqlAuth(mutation, { issueId: issue.id, oid: commit.oid, branchName });
+    console.log(createLinkedBranch);
+    return createLinkedBranch?.issue?.id ? true: false ;  
+  }
+
+  async getValidateIssueColumn(issueNumber, columnName) {
+      const issue = await getIssue(issueNumber);
+  }
+
+
+  async getIssueState(issueNumber){
+    const issue = await getIssue(issueNumber);
+    return issue.projectItems?.nodes[0]?.fieldValueByName?.name;
+  }
+
+  async getMyIssues(issueNumber){
+
+  }
+
+  getIssueName(title) {
+    return title.toLowerCase().replaceAll(' ', '-');
+  }
+
+  async  getIssueObject(issueNumber){
+    const result = await getIssue(issueNumber);
+    const addFields = {};
+    addFields.name = getIssueName(result.title);
+    if ( result.linkedBranches.nodes.length > 0 ) {
+      addFields.branch = result.linkedBranches.nodes[0].ref.name;
+    }
+    delete result.linkedBranches;
+
+    if ( result.projectItems.nodes.length > 0 ) {
+      addFields.state = result.projectItems.nodes[0].fieldValueByName.name;
+    }
+    delete result.projectItems;
+
+    if ( result.labels.nodes.length > 0 ) {
+      addFields.labels = [];
+      for ( const node of result.labels.nodes ) {
+        addFields.labels.push(node.name);
       }
     }
+    delete result.labels;
+
+    return { ...addFields,  ...result};
   }
-}
-*/  
 
-export async function getIssueState(issueNumber){
-  const issue = await getIssue(issueNumber);
-  return issue.projectItems?.nodes[0]?.fieldValueByName?.name;
-}
-
-export async function getMyIssues(issueNumber){
-
-}
-
-function getIssueName(title) {
-  return title.toLowerCase().replaceAll(' ', '-');
-}
-export async function getIssueObject(issueNumber){
-  const result = await getIssue(issueNumber);
-  const addFields = {};
-  addFields.name = getIssueName(result.title);
-  if ( result.linkedBranches.nodes.length > 0 ) {
-    addFields.branch = result.linkedBranches.nodes[0].ref.name;
-  }
-  delete result.linkedBranches;
-
-  if ( result.projectItems.nodes.length > 0 ) {
-    addFields.state = result.projectItems.nodes[0].fieldValueByName.name;
-  }
-  delete result.projectItems;
-
-  if ( result.labels.nodes.length > 0 ) {
-    addFields.labels = [];
-    for ( const node of result.labels.nodes ) {
-      addFields.labels.push(node.name);
-    }
-  }
-  delete result.labels;
-
-  return { ...addFields,  ...result};
-}
-
-export async function getRepository(label){
+ async  getRepository(label){
   const query = `
       query getRepo($owner:String!, $repo: String!, $projectNumber: Int!, ${label ?  '$label: String!': ''} ) {
         repository(owner: $owner, name: $repo) {
@@ -320,11 +308,11 @@ export async function getRepository(label){
         }
       }
   `; 
-  const { repository } = await graphqlAuth(query, { label, projectNumber: PROJECT_NUMBER,...repoVar});
+  const { repository } = await this.graphqlAuth(query, { label, projectNumber: this.projectNumber,...this.repoVar});
   return repository;
 }
 
-export async function getIssue(issueNumber){
+async getIssue(issueNumber){
   const query = `
       query getIssue($owner:String!, $repo: String!, $issueNumber: Int!) {
         repository(owner: $owner, name: $repo) {
@@ -369,12 +357,12 @@ export async function getIssue(issueNumber){
       }
   `; 
 
-  const { repository } = await graphqlAuth(query, { issueNumber: parseInt(issueNumber),...repoVar});
+  const { repository } = await this.graphqlAuth(query, { issueNumber: parseInt(issueNumber),...this.repoVar});
 
   return repository.issue;
 }
 
-export async function getIssuesByState(state){
+async  getIssuesByState(state){
     // let issues = [];
     // const result = await octokit.request(`GET /repos/${owner}/${repo}/issues`, {
     //     headers: {
@@ -389,4 +377,5 @@ export async function getIssuesByState(state){
     //     }
     // }
     // return issues;
+  }
 }

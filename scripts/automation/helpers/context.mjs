@@ -1,15 +1,15 @@
 import { executeShell, taskFunctions } from "./taskFunctions.mjs"
 import { convertNameToKey, convertKeyToName,  getFiles, filterDirectory, addNewItems } from "./util.mjs";
+import {GitHubApi} from "./github-graphql.mjs";
 import prompts from "prompts";
 import matter from 'gray-matter';
 import fs from "fs";
 const filterProcesses = (fullPath) => !fullPath.endsWith("intro.md") && fullPath.endsWith(".md");
 
 class Context {
-    isGitRepo = true;
+    isGitApi = false;
     sfInstalled = true; 
     sfToken = true;
-    gitToken;
 
     branchName;
     issueNumber;
@@ -27,6 +27,45 @@ class Context {
     _scratch;
     existNewBranch = false; 
 
+    // Repository
+    repositoryUrl;
+    repositoryType;
+    repositoryOwner;
+    repositoryRepo;
+    
+    loadGitApi() {
+        if ( process.env.GITHUB_TOKEN ) {
+            const token = process.env.GITHUB_TOKEN ;
+            this.gitApi = new GitHubApi(token, this.repositoryOwner, this.repositoryRepo, this.projectNumber);
+            this.isGitApi = true;
+        }
+
+    }
+
+    loadPackage() {
+        try {
+            const filename =  this.projectPath +  "/package.json";
+            const content = fs.readFileSync(filename, "utf8");
+            const packageJson = JSON.parse(content);
+            
+            if ( packageJson.repository ) {
+                if ( packageJson.repository.url ) {
+                    this.repositoryUrl = packageJson.repository.url;
+                    this.repositoryType = this.repository.type;
+                    // Ver de sacar repo y owner
+                } else {
+                    this.repositoryUrl = packageJson.repository;
+                    const repositoryArray =  this.repositoryUrl.split(':');
+                    this.repositoryType = repositoryArray[0];
+                    [this.repositoryOwner, this.repositoryRepo] = repositoryArray[1].split('/');
+                }
+            } 
+
+        } catch (error) {
+            throw new Error(`Verifique que exista y sea valido el package.json`  );
+        }  
+    }
+
     loadConfig() {
         const filename =  this.projectPath +  "/.autoforce.json";
         const content = fs.readFileSync(filename, "utf8");
@@ -41,11 +80,12 @@ class Context {
       
     }
 
+
     init() {
         // Busca variables de entorno    
-        this.gitToken = process.env.GITHUB_TOKEN ;
-
         this.loadConfig();
+        this.loadPackage();
+        this.loadGitApi();
         // 
         this.branchName = taskFunctions.getBranchName();
 
@@ -365,6 +405,5 @@ class Context {
 }
 
 const context= new Context();
-
 context.init();
 export default context;

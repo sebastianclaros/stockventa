@@ -1,6 +1,5 @@
-import {execSync, spawn} from "child_process";
+import {execSync} from "child_process";
 import context from "./context.mjs";
-import { getIssue, createIssue, getIssueObject, moveIssue, assignBranchToIssue, assignIssueToMe, getIssueState, createPullRequest } from "./github-graphql.mjs";
 import { logError} from "./color.mjs";
 import metadata from './metadata.mjs';
 import prompts from "prompts";
@@ -210,7 +209,7 @@ export const taskFunctions = {
     async createPullRequest() {
         try {
             context.issueFromBranch(branchName);
-            const pullRequest = await createPullRequest( branchName, `resolves #${context.issueNumber} `, 'AI not implemented yet' );             
+            const pullRequest = await context.gitApi.createPullRequest( branchName, `resolves #${context.issueNumber} `, 'AI not implemented yet' );             
             return pullRequest.number ? true : false;
         } catch (error) {
             console.log(error);
@@ -268,7 +267,7 @@ export const taskFunctions = {
         console.log('Not implemented');
     },
     async createIssue(title, label) {
-        const issueNumber = await createIssue(title, 'Backlog', label );
+        const issueNumber = await context.gitApi.createIssue(title, 'Backlog', label );
         if ( issueNumber) {
             console.log(`Se creao el issue ${issueNumber}`);
             return true;
@@ -277,7 +276,7 @@ export const taskFunctions = {
     },
     
     async validateIssue(issueNumber, states) {        
-        const currentState = await getIssueState(issueNumber);        
+        const currentState = await context.gitApi.getIssueState(issueNumber);        
         const arrayStates = states.toLocaleLowerCase().replace(' ', '').split(',');
         return arrayStates.includes(currentState.toLocaleLowerCase().replace(' ', ''));
     },
@@ -329,25 +328,25 @@ export const taskFunctions = {
     },
     
     async moveIssue(issueNumber, state) {
-        const result = await moveIssue(issueNumber, state);    
+        const result = await context.gitApi.moveIssue(issueNumber, state);    
         return result;
     },
     
     async assignBranchToIssue(issueNumber, newBranchName) {
         const commitSha = executeShell( `git rev-parse --verify main` ) ; 
-        const result = await assignBranchToIssue(issueNumber,newBranchName, commitSha);
+        const result = await context.gitApi.assignBranchToIssue(issueNumber,newBranchName, commitSha);
         return result;
     },    
 
     
     async assignIssueToMe(issueNumber) {
-        const result = await assignIssueToMe(issueNumber);    
+        const result = await context.gitApi.assignIssueToMe(issueNumber);    
         return result;
         
     },    
 
     async checkIssueType(issueNumber) {
-        const issue = await getIssueObject(issueNumber);
+        const issue = await context.gitApi.getIssueObject(issueNumber);
         // Setea el issueType segun el issue
         try {
             let newIssueType = 'feature';

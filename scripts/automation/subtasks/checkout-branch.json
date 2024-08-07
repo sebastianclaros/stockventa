@@ -1,6 +1,6 @@
 {
     "name": "checkout-branch",
-    "guards": [ "isGitRepo" ], 
+    "guards": [ "isGitApi" ], 
     "arguments": ["newBranchName"],
     "description": "Comando para cambiar de branch y baja cualquier cambio que este en la remote branch o en main",
     "steps": [
