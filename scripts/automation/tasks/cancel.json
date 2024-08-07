@@ -1,6 +1,6 @@
 {
     "name": "cancel",
-    "guards": [ "gitToken" ], 
+    "guards": [ "isGitApi" ], 
     "description": "Comando para cancelar un requerimiento",
     "steps": [
         { "name": "Cancela el issue", "function": "cancelIssue" }

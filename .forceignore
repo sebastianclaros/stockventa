@@ -15,3 +15,6 @@ package.xml
 *Profiles*
 
 *AppMenu*
+**/tsconfig.json
+
+**/*.ts

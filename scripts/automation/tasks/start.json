@@ -1,6 +1,6 @@
 {
     "name": "start",
-    "guards": [ "gitToken" ], 
+    "guards": [ "isGitApi" ], 
     "arguments": [ "newIssueNumber" ],
     "description": "Comando para iniciar un requerimiento. Automatiza las acciones cuando se arranca un requerimiento nuevo",
     "steps": [

@@ -1,6 +1,6 @@
 {
     "name": "finish",
-    "guards": [ "gitToken" ], 
+    "guards": [ "isGitApi" ], 
     "description": "Comando para teminar un requerimiento. Automatiza las acciones cuando se termino el desarrollo de un requerimiento",
     "steps": [
         { "name": "chequea si hay cambios sin commit", "function": "checkCommitPending", "description": "Chequea si hay algo sin commitear:\n ${salida}", "errorMessage": "Tiene modificaciones pendientes", "onError": "commitChanges" },

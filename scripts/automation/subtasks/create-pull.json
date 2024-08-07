@@ -1,6 +1,6 @@
 {
     "name": "create-pull",
-    "guards": [ "isGitRepo" ], 
+    "guards": [ "isGitApi" ], 
     "description": "Comando para crear el pull request de la branch",
     "steps": [
         { "name": "chequea si hay cambios sin commit", "function": "checkCommitPending", "description": "Chequea si hay algo sin commitear", "errorMessage": "Tiene modificaciones pendientes:\n ${salida}", "onError": "commitChanges" },

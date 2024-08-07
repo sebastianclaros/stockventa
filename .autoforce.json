@@ -1,6 +1,7 @@
 {
   "isVerbose": true,
   "permissionSet": "adminInventario",
+  "projectNumber": 3,
   "processes": {
     "modelo-de-datos": {
       "classes": [

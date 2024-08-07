@@ -1,6 +1,6 @@
 {
     "name": "publish-branch",
-    "guards": [ "isGitRepo" ], 
+    "guards": [ "isGitApi" ], 
     "description": "Comando para publicar la branch en Remote",
     "steps": [
         { "name": "chequea si hay cambios sin commit", "function": "checkCommitPending", "description": "Chequea si hay algo sin commitear", "errorMessage": "Tiene modificaciones pendientes:\n ${salida}", "onError": "commitChanges" },

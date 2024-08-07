@@ -1,6 +1,6 @@
 {
     "name": "switch",
-    "guards": [ "gitToken" ], 
+    "guards": [ "isGitApi" ], 
     "arguments": [ "newIssueNumber" ],
     "description": "Comando para cambiar el requerimiento a desarrollar",
     "steps": [
