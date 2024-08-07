@@ -56,7 +56,7 @@ export class GitHubApi {
   }
 
   async createPullRequest(branchName, title, body) {
-    const repository = await getRepository();
+    const repository = await this.getRepository();
     const repositoryId = repository.id;
     const headRefName = 'main';
     const baseRefName = branchName;
@@ -89,8 +89,8 @@ export class GitHubApi {
   }
 
   async createIssue(title, columnName, label, milestone, body ) {
-    const user = await getUser();
-    const repository = await getRepository(label);
+    const user = await this.getUser();
+    const repository = await this.getRepository(label);
     const repositoryId = repository.id;
     const labelId = repository.label?.id;
     const projectId = repository.projectV2.id;
@@ -135,7 +135,7 @@ export class GitHubApi {
     const itemId = addProjectV2ItemById.item.id;
 
     const fieldId = repository.projectV2.field.id;
-    const mapValues = await getColumnValueMap();
+    const mapValues = await this.getColumnValueMap();
     const columnValue = mapValues[columnName]; 
     const mutationColumn = `
     mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $columnValue: String!) {
@@ -156,11 +156,11 @@ export class GitHubApi {
   }
 
   async  moveIssue(issueNumber, columnName) {
-    const issue = await getIssue(issueNumber);
+    const issue = await this.getIssue(issueNumber);
     const itemId = issue.projectItems.nodes[0].id;
     const projectId = issue.projectItems.nodes[0].project.id;  
     const fieldId = issue.projectItems.nodes[0].fieldValueByName.field.id;
-    const mapValues = await getColumnValueMap();
+    const mapValues = await this.getColumnValueMap();
     const columnValue = mapValues[columnName]; 
     const mutation = `
     mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $columnValue: String!) {
@@ -182,8 +182,8 @@ export class GitHubApi {
   }
 
   async assignIssueToMe(issueNumber) {
-    const user = await getUser();
-    const issue = await getIssue(issueNumber);
+    const user = await this.getUser();
+    const issue = await this.getIssue(issueNumber);
     const mutation = `
       mutation assignUser( $issueId: ID!, $userId: ID!) { 
         addAssigneesToAssignable(input: {
@@ -219,8 +219,8 @@ export class GitHubApi {
   }
 
   async assignBranchToIssue(issueNumber, branchName, commitSha) {
-    const issue = await getIssue(issueNumber);  
-    const commit = await getCommit(commitSha);
+    const issue = await this.getIssue(issueNumber);  
+    const commit = await this.getCommit(commitSha);
     const mutation = `
       mutation createLinkedBranch( $issueId: ID!, $oid: GitObjectID!, $branchName: String!) { 
         createLinkedBranch(input: {
@@ -240,12 +240,12 @@ export class GitHubApi {
   }
 
   async getValidateIssueColumn(issueNumber, columnName) {
-      const issue = await getIssue(issueNumber);
+      const issue = await this.getIssue(issueNumber);
   }
 
 
   async getIssueState(issueNumber){
-    const issue = await getIssue(issueNumber);
+    const issue = await this.getIssue(issueNumber);
     return issue.projectItems?.nodes[0]?.fieldValueByName?.name;
   }
 
@@ -258,9 +258,9 @@ export class GitHubApi {
   }
 
   async  getIssueObject(issueNumber){
-    const result = await getIssue(issueNumber);
+    const result = await this.getIssue(issueNumber);
     const addFields = {};
-    addFields.name = getIssueName(result.title);
+    addFields.name = this.getIssueName(result.title);
     if ( result.linkedBranches.nodes.length > 0 ) {
       addFields.branch = result.linkedBranches.nodes[0].ref.name;
     }
