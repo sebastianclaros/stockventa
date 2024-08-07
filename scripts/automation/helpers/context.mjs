@@ -51,17 +51,26 @@ class Context {
             if ( packageJson.repository ) {
                 if ( packageJson.repository.url ) {
                     this.repositoryUrl = packageJson.repository.url;
-                    this.repositoryType = this.repository.type;
+                    this.repositoryType = packageJson.repository.type;
                     // Ver de sacar repo y owner
+                    if ( this.repositoryUrl.includes("github.com") ) {
+                        const repositoryArray =  this.repositoryUrl.split('github.com/');
+                        [this.repositoryOwner, this.repositoryRepo] = repositoryArray[1].split('/');
+                    }
                 } else {
                     this.repositoryUrl = packageJson.repository;
                     const repositoryArray =  this.repositoryUrl.split(':');
                     this.repositoryType = repositoryArray[0];
                     [this.repositoryOwner, this.repositoryRepo] = repositoryArray[1].split('/');
                 }
+                if ( this.repositoryRepo.endsWith('.git') ) {
+                    this.repositoryRepo = this.repositoryRepo.replace('.git', '');
+                }
+                console.log(this.repositoryOwner, this.repositoryRepo);
             } 
 
         } catch (error) {
+            console.log(error);
             throw new Error(`Verifique que exista y sea valido el package.json`  );
         }  
     }

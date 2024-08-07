@@ -3,6 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "description": "Salesforce App",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastianclaros/stockventa"
+  },
   "scripts": {
     "new": "node scripts/automation/auto.mjs new issue",
     "start": "node scripts/automation/auto.mjs start",
