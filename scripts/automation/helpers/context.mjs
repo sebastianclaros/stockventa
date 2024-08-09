@@ -4,7 +4,7 @@ import {GitHubApi} from "./github-graphql.mjs";
 import prompts from "prompts";
 import matter from 'gray-matter';
 import fs from "fs";
-const filterProcesses = (fullPath) => !fullPath.endsWith("intro.md") && fullPath.endsWith(".md");
+const filterProcesses = (fullPath) =>  fullPath.endsWith(".md"); // && !fullPath.endsWith("intro.md") 
 
 class Context {
     isGitApi = false;
@@ -14,6 +14,8 @@ class Context {
     branchName;
     issueNumber;
     issueType;
+
+    _process;
 
     _newIssueNumber;
     _newIssueType;
@@ -36,6 +38,9 @@ class Context {
     loadGitApi() {
         if ( process.env.GITHUB_TOKEN ) {
             const token = process.env.GITHUB_TOKEN ;
+            if ( !this.repositoryOwner ||  !this.repositoryRepo) {
+                throw new Error("Falta agregue repository en el package.json para obtener el Owner or Repo");
+            }
             this.gitApi = new GitHubApi(token, this.repositoryOwner, this.repositoryRepo, this.projectNumber);
             this.isGitApi = true;
         }
@@ -276,12 +281,29 @@ class Context {
                         
         return answer.newIssueNumber;
     }
+
+    set process( value ) {
+        this._process = value;
+    }
+
+    get process() {
+        if ( !this._process && this.issueTitle) {
+            const desde = this.issueTitle.indexOf('[');
+            const hasta = this.issueTitle.indexOf(']', desde);
+            if ( desde !== -1 && hasta !== -1 ) {
+                this._process = this.issueTitle.substring( desde + 1, hasta );
+            } 
+        }
+        return this._process;
+    }
+
     async askForprocess() {
+
         const folder = `${process.cwd()}/docs/${this.module}`;
         const files = getFiles( folder, filterProcesses);
         const choices = files.map( file => {
             const header = this.getProcessHeader(`${folder}/${file}` ); 
-            const processName = header.slug || header.title || file.split('.')[0];
+            const processName = header.process || header.title || file.split('.')[0];
             const value = convertNameToKey(processName);
             const title = convertKeyToName(value);
             return { value, title: `${title} (${file})`  }; 

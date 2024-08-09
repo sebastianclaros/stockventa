@@ -1,6 +1,7 @@
 ---
 title: Servicio getAvaliability
 slug: get-availability
+process: get-availability
 ---
 
 ## Descripcion

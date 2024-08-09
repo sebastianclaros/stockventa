@@ -1,6 +1,7 @@
 ---
 title: Modelo de Objetos
 slug: modelo-de-datos
+process: modelo-de-datos
 ---
 
 ## Introducción
