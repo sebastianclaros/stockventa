@@ -323,7 +323,7 @@ class Context {
     }
 
     async askForprocess() {
-        const choices = this.processesHeader.map( header => {
+        const choices = Object.values(this.processesHeader).map( header => {
             return { value: header.process, title: header.title }; 
         });
         const answer = await prompts([{
