@@ -4,7 +4,7 @@ import {GitHubApi} from "./github-graphql.mjs";
 import prompts from "prompts";
 import matter from 'gray-matter';
 import fs from "fs";
-const filterProcesses = (fullPath) => !fullPath.endsWith("intro.md") && fullPath.endsWith(".md");
+const filterProcesses = (fullPath) =>  fullPath.endsWith(".md"); // && !fullPath.endsWith("intro.md") 
 
 class Context {
     isGitApi = false;
@@ -14,6 +14,9 @@ class Context {
     branchName;
     issueNumber;
     issueType;
+
+    _process;
+    _processesHeader;
 
     _newIssueNumber;
     _newIssueType;
@@ -36,6 +39,9 @@ class Context {
     loadGitApi() {
         if ( process.env.GITHUB_TOKEN ) {
             const token = process.env.GITHUB_TOKEN ;
+            if ( !this.repositoryOwner ||  !this.repositoryRepo) {
+                throw new Error("Falta agregue repository en el package.json para obtener el Owner or Repo");
+            }
             this.gitApi = new GitHubApi(token, this.repositoryOwner, this.repositoryRepo, this.projectNumber);
             this.isGitApi = true;
         }
@@ -66,7 +72,6 @@ class Context {
                 if ( this.repositoryRepo.endsWith('.git') ) {
                     this.repositoryRepo = this.repositoryRepo.replace('.git', '');
                 }
-                console.log(this.repositoryOwner, this.repositoryRepo);
             } 
 
         } catch (error) {
@@ -154,6 +159,25 @@ class Context {
 
     }
 
+    get processesHeader() {
+        if ( !this._processesHeader ) {
+            this._processesHeader = {};
+            const folders = getFiles(process.cwd() + "/docs", filterDirectory, true, ['diccionarios']);
+            for ( const folder of folders )  {
+                const fullpath = `${process.cwd()}/docs/${folder}`;
+                const filenames = getFiles( fullpath, filterProcesses );
+                for ( const filename of filenames ) {
+                    const header = this.getProcessHeader(fullpath + "/" + filename); 
+                    if ( header.process ) {
+                        this._processesHeader[header.process] = { ...header, folder: fullpath, filename };
+                    }
+                }
+            }
+        }
+        return this._processesHeader;
+    }
+
+    // TODO: merge con getProcessFromDocs
     getProcessMetadata() {
         const folders = getFiles(process.cwd() + "/docs", filterDirectory, true, ['diccionarios']);
         let retArray = [];
@@ -180,6 +204,7 @@ class Context {
     getModules() {
         return getFiles(process.cwd() + "/docs", filterDirectory, false, ['diccionarios']);
     }
+
     get modules() {
         return this.getModules().map( module => { return { value: module, title: module } } ) ;    
     }
@@ -276,15 +301,44 @@ class Context {
                         
         return answer.newIssueNumber;
     }
+
+    set process( value ) {
+        this._process = value;
+    }
+
+    getProcessFromTitle(title) {
+        const desde = title.indexOf('[');
+        const hasta = title.indexOf(']', desde);
+        if ( desde !== -1 && hasta !== -1 ) {
+            return title.substring( desde + 1, hasta );
+        }
+        return ; 
+    }
+
+    get process() {
+        if ( !this._process && this.issueTitle) {
+            const process = this.getProcessFromTitle(this.issueTitle);
+            if ( process ){
+                this._process = process;
+            }
+        }
+        
+        return this._process;
+    }
+
     async askForprocess() {
-        const folder = `${process.cwd()}/docs/${this.module}`;
-        const files = getFiles( folder, filterProcesses);
-        const choices = files.map( file => {
-            const header = this.getProcessHeader(`${folder}/${file}` ); 
-            const processName = header.slug || header.title || file.split('.')[0];
-            const value = convertNameToKey(processName);
-            const title = convertKeyToName(value);
-            return { value, title: `${title} (${file})`  }; 
+        if ( !this.issueTitle && this.issueNumber ) {
+            const issue = await this.gitApi.getIssueObject(this.issueNumber);
+            this.issueTitle =  issue.title;
+        }
+        if ( this.issueTitle ) {
+            const process =   this.getProcessFromTitle(this.issueTitle);
+            if ( process && this.processesHeader[process]){
+                return process;
+            }
+        }
+        const choices = Object.values(this.processesHeader).map( header => {
+            return { value: header.process, title: header.title }; 
         });
         const answer = await prompts([{
             type: "select",

@@ -3,7 +3,6 @@ import { getMetadataFromContext } from "./util.mjs";
 import objectHelper from "./object.mjs";
 import classHelper  from "./class.mjs";
 import lwcHelper  from "./lwc.mjs";
-import {execute as executeNew}  from "./new.mjs";
 
 // Logica especificas de cada componente
 export const helpers = {
@@ -21,7 +20,6 @@ export async function execute() {
     const filename = node.hasChilds
       ? `${node.path}/intro.md`
       : `${node.path}/${node.name}.md`;
-    await executeNew("intro", filename, node);
     for (const component of components) {
       const items = node[component];
       if (items?.length > 0) {

@@ -3,6 +3,25 @@ import context from "./context.mjs";
 import { logError} from "./color.mjs";
 import metadata from './metadata.mjs';
 import prompts from "prompts";
+import templateGenerator from "./template.mjs";
+
+
+function createTemplate( templateFolder, templateExtension, template, filename, folder, context) {
+    if (!template || !filename || !templateFolder || !templateExtension) {
+        return;
+    }
+    const templateEngine = templateGenerator(templateFolder, templateExtension);
+
+    const formulas = {
+        today: Date.now(),
+        filename
+    };
+    const view = { ...formulas, ...context};
+    templateEngine.read(template);
+    templateEngine.render(view);
+    templateEngine.save(filename, folder, { create: true });
+}
+
 
 function convertArgsToString(args) {
     let argsString = '';
@@ -149,8 +168,8 @@ function getFilesChanged() {
 
 export const taskFunctions = {   
 
-    docProcess() {
-        if ( !context.process) {
+    async docProcess() { 
+        if ( !context.process ) {
             return false;
         }
         const files = getFilesChanged();
@@ -237,7 +256,7 @@ export const taskFunctions = {
                 }
             }
         }
-        return null;
+        throw new Error(`No se encontro la organizacion ${targetOrg.value} verifique que este activa con: sf org list. `);
     },
 
     // type: 'scratchOrgs', 'sandboxes', others
@@ -273,6 +292,11 @@ export const taskFunctions = {
             return true;
         }
         return false;
+    },
+    async createTemplate(template, folder, name, identifier) {
+        const filename = name.toLocaleLowerCase().replaceAll(' ', '-') +  '.md';
+        createTemplate( '.', 'md', template, filename, folder, { name, identifier });
+        return true;
     },
     
     async validateIssue(issueNumber, states) {        
