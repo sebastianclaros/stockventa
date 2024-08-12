@@ -169,11 +169,6 @@ function getFilesChanged() {
 export const taskFunctions = {   
 
     async docProcess() { 
-        if ( !context.process && context.issueNumber) {
-            const issue = await context.gitApi.getIssueObject(context.issueNumber);
-            console.log(issue);
-            context.issueTitle =  issue.name;    
-        }
         if ( !context.process ) {
             return false;
         }

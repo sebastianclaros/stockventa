@@ -306,23 +306,37 @@ class Context {
         this._process = value;
     }
 
-    getProcessFromTitle() {
-        const desde = this.issueTitle.indexOf('[');
-        const hasta = this.issueTitle.indexOf(']', desde);
+    getProcessFromTitle(title) {
+        const desde = title.indexOf('[');
+        const hasta = title.indexOf(']', desde);
         if ( desde !== -1 && hasta !== -1 ) {
-            return this.issueTitle.substring( desde + 1, hasta );
+            return title.substring( desde + 1, hasta );
         }
         return ; 
     }
 
     get process() {
         if ( !this._process && this.issueTitle) {
-            getProcessFromTitle();
+            const process = this.getProcessFromTitle(this.issueTitle);
+            if ( process ){
+                this._process = process;
+            }
         }
+        
         return this._process;
     }
 
     async askForprocess() {
+        if ( !this.issueTitle && this.issueNumber ) {
+            const issue = await this.gitApi.getIssueObject(this.issueNumber);
+            this.issueTitle =  issue.title;
+        }
+        if ( this.issueTitle ) {
+            const process =   this.getProcessFromTitle(this.issueTitle);
+            if ( process && this.processesHeader[process]){
+                return process;
+            }
+        }
         const choices = Object.values(this.processesHeader).map( header => {
             return { value: header.process, title: header.title }; 
         });
