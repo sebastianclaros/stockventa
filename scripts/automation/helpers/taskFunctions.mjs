@@ -369,6 +369,12 @@ export const taskFunctions = {
         
     },    
 
+    async viewIssue(issueNumber) {
+        const issue = await context.gitApi.getIssueObject(issueNumber);
+        console.log(issue);
+        return true;
+    },
+
     async checkIssueType(issueNumber) {
         const issue = await context.gitApi.getIssueObject(issueNumber);
         // Setea el issueType segun el issue
