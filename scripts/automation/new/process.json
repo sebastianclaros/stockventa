@@ -1,8 +1,8 @@
 {
     "name": "process",
-    "arguments": { "module": { "type": "select", "choices": "${modules}" }, "title": { "required": true  } },
+    "arguments": { "folder": { "type": "select", "choices": "${modules}" }, "name": { "required": true  }, "identifier": { "required": true  } },
     "description": "Comando para crear un proceso nuevo",
     "steps": [
-        { "name": "Crear un proceso nuevo", "function": "createProcess", "arguments": ["${title}", "${module}"] }
+        { "name": "Crear un proceso nuevo", "function": "createTemplate", "arguments": { "template": "process", "folder": "${folder}", "name": "${name}", "identifier": "${identifier}" } }
     ] 
 }

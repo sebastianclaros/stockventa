@@ -16,6 +16,7 @@ class Context {
     issueType;
 
     _process;
+    _processesHeader;
 
     _newIssueNumber;
     _newIssueType;
@@ -71,7 +72,6 @@ class Context {
                 if ( this.repositoryRepo.endsWith('.git') ) {
                     this.repositoryRepo = this.repositoryRepo.replace('.git', '');
                 }
-                console.log(this.repositoryOwner, this.repositoryRepo);
             } 
 
         } catch (error) {
@@ -159,6 +159,25 @@ class Context {
 
     }
 
+    get processesHeader() {
+        if ( !this._processesHeader ) {
+            this._processesHeader = {};
+            const folders = getFiles(process.cwd() + "/docs", filterDirectory, true, ['diccionarios']);
+            for ( const folder of folders )  {
+                const fullpath = `${process.cwd()}/docs/${folder}`;
+                const filenames = getFiles( fullpath, filterProcesses );
+                for ( const filename of filenames ) {
+                    const header = this.getProcessHeader(fullpath + "/" + filename); 
+                    if ( header.process ) {
+                        this._processesHeader[header.process] = { ...header, folder: fullpath, filename };
+                    }
+                }
+            }
+        }
+        return this._processesHeader;
+    }
+
+    // TODO: merge con getProcessFromDocs
     getProcessMetadata() {
         const folders = getFiles(process.cwd() + "/docs", filterDirectory, true, ['diccionarios']);
         let retArray = [];
@@ -185,6 +204,7 @@ class Context {
     getModules() {
         return getFiles(process.cwd() + "/docs", filterDirectory, false, ['diccionarios']);
     }
+
     get modules() {
         return this.getModules().map( module => { return { value: module, title: module } } ) ;    
     }
@@ -286,27 +306,25 @@ class Context {
         this._process = value;
     }
 
+    getProcessFromTitle() {
+        const desde = this.issueTitle.indexOf('[');
+        const hasta = this.issueTitle.indexOf(']', desde);
+        if ( desde !== -1 && hasta !== -1 ) {
+            return this.issueTitle.substring( desde + 1, hasta );
+        }
+        return ; 
+    }
+
     get process() {
         if ( !this._process && this.issueTitle) {
-            const desde = this.issueTitle.indexOf('[');
-            const hasta = this.issueTitle.indexOf(']', desde);
-            if ( desde !== -1 && hasta !== -1 ) {
-                this._process = this.issueTitle.substring( desde + 1, hasta );
-            } 
+            getProcessFromTitle();
         }
         return this._process;
     }
 
     async askForprocess() {
-
-        const folder = `${process.cwd()}/docs/${this.module}`;
-        const files = getFiles( folder, filterProcesses);
-        const choices = files.map( file => {
-            const header = this.getProcessHeader(`${folder}/${file}` ); 
-            const processName = header.process || header.title || file.split('.')[0];
-            const value = convertNameToKey(processName);
-            const title = convertKeyToName(value);
-            return { value, title: `${title} (${file})`  }; 
+        const choices = this.processesHeader.map( header => {
+            return { value: header.process, title: header.title }; 
         });
         const answer = await prompts([{
             type: "select",
