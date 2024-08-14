@@ -8,7 +8,7 @@
     "url": "git+https://github.com/sebastianclaros/stockventa"
   },
   "scripts": {
-    "mockup": "node mockup/index.js",
+    "mockup": "node mock/index.js",
     "new": "node scripts/automation/auto.mjs new issue",
     "start": "node scripts/automation/auto.mjs start",
     "stop": "node scripts/automation/auto.mjs stop",
