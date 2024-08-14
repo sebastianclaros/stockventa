@@ -4,7 +4,7 @@ import { logError} from "./color.mjs";
 import metadata from './metadata.mjs';
 import prompts from "prompts";
 import templateGenerator from "./template.mjs";
-
+import { getColored } from "./color.mjs";
 
 function createTemplate( templateFolder, templateExtension, template, filename, folder, context) {
     if (!template || !filename || !templateFolder || !templateExtension) {
@@ -368,6 +368,38 @@ export const taskFunctions = {
         return result;
         
     },    
+
+    async viewIssue(issueNumber) {
+        const result = await context.gitApi.getIssue(issueNumber);
+        // Branch    
+        if ( result.linkedBranches.nodes.lenght > 0  ) {
+            console.log( result.linkedBranches.nodes[0].ref.name );
+        } else {
+            console.log( 'sin branch' );
+        }
+    
+        // Labels
+        if ( result.labels ) {
+            const labels = [];
+            for ( const label of result.labels.nodes){
+                labels.push ( getColored(label.name, label.color) );
+            }    
+        
+            console.log( labels.join( ' ' ) );
+        }
+    
+        // Body
+        if ( result.body ) {
+            console.log( result.body);
+        }
+    
+        // Comments
+        if ( result.comments ) {
+            console.log( result.comments);
+        }
+    
+        return true;
+    },
 
     async checkIssueType(issueNumber) {
         const issue = await context.gitApi.getIssueObject(issueNumber);
