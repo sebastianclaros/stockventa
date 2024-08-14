@@ -8,6 +8,7 @@
     "url": "git+https://github.com/sebastianclaros/stockventa"
   },
   "scripts": {
+    "mockup": "node mock/index.js",
     "new": "node scripts/automation/auto.mjs new issue",
     "start": "node scripts/automation/auto.mjs start",
     "stop": "node scripts/automation/auto.mjs stop",
@@ -64,5 +65,8 @@
     "**/{aura,lwc}/**": [
       "eslint"
     ]
+  },
+  "dependencies": {
+    "express": "^4.19.2"
   }
 }
